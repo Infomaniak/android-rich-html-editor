@@ -1,0 +1,4 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.HtmlEditor" parent="LightAndDarkCommonBaseTheme" />
+</resources>
