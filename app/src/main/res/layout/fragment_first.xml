@@ -4,32 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".FirstFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <Button
             android:id="@+id/button_first"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next"
-            app:layout_constraintBottom_toTopOf="@id/textview_first"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="@string/next" />
 
         <TextView
-            android:id="@+id/textview_first"
+            style="@style/Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/first_fragment_label"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_first" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_gravity="start"
+            android:text="Output html:" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/editorHeight">
+
+            <TextView
+                android:id="@+id/htmlOutput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#d0d8e0"
+                android:minHeight="@dimen/editorHeight"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_first" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp" />
+
+        <TextView
+            style="@style/Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Input editor:" />
+
+        <EditText
+            android:id="@+id/editTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="4"
+            tools:text="Lorem ipsum dolores sit amet" />
+
+        <!--<com.google.android.material.textfield.TextInputLayout-->
+        <!--    android:id="@+id/bodyLayout"-->
+        <!--    android:layout_width="match_parent"-->
+        <!--    android:layout_height="wrap_content"-->
+        <!--    android:hint="Input"-->
+        <!--    app:hintEnabled="false"-->
+        <!--    app:placeholderText="Input">-->
+
+        <!--    <com.google.android.material.textfield.TextInputEditText-->
+        <!--        android:id="@+id/bodyText"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:gravity="top"-->
+        <!--        android:inputType="textMultiLine|textCapSentences"-->
+        <!--        android:minLines="4" />-->
+
+        <!--</com.google.android.material.textfield.TextInputLayout>-->
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>
