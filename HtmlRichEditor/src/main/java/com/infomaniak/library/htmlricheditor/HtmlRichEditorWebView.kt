@@ -13,7 +13,7 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
 
     init {
         settings.javaScriptEnabled = true
-
+        isFocusableInTouchMode = true
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) = enableEdition()
         }
