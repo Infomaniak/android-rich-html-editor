@@ -23,6 +23,11 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
         editor.loadHtml(testHtmlHard)
+
+        buttonBold.setOnClickListener { editor.textFormat.setBold() }
+        buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
+        buttonStrikeThrough.setOnClickListener { editor.textFormat.setStrikeThrough() }
+        buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
     }
 
     override fun onDestroyView() {

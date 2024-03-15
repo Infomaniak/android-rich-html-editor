@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Subtitle">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
-        <item name="android:layout_marginBottom">16dp</item>
+    <style name="EditorButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:minWidth">48dp</item>
     </style>
 </resources>

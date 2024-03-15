@@ -11,6 +11,8 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
+    val textFormat = TextFormat(this)
+
     init {
         settings.javaScriptEnabled = true
         isFocusableInTouchMode = true

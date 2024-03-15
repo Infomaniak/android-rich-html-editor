@@ -6,15 +6,61 @@
     android:fillViewport="true"
     tools:context=".FirstFragment">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.infomaniak.library.htmlricheditor.HtmlRichEditorWebView
-            android:id="@+id/editor"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:orientation="horizontal">
 
-    </FrameLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonBold"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="B" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonItalic"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonStrikeThrough"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonUnderline"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="U" />
+
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:padding="16dp">
+
+            <com.infomaniak.library.htmlricheditor.HtmlRichEditorWebView
+                android:id="@+id/editor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>
