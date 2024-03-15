@@ -28,6 +28,13 @@ class FirstFragment : Fragment() {
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
         buttonStrikeThrough.setOnClickListener { editor.textFormat.setStrikeThrough() }
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
+
+        editor.textFormat.apply {
+            boldStatus.observe(viewLifecycleOwner) { buttonBold.isActivated = it }
+            italicStatus.observe(viewLifecycleOwner) { buttonItalic.isActivated = it }
+            strikeThroughStatus.observe(viewLifecycleOwner) { buttonStrikeThrough.isActivated = it }
+            underlineStatus.observe(viewLifecycleOwner) { buttonUnderline.isActivated = it }
+        }
     }
 
     override fun onDestroyView() {

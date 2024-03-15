@@ -3,5 +3,6 @@
 
     <style name="EditorButton" parent="Widget.Material3.Button.IconButton">
         <item name="android:minWidth">48dp</item>
+        <item name="backgroundTint">@color/background_editor_button</item>
     </style>
 </resources>
