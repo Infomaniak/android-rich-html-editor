@@ -37,6 +37,10 @@ class TextFormat(private val webView: WebView) {
         execCommandAndRefreshButtonStatus(ExecCommand.UNDERLINE)
     }
 
+    fun removeFormat() {
+        execCommandAndRefreshButtonStatus(ExecCommand.REMOVE_FORMAT)
+    }
+
     private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
         val valueCallback = callback?.let { callback -> ValueCallback<String> { callback(it) } }
         webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
@@ -77,5 +81,6 @@ class TextFormat(private val webView: WebView) {
         ITALIC("italic"),
         STRIKE_THROUGH("strikeThrough"),
         UNDERLINE("underline"),
+        REMOVE_FORMAT("removeFormat"),
     }
 }

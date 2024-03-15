@@ -28,6 +28,7 @@ class FirstFragment : Fragment() {
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
         buttonStrikeThrough.setOnClickListener { editor.textFormat.setStrikeThrough() }
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
+        buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
 
         editor.textFormat.apply {
             boldStatus.observe(viewLifecycleOwner) { buttonBold.isActivated = it }

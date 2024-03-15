@@ -45,6 +45,13 @@
                 android:layout_height="wrap_content"
                 android:text="U" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonRemoveFormat"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X" />
+
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
