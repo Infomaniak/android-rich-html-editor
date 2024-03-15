@@ -19,7 +19,7 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
         }
     }
 
-    fun loadHtml(html: String) {
+    fun loadHtml(html: String = "") {
         super.loadDataWithBaseURL("", html, "text/html", "UTF-8", null) // TODO
     }
 
