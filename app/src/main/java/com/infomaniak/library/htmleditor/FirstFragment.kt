@@ -1,11 +1,20 @@
 package com.infomaniak.library.htmleditor
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.infomaniak.library.htmleditor.databinding.FragmentFirstBinding
+import com.infomaniak.library.htmlricheditor.TextFormat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class FirstFragment : Fragment() {
 
@@ -30,11 +39,13 @@ class FirstFragment : Fragment() {
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
 
-        editor.textFormat.apply {
-            boldStatus.observe(viewLifecycleOwner) { buttonBold.isActivated = it }
-            italicStatus.observe(viewLifecycleOwner) { buttonItalic.isActivated = it }
-            strikeThroughStatus.observe(viewLifecycleOwner) { buttonStrikeThrough.isActivated = it }
-            underlineStatus.observe(viewLifecycleOwner) { buttonUnderline.isActivated = it }
+        viewLifecycleOwner.lifecycleScope.launch {
+            editor.textFormat.editorStatusFlow.collect {
+                buttonBold.isActivated = it.contains(TextFormat.ExecCommand.BOLD)
+                buttonItalic.isActivated = it.contains(TextFormat.ExecCommand.ITALIC)
+                buttonStrikeThrough.isActivated = it.contains(TextFormat.ExecCommand.STRIKE_THROUGH)
+                buttonUnderline.isActivated = it.contains(TextFormat.ExecCommand.UNDERLINE)
+            }
         }
     }
 

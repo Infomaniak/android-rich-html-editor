@@ -3,23 +3,16 @@ package com.infomaniak.library.htmlricheditor
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 class TextFormat(private val webView: WebView) {
 
-    private val _boldStatus = MutableLiveData<Boolean>()
-    val boldStatus: LiveData<Boolean> = _boldStatus.distinctUntilChanged()
+    private val typeToExecCommand = ExecCommand.entries.associateBy(ExecCommand::argumentName)
 
-    private val _italicStatus = MutableLiveData<Boolean>()
-    val italicStatus: LiveData<Boolean> = _italicStatus.distinctUntilChanged()
-
-    private val _strikeThroughStatus = MutableLiveData<Boolean>()
-    val strikeThroughStatus: LiveData<Boolean> = _strikeThroughStatus.distinctUntilChanged()
-
-    private val _underlineStatus = MutableLiveData<Boolean>()
-    val underlineStatus: LiveData<Boolean> = _underlineStatus.distinctUntilChanged()
+    private val _editorStatus: MutableStateFlow<Set<ExecCommand>> = MutableStateFlow(emptySet())
+    val editorStatusFlow: Flow<Set<ExecCommand>> = _editorStatus
 
     fun setBold() {
         execCommandAndRefreshButtonStatus(ExecCommand.BOLD)
@@ -58,14 +51,26 @@ class TextFormat(private val webView: WebView) {
 
     @JavascriptInterface
     fun notifyCommandStatus(type: String, isActivated: Boolean) {
-        val command = ExecCommand.typeToEnum[type]
-        when (command) {
-            ExecCommand.BOLD -> _boldStatus.postValue(isActivated)
-            ExecCommand.ITALIC -> _italicStatus.postValue(isActivated)
-            ExecCommand.STRIKE_THROUGH -> _strikeThroughStatus.postValue(isActivated)
-            ExecCommand.UNDERLINE -> _underlineStatus.postValue(isActivated)
-            ExecCommand.REMOVE_FORMAT -> Unit
-            null -> Unit // Should never happen
+        val command = typeToExecCommand[type]
+        // when (command) {
+        //     ExecCommand.BOLD -> _boldStatus.postValue(isActivated)
+        //     ExecCommand.ITALIC -> _italicStatus.postValue(isActivated)
+        //     ExecCommand.STRIKE_THROUGH -> _strikeThroughStatus.postValue(isActivated)
+        //     ExecCommand.UNDERLINE -> _underlineStatus.postValue(isActivated)
+        //     ExecCommand.REMOVE_FORMAT -> Unit
+        //     null -> Unit // Should never happen
+        // }
+    }
+
+    @JavascriptInterface
+    fun notifyCommandStatuses(isBold: Boolean, isItalic: Boolean, isStrikeThrough: Boolean, isUnderlined: Boolean) { // TODO : Pass array
+        _editorStatus.update {
+            mutableSetOf<ExecCommand>().apply {
+                if (isBold) add(ExecCommand.BOLD)
+                if (isItalic) add(ExecCommand.ITALIC)
+                if (isStrikeThrough) add(ExecCommand.STRIKE_THROUGH)
+                if (isUnderlined) add(ExecCommand.UNDERLINE)
+            }
         }
     }
 
@@ -74,10 +79,6 @@ class TextFormat(private val webView: WebView) {
         ITALIC("italic"),
         STRIKE_THROUGH("strikeThrough"),
         UNDERLINE("underline"),
-        REMOVE_FORMAT("removeFormat");
-
-        companion object {
-            val typeToEnum = ExecCommand.entries.associateBy(ExecCommand::argumentName)
-        }
+        REMOVE_FORMAT("removeFormat"),
     }
 }

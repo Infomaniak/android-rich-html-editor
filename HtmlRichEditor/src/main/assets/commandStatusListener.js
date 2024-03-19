@@ -3,10 +3,12 @@ function notifyCommandStatus(type) {
 }
 
 function reportCommandStatusChange() {
-    notifyCommandStatus("bold")
-    notifyCommandStatus("italic")
-    notifyCommandStatus("strikeThrough")
-    notifyCommandStatus("underline")
+    window.editor.notifyCommandStatuses(
+        document.queryCommandState("bold"),
+        document.queryCommandState("italic"),
+        document.queryCommandState("strikeThrough"),
+        document.queryCommandState("underline"),
+    )
 }
 
 document.addEventListener("selectionchange", reportCommandStatusChange)
