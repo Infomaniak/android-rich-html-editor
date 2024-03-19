@@ -1,9 +1,5 @@
-function notifyCommandStatus(type) {
-    window.editor.notifyCommandStatus(type, document.queryCommandState(type))
-}
-
 function reportCommandStatusChange() {
-    window.editor.notifyCommandStatuses(
+    window.editor.notifyCommandStatus(
         document.queryCommandState("bold"),
         document.queryCommandState("italic"),
         document.queryCommandState("strikeThrough"),

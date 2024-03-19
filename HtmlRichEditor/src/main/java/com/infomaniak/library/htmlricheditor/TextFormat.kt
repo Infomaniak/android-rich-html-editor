@@ -5,13 +5,10 @@ import android.webkit.ValueCallback
 import android.webkit.WebView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 
 class TextFormat(private val webView: WebView) {
 
-    private val typeToExecCommand = ExecCommand.entries.associateBy(ExecCommand::argumentName)
-
-    private val _editorStatus: MutableStateFlow<Set<ExecCommand>> = MutableStateFlow(emptySet())
+    private val _editorStatus: MutableStateFlow<Set<ExecCommand>> = MutableStateFlow(mutableSetOf())
     val editorStatusFlow: Flow<Set<ExecCommand>> = _editorStatus
 
     fun setBold() {
@@ -45,32 +42,31 @@ class TextFormat(private val webView: WebView) {
 
     private fun execCommandAndRefreshButtonStatus(command: ExecCommand) {
         withSelectionState { isCaret ->
-            execCommand(command) { if (isCaret) webView.evaluateJavascript("reportCommandStatusChange()", null) }
+            execCommand(command) {
+                if (isCaret) updateEditorStatus(command)
+            }
+        }
+    }
+
+    private fun updateEditorStatus(command: ExecCommand) {
+        webView.evaluateJavascript("document.queryCommandState('${command.argumentName}')") { result ->
+            val isActivated = result == "true"
+
+            // toMutableSet() is need to clone the set to have a new reference on the set so the .value assignation will consider
+            // it an updated value
+            _editorStatus.value = _editorStatus.value.toMutableSet().apply {
+                if (isActivated) add(command) else remove(command)
+            }
         }
     }
 
     @JavascriptInterface
-    fun notifyCommandStatus(type: String, isActivated: Boolean) {
-        val command = typeToExecCommand[type]
-        // when (command) {
-        //     ExecCommand.BOLD -> _boldStatus.postValue(isActivated)
-        //     ExecCommand.ITALIC -> _italicStatus.postValue(isActivated)
-        //     ExecCommand.STRIKE_THROUGH -> _strikeThroughStatus.postValue(isActivated)
-        //     ExecCommand.UNDERLINE -> _underlineStatus.postValue(isActivated)
-        //     ExecCommand.REMOVE_FORMAT -> Unit
-        //     null -> Unit // Should never happen
-        // }
-    }
-
-    @JavascriptInterface
-    fun notifyCommandStatuses(isBold: Boolean, isItalic: Boolean, isStrikeThrough: Boolean, isUnderlined: Boolean) { // TODO : Pass array
-        _editorStatus.update {
-            mutableSetOf<ExecCommand>().apply {
-                if (isBold) add(ExecCommand.BOLD)
-                if (isItalic) add(ExecCommand.ITALIC)
-                if (isStrikeThrough) add(ExecCommand.STRIKE_THROUGH)
-                if (isUnderlined) add(ExecCommand.UNDERLINE)
-            }
+    fun notifyCommandStatus(isBold: Boolean, isItalic: Boolean, isStrikeThrough: Boolean, isUnderlined: Boolean) { // TODO : Pass array
+        _editorStatus.value = mutableSetOf<ExecCommand>().apply {
+            if (isBold) add(ExecCommand.BOLD)
+            if (isItalic) add(ExecCommand.ITALIC)
+            if (isStrikeThrough) add(ExecCommand.STRIKE_THROUGH)
+            if (isUnderlined) add(ExecCommand.UNDERLINE)
         }
     }
 
