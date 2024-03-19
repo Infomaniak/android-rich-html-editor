@@ -57,23 +57,16 @@ class TextFormat(private val webView: WebView) {
     }
 
     @JavascriptInterface
-    fun notifyBoldStatus(isBoldActive: Boolean) {
-        _boldStatus.postValue(isBoldActive)
-    }
-
-    @JavascriptInterface
-    fun notifyItalicStatus(isItalicActive: Boolean) {
-        _italicStatus.postValue(isItalicActive)
-    }
-
-    @JavascriptInterface
-    fun notifyStrikeThroughStatus(isStrikeThroughActive: Boolean) {
-        _strikeThroughStatus.postValue(isStrikeThroughActive)
-    }
-
-    @JavascriptInterface
-    fun notifyUnderlineStatus(isUnderlineActive: Boolean) {
-        _underlineStatus.postValue(isUnderlineActive)
+    fun notifyCommandStatus(type: String, isActivated: Boolean) {
+        val command = ExecCommand.typeToEnum[type]
+        when (command) {
+            ExecCommand.BOLD -> _boldStatus.postValue(isActivated)
+            ExecCommand.ITALIC -> _italicStatus.postValue(isActivated)
+            ExecCommand.STRIKE_THROUGH -> _strikeThroughStatus.postValue(isActivated)
+            ExecCommand.UNDERLINE -> _underlineStatus.postValue(isActivated)
+            ExecCommand.REMOVE_FORMAT -> Unit
+            null -> Unit // Should never happen
+        }
     }
 
     enum class ExecCommand(val argumentName: String) {
@@ -81,6 +74,10 @@ class TextFormat(private val webView: WebView) {
         ITALIC("italic"),
         STRIKE_THROUGH("strikeThrough"),
         UNDERLINE("underline"),
-        REMOVE_FORMAT("removeFormat"),
+        REMOVE_FORMAT("removeFormat");
+
+        companion object {
+            val typeToEnum = ExecCommand.entries.associateBy(ExecCommand::argumentName)
+        }
     }
 }
