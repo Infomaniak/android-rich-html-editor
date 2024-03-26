@@ -10,7 +10,7 @@ open class HtmlRichEditorWebViewClient : WebViewClient() {
 
     private fun WebView.setupDocument() {
         enableEdition()
-        addScript(context.readAsset("commandStatusListener.js"))
+        addScript(context.readAsset("command_status_listener.js"))
     }
 
     private fun WebView.enableEdition() {
