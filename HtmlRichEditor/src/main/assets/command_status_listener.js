@@ -8,7 +8,7 @@ const textInfo = [
     "fontName",
     "fontSize",
     "foreColor",
-    "hiliteColor"
+    "backColor"
 ];
 
 let currentSelectionState = {};
@@ -25,7 +25,7 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["fontName"],
             newSelectionState["fontSize"],
             newSelectionState["foreColor"],
-            newSelectionState["hiliteColor"]
+            newSelectionState["backColor"]
         );
     }
 }

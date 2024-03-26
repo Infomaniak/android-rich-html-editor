@@ -70,12 +70,10 @@ class TextFormat(private val webView: WebView) {
         ITALIC("italic"),
         STRIKE_THROUGH("strikeThrough"),
         UNDERLINE("underline"),
-
         FONT_NAME("fontName"),
         FONT_SIZE("fontSize"),
         TEXT_COLOR("foreColor"),
         BACKGROUND_COLOR("hiliteColor"),
-
         REMOVE_FORMAT("removeFormat"),
     }
 }
