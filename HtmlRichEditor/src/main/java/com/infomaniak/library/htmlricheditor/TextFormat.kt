@@ -46,7 +46,7 @@ class TextFormat(private val webView: WebView) {
         isStrikeThrough: Boolean,
         isUnderlined: Boolean,
         fontName: String,
-        fontSize: Int,
+        fontSize: String,
         textColor: String,
         backgroundColor: String,
     ) {
@@ -57,7 +57,7 @@ class TextFormat(private val webView: WebView) {
                 isStrikeThrough,
                 isUnderlined,
                 fontName,
-                fontSize,
+                fontSize.toFloat(),
                 textColor,
                 backgroundColor,
             )
@@ -85,7 +85,7 @@ data class EditorStatuses(
     var isStrikeThrough: Boolean = false,
     var isUnderlined: Boolean = false,
     var fontName: String? = null,
-    var fontSize: Int? = null,
+    var fontSize: Float? = null,
     var textColor: String? = null,
     var backgroundColor: String? = null,
 ) {
@@ -97,7 +97,7 @@ data class EditorStatuses(
         isStrikeThrough: Boolean,
         isUnderlined: Boolean,
         fontName: String,
-        fontSize: Int,
+        fontSize: Float,
         textColor: String,
         backgroundColor: String,
     ) {
