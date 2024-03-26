@@ -1,15 +1,30 @@
 package com.infomaniak.library.htmlricheditor
 
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class TextFormat(private val webView: WebView) {
 
-    private val _editorStatus: MutableStateFlow<Set<ExecCommand>> = MutableStateFlow(mutableSetOf())
-    val editorStatusFlow: Flow<Set<ExecCommand>> = _editorStatus
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+
+    private val editorStatuses = EditorStatuses()
+
+    private val _editorStatusesFlow: MutableSharedFlow<EditorStatuses> = MutableSharedFlow(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
     fun setBold() {
         execCommandAndRefreshButtonStatus(ExecCommand.BOLD)
@@ -52,21 +67,36 @@ class TextFormat(private val webView: WebView) {
         webView.evaluateJavascript("document.queryCommandState('${command.argumentName}')") { result ->
             val isActivated = result == "true"
 
-            // toMutableSet() is need to clone the set to have a new reference on the set so the .value assignation will consider
-            // it an updated value
-            _editorStatus.value = _editorStatus.value.toMutableSet().apply {
-                if (isActivated) add(command) else remove(command)
+            coroutineScope.launch {
+                editorStatuses.updateStatusAtomically(command, isActivated)
+                _editorStatusesFlow.emit(editorStatuses)
             }
         }
     }
 
     @JavascriptInterface
-    fun notifyCommandStatus(isBold: Boolean, isItalic: Boolean, isStrikeThrough: Boolean, isUnderlined: Boolean) { // TODO : Pass array
-        _editorStatus.value = mutableSetOf<ExecCommand>().apply {
-            if (isBold) add(ExecCommand.BOLD)
-            if (isItalic) add(ExecCommand.ITALIC)
-            if (isStrikeThrough) add(ExecCommand.STRIKE_THROUGH)
-            if (isUnderlined) add(ExecCommand.UNDERLINE)
+    fun reportCommandDataChange(
+        isBold: Boolean,
+        isItalic: Boolean,
+        isStrikeThrough: Boolean,
+        isUnderlined: Boolean,
+        fontName: String,
+        fontSize: Int,
+        textColor: String,
+        backgroundColor: String,
+    ) {
+        coroutineScope.launch {
+            editorStatuses.updateStatusesAtomically(
+                isBold,
+                isItalic,
+                isStrikeThrough,
+                isUnderlined,
+                fontName,
+                fontSize,
+                textColor,
+                backgroundColor,
+            )
+            _editorStatusesFlow.emit(editorStatuses)
         }
     }
 
@@ -75,6 +105,64 @@ class TextFormat(private val webView: WebView) {
         ITALIC("italic"),
         STRIKE_THROUGH("strikeThrough"),
         UNDERLINE("underline"),
+
+        FONT_NAME("fontName"),
+        FONT_SIZE("fontSize"),
+        TEXT_COLOR("foreColor"),
+        BACKGROUND_COLOR("hiliteColor"),
+
         REMOVE_FORMAT("removeFormat"),
+    }
+}
+
+
+data class EditorStatuses(
+    var isBold: Boolean = false,
+    var isItalic: Boolean = false,
+    var isStrikeThrough: Boolean = false,
+    var isUnderlined: Boolean = false,
+    var fontName: String? = null,
+    var fontSize: Int? = null,
+    var textColor: String? = null,
+    var backgroundColor: String? = null,
+) {
+    private val mutex = Mutex()
+
+    suspend fun updateStatusesAtomically(
+        isBold: Boolean,
+        isItalic: Boolean,
+        isStrikeThrough: Boolean,
+        isUnderlined: Boolean,
+        fontName: String,
+        fontSize: Int,
+        textColor: String,
+        backgroundColor: String,
+    ) {
+        mutex.withLock {
+            this.isBold = isBold
+            this.isItalic = isItalic
+            this.isStrikeThrough = isStrikeThrough
+            this.isUnderlined = isUnderlined
+            this.fontName = fontName
+            this.fontSize = fontSize
+            this.textColor = textColor
+            this.backgroundColor = backgroundColor
+        }
+    }
+
+    suspend fun updateStatusAtomically(command: TextFormat.ExecCommand, value: Any) {
+        mutex.withLock {
+            when (command) {
+                TextFormat.ExecCommand.BOLD -> this.isBold = value as Boolean
+                TextFormat.ExecCommand.ITALIC -> this.isItalic = value as Boolean
+                TextFormat.ExecCommand.STRIKE_THROUGH -> this.isStrikeThrough = value as Boolean
+                TextFormat.ExecCommand.UNDERLINE -> this.isUnderlined = value as Boolean
+                TextFormat.ExecCommand.FONT_NAME -> this.fontName = value as String
+                TextFormat.ExecCommand.FONT_SIZE -> this.fontSize = value as Int
+                TextFormat.ExecCommand.TEXT_COLOR -> this.textColor = value as String
+                TextFormat.ExecCommand.BACKGROUND_COLOR -> this.backgroundColor = value as String
+                TextFormat.ExecCommand.REMOVE_FORMAT -> Unit
+            }
+        }
     }
 }

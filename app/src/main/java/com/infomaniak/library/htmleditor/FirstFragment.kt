@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.library.htmleditor.databinding.FragmentFirstBinding
-import com.infomaniak.library.htmlricheditor.TextFormat
 import kotlinx.coroutines.launch
 
 class FirstFragment : Fragment() {
@@ -34,11 +33,11 @@ class FirstFragment : Fragment() {
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            editor.textFormat.editorStatusFlow.collect {
-                buttonBold.isActivated = it.contains(TextFormat.ExecCommand.BOLD)
-                buttonItalic.isActivated = it.contains(TextFormat.ExecCommand.ITALIC)
-                buttonStrikeThrough.isActivated = it.contains(TextFormat.ExecCommand.STRIKE_THROUGH)
-                buttonUnderline.isActivated = it.contains(TextFormat.ExecCommand.UNDERLINE)
+            editor.textFormat.editorStatusesFlow.collect {
+                buttonBold.isActivated = it.isBold
+                buttonItalic.isActivated = it.isItalic
+                buttonStrikeThrough.isActivated = it.isStrikeThrough
+                buttonUnderline.isActivated = it.isUnderlined
             }
         }
     }
