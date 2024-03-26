@@ -1,6 +1,5 @@
 package com.infomaniak.library.htmlricheditor
 
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebView
@@ -9,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -26,52 +24,19 @@ class TextFormat(private val webView: WebView) {
     )
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
-    fun setBold() {
-        execCommandAndRefreshButtonStatus(ExecCommand.BOLD)
-    }
+    fun setBold() = execCommand(ExecCommand.BOLD)
 
-    fun setItalic() {
-        execCommandAndRefreshButtonStatus(ExecCommand.ITALIC)
-    }
+    fun setItalic() = execCommand(ExecCommand.ITALIC)
 
-    fun setStrikeThrough() {
-        execCommandAndRefreshButtonStatus(ExecCommand.STRIKE_THROUGH)
-    }
+    fun setStrikeThrough() = execCommand(ExecCommand.STRIKE_THROUGH)
 
-    fun setUnderline() {
-        execCommandAndRefreshButtonStatus(ExecCommand.UNDERLINE)
-    }
+    fun setUnderline() = execCommand(ExecCommand.UNDERLINE)
 
-    fun removeFormat() {
-        execCommandAndRefreshButtonStatus(ExecCommand.REMOVE_FORMAT)
-    }
+    fun removeFormat() = execCommand(ExecCommand.REMOVE_FORMAT)
 
     private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
         val valueCallback = callback?.let { callback -> ValueCallback<String> { callback(it) } }
         webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
-    }
-
-    private fun withSelectionState(block: (Boolean) -> Unit) {
-        webView.evaluateJavascript("window.getSelection().type == 'Caret'") { isCaret -> block((isCaret == "true")) }
-    }
-
-    private fun execCommandAndRefreshButtonStatus(command: ExecCommand) {
-        withSelectionState { isCaret ->
-            execCommand(command) {
-                if (isCaret) updateEditorStatus(command)
-            }
-        }
-    }
-
-    private fun updateEditorStatus(command: ExecCommand) {
-        webView.evaluateJavascript("document.queryCommandState('${command.argumentName}')") { result ->
-            val isActivated = result == "true"
-
-            coroutineScope.launch {
-                editorStatuses.updateStatusAtomically(command, isActivated)
-                _editorStatusesFlow.emit(editorStatuses)
-            }
-        }
     }
 
     @JavascriptInterface
@@ -147,22 +112,6 @@ data class EditorStatuses(
             this.fontSize = fontSize
             this.textColor = textColor
             this.backgroundColor = backgroundColor
-        }
-    }
-
-    suspend fun updateStatusAtomically(command: TextFormat.ExecCommand, value: Any) {
-        mutex.withLock {
-            when (command) {
-                TextFormat.ExecCommand.BOLD -> this.isBold = value as Boolean
-                TextFormat.ExecCommand.ITALIC -> this.isItalic = value as Boolean
-                TextFormat.ExecCommand.STRIKE_THROUGH -> this.isStrikeThrough = value as Boolean
-                TextFormat.ExecCommand.UNDERLINE -> this.isUnderlined = value as Boolean
-                TextFormat.ExecCommand.FONT_NAME -> this.fontName = value as String
-                TextFormat.ExecCommand.FONT_SIZE -> this.fontSize = value as Int
-                TextFormat.ExecCommand.TEXT_COLOR -> this.textColor = value as String
-                TextFormat.ExecCommand.BACKGROUND_COLOR -> this.backgroundColor = value as String
-                TextFormat.ExecCommand.REMOVE_FORMAT -> Unit
-            }
         }
     }
 }
