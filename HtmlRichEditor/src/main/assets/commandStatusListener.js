@@ -1,14 +1,50 @@
-function reportCommandStatusChange() {
-    window.editor.reportCommandDataChange(
-        /* isBold */ document.queryCommandState("bold"),
-        /* isItalic */ document.queryCommandState("italic"),
-        /* isStrikeThrough */ document.queryCommandState("strikeThrough"),
-        /* isUnderlined */ document.queryCommandState("underline"),
-        /* fontName */ "Calibri",
-        /* fontSize */ 12345,
-        /* textColor */ "#123456",
-        /* backgroundColor */ "#123456",
-    );
+const format = [
+    "bold",
+    "italic",
+    "underline",
+    "strikethrough"
+];
+const textInfo = [
+    "fontName",
+    "fontSize",
+    "foreColor",
+    "hiliteColor"
+];
+
+let currentSelectionState = {};
+
+function reportSelectionStateChangedIfNecessary() {
+    const newSelectionState = getCurrentSelectionState();
+    if (!areSelectionStatesTheSame(currentSelectionState, newSelectionState)) {
+        currentSelectionState = newSelectionState;
+        window.editor.reportCommandDataChange(
+            newSelectionState["bold"],
+            newSelectionState["italic"],
+            newSelectionState["strikethrough"],
+            newSelectionState["underline"],
+            newSelectionState["fontName"],
+            newSelectionState["fontSize"],
+            newSelectionState["foreColor"],
+            newSelectionState["hiliteColor"]
+        );
+    }
 }
 
-document.addEventListener("selectionchange", reportCommandStatusChange)
+function getCurrentSelectionState() {
+    let currentState = {};
+
+    for (const property of format) {
+        currentState[property] = document.queryCommandState(property);
+    }
+    for (const property of textInfo) {
+        currentState[property] = document.queryCommandValue(property);
+    }
+
+    return currentState;
+}
+
+function areSelectionStatesTheSame(state1, state2) {
+    return format.every(property => state1[property] === state2[property]) && textInfo.every(property => state1[property] === state2[property]);
+}
+
+document.addEventListener("selectionchange", reportSelectionStateChangedIfNecessary)
