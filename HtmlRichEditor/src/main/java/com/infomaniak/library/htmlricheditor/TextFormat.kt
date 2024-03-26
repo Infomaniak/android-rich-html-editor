@@ -1,8 +1,10 @@
 package com.infomaniak.library.htmlricheditor
 
+import android.graphics.Color
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebView
+import androidx.annotation.ColorInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -39,6 +41,20 @@ class TextFormat(private val webView: WebView) {
         webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
     }
 
+    // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt
+    @ColorInt
+    fun String.toColorInt(): Int {
+        val startIndex = when {
+            startsWith("rgb(") -> 4
+            startsWith("rgba(") -> 5
+            else -> throw IllegalArgumentException("Color string should start with rgb( ou with rgba(")
+        }
+
+        val (r, g, b) = substring(startIndex, length - 1).replace(" ", "").split(",").map { it.toInt() }
+
+        return Color.argb(255, r, g, b)
+    }
+
     @JavascriptInterface
     fun reportCommandDataChange(
         isBold: Boolean,
@@ -58,8 +74,8 @@ class TextFormat(private val webView: WebView) {
                 isUnderlined,
                 fontName,
                 fontSize.toFloat(),
-                textColor,
-                backgroundColor,
+                textColor.toColorInt(),
+                backgroundColor.toColorInt(),
             )
             _editorStatusesFlow.emit(editorStatuses)
         }
@@ -86,8 +102,8 @@ data class EditorStatuses(
     var isUnderlined: Boolean = false,
     var fontName: String? = null,
     var fontSize: Float? = null,
-    var textColor: String? = null,
-    var backgroundColor: String? = null,
+    var textColor: Int? = null,
+    var backgroundColor: Int? = null,
 ) {
     private val mutex = Mutex()
 
@@ -98,8 +114,8 @@ data class EditorStatuses(
         isUnderlined: Boolean,
         fontName: String,
         fontSize: Float,
-        textColor: String,
-        backgroundColor: String,
+        @ColorInt textColor: Int,
+        @ColorInt backgroundColor: Int,
     ) {
         mutex.withLock {
             this.isBold = isBold
