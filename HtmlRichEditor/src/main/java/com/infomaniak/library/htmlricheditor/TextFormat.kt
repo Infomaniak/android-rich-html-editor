@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.launch
 
 class TextFormat(private val webView: WebView) {
@@ -26,19 +27,52 @@ class TextFormat(private val webView: WebView) {
     // TODO: Make a flow for each property so properties a user will never be interested in won't trigger a collect for no reason
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
-    fun setBold() = execCommand(ExecCommand.BOLD)
+    fun setBold() {
+        execCommandAndRefreshButtonStatus(ExecCommand.BOLD)
+    }
 
-    fun setItalic() = execCommand(ExecCommand.ITALIC)
+    fun setItalic() {
+        execCommandAndRefreshButtonStatus(ExecCommand.ITALIC)
+    }
 
-    fun setStrikeThrough() = execCommand(ExecCommand.STRIKE_THROUGH)
+    fun setStrikeThrough() {
+        execCommandAndRefreshButtonStatus(ExecCommand.STRIKE_THROUGH)
+    }
 
-    fun setUnderline() = execCommand(ExecCommand.UNDERLINE)
+    fun setUnderline() {
+        execCommandAndRefreshButtonStatus(ExecCommand.UNDERLINE)
+    }
 
-    fun removeFormat() = execCommand(ExecCommand.REMOVE_FORMAT)
+    fun removeFormat() {
+        execCommandAndRefreshButtonStatus(ExecCommand.REMOVE_FORMAT)
+    }
 
     private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
         val valueCallback = callback?.let { callback -> ValueCallback<String> { callback(it) } }
         webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
+    }
+
+    private fun withSelectionState(block: (Boolean) -> Unit) {
+        webView.evaluateJavascript("window.getSelection().type == 'Caret'") { isCaret -> block((isCaret == "true")) }
+    }
+
+    private fun execCommandAndRefreshButtonStatus(command: ExecCommand) {
+        withSelectionState { isCaret ->
+            execCommand(command) {
+                if (isCaret) updateEditorStatus(command)
+            }
+        }
+    }
+
+    private fun updateEditorStatus(command: ExecCommand) {
+        webView.evaluateJavascript("document.queryCommandState('${command.argumentName}')") { result ->
+            val isActivated = result == "true"
+
+            coroutineScope.launch {
+                editorStatuses.updateStatusAtomically(command, isActivated)
+                _editorStatusesFlow.emit(editorStatuses)
+            }
+        }
     }
 
     // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt

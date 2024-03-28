@@ -37,4 +37,20 @@ data class EditorStatuses(
             this.backgroundColor = backgroundColor
         }
     }
+
+    suspend fun updateStatusAtomically(command: TextFormat.ExecCommand, value: Any) {
+        mutex.withLock {
+            when (command) {
+                TextFormat.ExecCommand.BOLD -> this.isBold = value as Boolean
+                TextFormat.ExecCommand.ITALIC -> this.isItalic = value as Boolean
+                TextFormat.ExecCommand.STRIKE_THROUGH -> this.isStrikeThrough = value as Boolean
+                TextFormat.ExecCommand.UNDERLINE -> this.isUnderlined = value as Boolean
+                TextFormat.ExecCommand.FONT_NAME -> this.fontName = value as String
+                TextFormat.ExecCommand.FONT_SIZE -> this.fontSize = value as Float
+                TextFormat.ExecCommand.TEXT_COLOR -> this.textColor = value as Int
+                TextFormat.ExecCommand.BACKGROUND_COLOR -> this.backgroundColor = value as Int
+                TextFormat.ExecCommand.REMOVE_FORMAT -> Unit
+            }
+        }
+    }
 }
