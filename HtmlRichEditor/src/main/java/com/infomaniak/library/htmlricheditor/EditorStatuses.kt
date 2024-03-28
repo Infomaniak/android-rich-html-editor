@@ -22,9 +22,9 @@ data class EditorStatuses(
         isStrikeThrough: Boolean,
         isUnderlined: Boolean,
         fontName: String,
-        fontSize: Float,
-        @ColorInt textColor: Int,
-        @ColorInt backgroundColor: Int,
+        fontSize: Float?,
+        @ColorInt textColor: Int?,
+        @ColorInt backgroundColor: Int?,
     ) {
         mutex.withLock {
             this.isBold = isBold
@@ -38,18 +38,17 @@ data class EditorStatuses(
         }
     }
 
-    suspend fun updateStatusAtomically(command: TextFormat.ExecCommand, value: Any) {
+    suspend fun updateStatusAtomically(command: TextFormat.EditorStatusCommand, value: Any) {
         mutex.withLock {
             when (command) {
-                TextFormat.ExecCommand.BOLD -> this.isBold = value as Boolean
-                TextFormat.ExecCommand.ITALIC -> this.isItalic = value as Boolean
-                TextFormat.ExecCommand.STRIKE_THROUGH -> this.isStrikeThrough = value as Boolean
-                TextFormat.ExecCommand.UNDERLINE -> this.isUnderlined = value as Boolean
-                TextFormat.ExecCommand.FONT_NAME -> this.fontName = value as String
-                TextFormat.ExecCommand.FONT_SIZE -> this.fontSize = value as Float
-                TextFormat.ExecCommand.TEXT_COLOR -> this.textColor = value as Int
-                TextFormat.ExecCommand.BACKGROUND_COLOR -> this.backgroundColor = value as Int
-                TextFormat.ExecCommand.REMOVE_FORMAT -> Unit
+                TextFormat.EditorStatusCommand.BOLD -> this.isBold = value as Boolean
+                TextFormat.EditorStatusCommand.ITALIC -> this.isItalic = value as Boolean
+                TextFormat.EditorStatusCommand.STRIKE_THROUGH -> this.isStrikeThrough = value as Boolean
+                TextFormat.EditorStatusCommand.UNDERLINE -> this.isUnderlined = value as Boolean
+                TextFormat.EditorStatusCommand.FONT_NAME -> this.fontName = value as String
+                TextFormat.EditorStatusCommand.FONT_SIZE -> this.fontSize = value as Float
+                TextFormat.EditorStatusCommand.TEXT_COLOR -> this.textColor = value as Int
+                TextFormat.EditorStatusCommand.BACKGROUND_COLOR -> this.backgroundColor = value as Int
             }
         }
     }

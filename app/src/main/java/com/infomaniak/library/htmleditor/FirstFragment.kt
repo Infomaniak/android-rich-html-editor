@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.library.htmleditor.databinding.FragmentFirstBinding
+import com.infomaniak.library.htmlricheditor.TextFormat
+import com.infomaniak.library.htmlricheditor.TextFormat.EditorStatusCommand
 import kotlinx.coroutines.launch
 
 class FirstFragment : Fragment() {
@@ -24,7 +26,7 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        editor.loadHtml(testHtmlHard)
+        editor.loadHtml(testHtmlHard, setOf(EditorStatusCommand.BOLD))
 
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }

@@ -27,23 +27,23 @@ class TextFormat(private val webView: WebView) {
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
     fun setBold() {
-        execCommandAndRefreshButtonStatus(ExecCommand.BOLD)
+        execCommandAndRefreshButtonStatus(EditorStatusCommand.BOLD)
     }
 
     fun setItalic() {
-        execCommandAndRefreshButtonStatus(ExecCommand.ITALIC)
+        execCommandAndRefreshButtonStatus(EditorStatusCommand.ITALIC)
     }
 
     fun setStrikeThrough() {
-        execCommandAndRefreshButtonStatus(ExecCommand.STRIKE_THROUGH)
+        execCommandAndRefreshButtonStatus(EditorStatusCommand.STRIKE_THROUGH)
     }
 
     fun setUnderline() {
-        execCommandAndRefreshButtonStatus(ExecCommand.UNDERLINE)
+        execCommandAndRefreshButtonStatus(EditorStatusCommand.UNDERLINE)
     }
 
     fun removeFormat() {
-        execCommandAndRefreshButtonStatus(ExecCommand.REMOVE_FORMAT)
+        execCommand(OtherCommand.REMOVE_FORMAT)
     }
 
     private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
@@ -55,7 +55,7 @@ class TextFormat(private val webView: WebView) {
         webView.evaluateJavascript("window.getSelection().type == 'Caret'") { isCaret -> block((isCaret == "true")) }
     }
 
-    private fun execCommandAndRefreshButtonStatus(command: ExecCommand) {
+    private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand) {
         withSelectionState { isCaret ->
             execCommand(command) {
                 if (isCaret) updateEditorStatus(command)
@@ -63,7 +63,8 @@ class TextFormat(private val webView: WebView) {
         }
     }
 
-    private fun updateEditorStatus(command: ExecCommand) {
+    private fun updateEditorStatus(command: EditorStatusCommand) {
+        // TODO: Handle queryCommandValue cases
         webView.evaluateJavascript("document.queryCommandState('${command.argumentName}')") { result ->
             val isActivated = result == "true"
 
@@ -76,11 +77,11 @@ class TextFormat(private val webView: WebView) {
 
     // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt
     @ColorInt
-    fun String.toColorInt(): Int {
+    fun String.toColorIntOrNull(): Int? {
         val startIndex = when {
             startsWith("rgb(") -> 4
             startsWith("rgba(") -> 5
-            else -> throw IllegalArgumentException("Color string should start with rgb( ou with rgba(")
+            else -> return null
         }
 
         val (r, g, b) = substring(startIndex, length - 1).replace(" ", "").split(",").map { it.toInt() }
@@ -106,23 +107,32 @@ class TextFormat(private val webView: WebView) {
                 isStrikeThrough,
                 isUnderlined,
                 fontName,
-                fontSize.toFloat(),
-                textColor.toColorInt(),
-                backgroundColor.toColorInt(),
+                fontSize.toFloatOrNull(),
+                textColor.toColorIntOrNull(),
+                backgroundColor.toColorIntOrNull(),
             )
             _editorStatusesFlow.emit(editorStatuses)
         }
     }
 
-    enum class ExecCommand(val argumentName: String) {
-        BOLD("bold"),
-        ITALIC("italic"),
-        STRIKE_THROUGH("strikeThrough"),
-        UNDERLINE("underline"),
-        FONT_NAME("fontName"),
-        FONT_SIZE("fontSize"),
-        TEXT_COLOR("foreColor"),
-        BACKGROUND_COLOR("hiliteColor"),
-        REMOVE_FORMAT("removeFormat"),
+    interface ExecCommand {
+        val argumentName: String
+    }
+
+    enum class CommandType { STATE, VALUE }
+
+    enum class EditorStatusCommand(override val argumentName: String, val commandType: CommandType) : ExecCommand {
+        BOLD("bold", CommandType.STATE),
+        ITALIC("italic", CommandType.STATE),
+        STRIKE_THROUGH("strikeThrough", CommandType.STATE),
+        UNDERLINE("underline", CommandType.STATE),
+        FONT_NAME("fontName", CommandType.VALUE),
+        FONT_SIZE("fontSize", CommandType.VALUE),
+        TEXT_COLOR("foreColor", CommandType.VALUE),
+        BACKGROUND_COLOR("backColor", CommandType.VALUE),
+    }
+
+    enum class OtherCommand(override val argumentName: String) : ExecCommand {
+        REMOVE_FORMAT("removeFormat")
     }
 }

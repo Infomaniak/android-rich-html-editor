@@ -12,15 +12,21 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
 
     val textFormat = TextFormat(this)
 
+    private val htmlRichEditorWebViewClient = HtmlRichEditorWebViewClient()
+
     init {
         settings.javaScriptEnabled = true
         isFocusableInTouchMode = true
-        webViewClient = HtmlRichEditorWebViewClient()
+        webViewClient = htmlRichEditorWebViewClient
 
         addJavascriptInterface(textFormat, "editor")
     }
 
-    fun loadHtml(html: String = "") {
+    /**
+     * subscribedStates: set of the EditorStatusCommand that the TextFormatter needs to detect. null means everything is detected
+     * */
+    fun loadHtml(html: String = "", subscribedStates: Set<TextFormat.EditorStatusCommand>? = null) {
+        htmlRichEditorWebViewClient.subscribeToEditorStates(subscribedStates)
         super.loadDataWithBaseURL("", html, "text/html", "UTF-8", null) // TODO
     }
 

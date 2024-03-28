@@ -1,22 +1,10 @@
-const format = [
-    "bold",
-    "italic",
-    "underline",
-    "strikethrough"
-];
-const textInfo = [
-    "fontName",
-    "fontSize",
-    "foreColor",
-    "backColor"
-];
-
 let currentSelectionState = {};
 
 function reportSelectionStateChangedIfNecessary() {
     const newSelectionState = getCurrentSelectionState();
     if (!areSelectionStatesTheSame(currentSelectionState, newSelectionState)) {
         currentSelectionState = newSelectionState;
+        console.log("New selection changed:", currentSelectionState)
         window.editor.reportCommandDataChange(
             newSelectionState["bold"],
             newSelectionState["italic"],
@@ -33,10 +21,10 @@ function reportSelectionStateChangedIfNecessary() {
 function getCurrentSelectionState() {
     let currentState = {};
 
-    for (const property of format) {
+    for (const property of stateCommands) {
         currentState[property] = document.queryCommandState(property);
     }
-    for (const property of textInfo) {
+    for (const property of valueCommands) {
         currentState[property] = document.queryCommandValue(property);
     }
 
@@ -44,7 +32,7 @@ function getCurrentSelectionState() {
 }
 
 function areSelectionStatesTheSame(state1, state2) {
-    return format.every(property => state1[property] === state2[property]) && textInfo.every(property => state1[property] === state2[property]);
+    return stateCommands.every(property => state1[property] === state2[property]) && valueCommands.every(property => state1[property] === state2[property]);
 }
 
 function onAttributesChange(callback) {
