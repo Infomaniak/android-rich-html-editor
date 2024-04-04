@@ -47,7 +47,7 @@ class TextFormat(private val webView: WebView) {
     }
 
     private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
-        val valueCallback = callback?.let { callback -> ValueCallback<String> { callback(it) } }
+        val valueCallback = callback?.let { ValueCallback<String> { value -> it(value) } }
         webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
     }
 
