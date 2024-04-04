@@ -20,5 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "HtmlEditor"
-include(":app")
+include(":sample")
 include(":HtmlRichEditor")
