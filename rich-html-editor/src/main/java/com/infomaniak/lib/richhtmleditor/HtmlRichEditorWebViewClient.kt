@@ -1,4 +1,4 @@
-package com.infomaniak.lib.htmlricheditor
+package com.infomaniak.lib.richhtmleditor
 
 import android.webkit.WebView
 import android.webkit.WebViewClient

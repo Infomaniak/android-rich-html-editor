@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentFirstBinding
-import com.infomaniak.lib.htmlricheditor.TextFormat.EditorStatusCommand
+import com.infomaniak.lib.richhtmleditor.TextFormat.EditorStatusCommand
 import kotlinx.coroutines.launch
 
 class FirstFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.infomaniak.lib.htmlricheditor
+package com.infomaniak.lib.richhtmleditor
 
 import android.graphics.Color
 import android.webkit.JavascriptInterface

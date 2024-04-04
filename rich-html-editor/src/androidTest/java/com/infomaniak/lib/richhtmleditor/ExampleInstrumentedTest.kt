@@ -1,4 +1,4 @@
-package com.infomaniak.lib.htmlricheditor
+package com.infomaniak.lib.richhtmleditor
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

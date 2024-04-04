@@ -63,7 +63,7 @@
             android:layout_height="400dp"
             android:padding="16dp">
 
-            <com.infomaniak.lib.htmlricheditor.HtmlRichEditorWebView
+            <com.infomaniak.lib.richhtmleditor.HtmlRichEditorWebView
                 android:id="@+id/editor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

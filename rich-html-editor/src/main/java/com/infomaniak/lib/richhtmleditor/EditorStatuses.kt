@@ -1,4 +1,4 @@
-package com.infomaniak.lib.htmlricheditor
+package com.infomaniak.lib.richhtmleditor
 
 import androidx.annotation.ColorInt
 import kotlinx.coroutines.sync.Mutex
