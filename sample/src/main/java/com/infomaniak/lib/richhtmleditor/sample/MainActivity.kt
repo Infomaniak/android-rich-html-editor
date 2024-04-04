@@ -1,9 +1,9 @@
-package com.infomaniak.lib.richhtmleditor
+package com.infomaniak.lib.richhtmleditor.sample
 
 import android.os.Bundle
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
-import com.infomaniak.lib.richhtmleditor.databinding.ActivityMainBinding
+import com.infomaniak.lib.richhtmleditor.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

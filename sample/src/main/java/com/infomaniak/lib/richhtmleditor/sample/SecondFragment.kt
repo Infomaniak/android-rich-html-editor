@@ -1,4 +1,4 @@
-package com.infomaniak.lib.richhtmleditor
+package com.infomaniak.lib.richhtmleditor.sample
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.infomaniak.lib.richhtmleditor.databinding.FragmentSecondBinding
+import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentSecondBinding
 
 
 class SecondFragment : Fragment() {
