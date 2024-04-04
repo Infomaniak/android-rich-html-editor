@@ -1,9 +1,9 @@
-package com.infomaniak.library.htmleditor
+package com.infomaniak.lib.htmleditor
 
 import android.os.Bundle
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
-import com.infomaniak.library.htmleditor.databinding.ActivityMainBinding
+import com.infomaniak.lib.htmleditor.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

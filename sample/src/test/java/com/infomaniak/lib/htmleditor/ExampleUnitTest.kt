@@ -1,4 +1,4 @@
-package com.infomaniak.library.htmleditor
+package com.infomaniak.lib.htmleditor
 
 import org.junit.Test
 

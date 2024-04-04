@@ -1,4 +1,4 @@
-package com.infomaniak.library.htmleditor
+package com.infomaniak.lib.htmleditor
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.infomaniak.library.htmleditor.databinding.FragmentSecondBinding
+import com.infomaniak.lib.htmleditor.databinding.FragmentSecondBinding
 
 
 class SecondFragment : Fragment() {
