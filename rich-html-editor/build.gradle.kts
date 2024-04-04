@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.infomaniak.lib.htmlricheditor"
+    namespace = "com.infomaniak.lib.richhtmleditor"
     compileSdk = 34
 
     defaultConfig {
