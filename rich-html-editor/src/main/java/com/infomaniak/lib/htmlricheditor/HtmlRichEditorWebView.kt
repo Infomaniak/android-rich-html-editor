@@ -31,17 +31,17 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
     }
 
     // TODO : Use correct message in deprecated annotation
-    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.library.htmlricheditor"))
+    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.lib.htmlricheditor"))
     override fun loadUrl(url: String) = super.loadUrl(url)
 
-    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.library.htmlricheditor"))
+    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.lib.htmlricheditor"))
     override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) =
         super.loadUrl(url, additionalHttpHeaders)
 
-    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.library.htmlricheditor"))
+    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.lib.htmlricheditor"))
     override fun loadData(data: String, mimeType: String?, encoding: String?) = super.loadData(data, mimeType, encoding)
 
-    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.library.htmlricheditor"))
+    @Deprecated("Use loadHtml", ReplaceWith("this.loadHtml()", "com.infomaniak.lib.htmlricheditor"))
     override fun loadDataWithBaseURL(baseUrl: String?, data: String, mimeType: String?, encoding: String?, historyUrl: String?) =
         super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
 }
