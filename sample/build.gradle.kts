@@ -46,6 +46,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(project(":HtmlRichEditor"))
+    implementation(project(":rich-html-editor"))
 }
