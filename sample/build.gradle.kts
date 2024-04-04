@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.infomaniak.lib.htmleditor"
+    namespace = "com.infomaniak.lib.richhtmleditor"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.infomaniak.lib.htmleditor"
+        applicationId = "com.infomaniak.lib.richhtmleditor"
         minSdk = 25
         targetSdk = 34
         versionCode = 1
