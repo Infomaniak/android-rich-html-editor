@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebView
 
-class HtmlRichEditorWebView @JvmOverloads constructor(
+class RichHtmlEditorWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -12,12 +12,12 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
 
     val textFormat = TextFormat(this)
 
-    private val htmlRichEditorWebViewClient = HtmlRichEditorWebViewClient()
+    private val richHtmlEditorWebViewClient = RichHtmlEditorWebViewClient()
 
     init {
         settings.javaScriptEnabled = true
         isFocusableInTouchMode = true
-        webViewClient = htmlRichEditorWebViewClient
+        webViewClient = richHtmlEditorWebViewClient
 
         addJavascriptInterface(textFormat, "editor")
     }
@@ -26,7 +26,7 @@ class HtmlRichEditorWebView @JvmOverloads constructor(
      * subscribedStates: set of the EditorStatusCommand that the TextFormatter needs to detect. null means everything is detected
      * */
     fun loadHtml(html: String = "", subscribedStates: Set<TextFormat.EditorStatusCommand>? = null) {
-        htmlRichEditorWebViewClient.subscribeToEditorStates(subscribedStates)
+        richHtmlEditorWebViewClient.subscribeToEditorStates(subscribedStates)
         super.loadDataWithBaseURL("", html, "text/html", "UTF-8", null) // TODO
     }
 

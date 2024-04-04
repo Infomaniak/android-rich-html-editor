@@ -4,7 +4,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CallSuper
 
-open class HtmlRichEditorWebViewClient : WebViewClient() {
+open class RichHtmlEditorWebViewClient : WebViewClient() {
     private var subscribedStates: Set<TextFormat.EditorStatusCommand>? = null
 
     @CallSuper
