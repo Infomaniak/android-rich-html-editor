@@ -1,4 +1,4 @@
-package com.infomaniak.lib.htmleditor
+package com.infomaniak.lib.richhtmleditor
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.lib.htmleditor.databinding.FragmentFirstBinding
+import com.infomaniak.lib.richhtmleditor.databinding.FragmentFirstBinding
 import com.infomaniak.lib.htmlricheditor.TextFormat.EditorStatusCommand
 import kotlinx.coroutines.launch
 
