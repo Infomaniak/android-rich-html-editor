@@ -58,21 +58,13 @@ class TextFormat(private val webView: WebView) {
     private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand) {
         withSelectionState { isCaret ->
             execCommand(command) {
-                if (isCaret) updateEditorStatus(command)
+                if (isCaret) reportSelectionStateChangedIfNecessary()
             }
         }
     }
 
-    private fun updateEditorStatus(command: EditorStatusCommand) {
-        // TODO: Handle queryCommandValue cases
-        webView.evaluateJavascript("document.queryCommandState('${command.argumentName}')") { result ->
-            val isActivated = result == "true"
-
-            coroutineScope.launch {
-                editorStatuses.updateStatusAtomically(command, isActivated)
-                _editorStatusesFlow.emit(editorStatuses)
-            }
-        }
+    private fun reportSelectionStateChangedIfNecessary() {
+        webView.evaluateJavascript("reportSelectionStateChangedIfNecessary()", null)
     }
 
     // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt

@@ -25,7 +25,7 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        editor.loadHtml(testHtmlHard, setOf(EditorStatusCommand.BOLD))
+        editor.loadHtml(testHtmlHard)
 
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
