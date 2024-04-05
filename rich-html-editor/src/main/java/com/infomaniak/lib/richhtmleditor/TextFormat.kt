@@ -23,7 +23,6 @@ class TextFormat(private val webView: WebView) {
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
 
-    // TODO: Make a flow for each property so properties a user will never be interested in won't trigger a collect for no reason
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
     fun setBold() {
