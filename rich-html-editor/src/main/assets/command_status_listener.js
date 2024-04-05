@@ -8,7 +8,7 @@ function reportSelectionStateChangedIfNecessary() {
         window.editor.reportCommandDataChange(
             newSelectionState["bold"],
             newSelectionState["italic"],
-            newSelectionState["strikethrough"],
+            newSelectionState["strikeThrough"],
             newSelectionState["underline"],
             newSelectionState["fontName"],
             newSelectionState["fontSize"],
