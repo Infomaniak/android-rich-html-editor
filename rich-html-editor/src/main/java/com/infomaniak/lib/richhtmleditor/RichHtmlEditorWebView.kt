@@ -26,8 +26,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * subscribedStates: set of the EditorStatusCommand that the TextFormatter needs to detect. null means everything is detected
      * */
     fun loadHtml(html: String = "", subscribedStates: Set<TextFormat.EditorStatusCommand>? = null) {
-        richHtmlEditorWebViewClient.subscribeToEditorStates(subscribedStates)
-        super.loadDataWithBaseURL("", html, "text/html", "UTF-8", null) // TODO
+        richHtmlEditorWebViewClient.init(html, subscribedStates)
+
+        val template = context.readAsset("editor_template.html")
+        super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null) // TODO
     }
 
     // TODO : Use correct message in deprecated annotation

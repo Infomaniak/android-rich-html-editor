@@ -1,10 +1,11 @@
 package com.infomaniak.lib.richhtmleditor
 
 import android.graphics.Color
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
-import android.webkit.WebView
 import androidx.annotation.ColorInt
+import androidx.core.view.updateLayoutParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
-class TextFormat(private val webView: WebView) {
+class TextFormat(private val webView: RichHtmlEditorWebView) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
@@ -103,6 +104,20 @@ class TextFormat(private val webView: WebView) {
                 backgroundColor.toColorIntOrNull(),
             )
             _editorStatusesFlow.emit(editorStatuses)
+        }
+    }
+
+    @JavascriptInterface
+    fun reportNewDocumentHeight(newHeight: Int) {
+        // TODO: Also report this when images are loaded and other causes that can make the webpage change size?
+        coroutineScope.launch(Dispatchers.Main) {
+            updateWebViewHeight(newHeight)
+        }
+    }
+
+    private fun updateWebViewHeight(newHeight: Int) {
+        webView.updateLayoutParams<ViewGroup.LayoutParams> {
+            height = newHeight
         }
     }
 
