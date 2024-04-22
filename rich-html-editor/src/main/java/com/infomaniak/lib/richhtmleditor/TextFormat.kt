@@ -26,33 +26,19 @@ class TextFormat(private val webView: RichHtmlEditorWebView) {
 
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
-    fun setBold() {
-        execCommandAndRefreshButtonStatus(EditorStatusCommand.BOLD)
-    }
+    fun setBold() = execCommandAndRefreshButtonStatus(EditorStatusCommand.BOLD)
 
-    fun setItalic() {
-        execCommandAndRefreshButtonStatus(EditorStatusCommand.ITALIC)
-    }
+    fun setItalic() = execCommandAndRefreshButtonStatus(EditorStatusCommand.ITALIC)
 
-    fun setStrikeThrough() {
-        execCommandAndRefreshButtonStatus(EditorStatusCommand.STRIKE_THROUGH)
-    }
+    fun setStrikeThrough() = execCommandAndRefreshButtonStatus(EditorStatusCommand.STRIKE_THROUGH)
 
-    fun setUnderline() {
-        execCommandAndRefreshButtonStatus(EditorStatusCommand.UNDERLINE)
-    }
+    fun setUnderline() = execCommandAndRefreshButtonStatus(EditorStatusCommand.UNDERLINE)
 
-    fun removeFormat() {
-        execCommand(OtherCommand.REMOVE_FORMAT)
-    }
+    fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
     private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
         val valueCallback = callback?.let { ValueCallback<String> { value -> it(value) } }
         webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
-    }
-
-    private fun withSelectionState(block: (Boolean) -> Unit) {
-        webView.evaluateJavascript("window.getSelection().type == 'Caret'") { isCaret -> block((isCaret == "true")) }
     }
 
     private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand) {
@@ -61,6 +47,10 @@ class TextFormat(private val webView: RichHtmlEditorWebView) {
                 if (isCaret) reportSelectionStateChangedIfNecessary()
             }
         }
+    }
+
+    private fun withSelectionState(block: (Boolean) -> Unit) {
+        webView.evaluateJavascript("window.getSelection().type == 'Caret'") { isCaret -> block((isCaret == "true")) }
     }
 
     private fun reportSelectionStateChangedIfNecessary() {
