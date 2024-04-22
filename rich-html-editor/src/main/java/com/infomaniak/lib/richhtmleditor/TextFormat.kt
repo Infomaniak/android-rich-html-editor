@@ -105,6 +105,9 @@ class TextFormat(private val webView: RichHtmlEditorWebView) {
         }
     }
 
+    @JavascriptInterface
+    fun exportHtml(html: String) = webView.notifyExportedHtml(html)
+
     private fun updateWebViewHeight(newHeight: Int) {
         webView.updateLayoutParams<ViewGroup.LayoutParams> {
             height = newHeight

@@ -52,6 +52,18 @@
                 android:layout_height="wrap_content"
                 android:text="X" />
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonExportHtml"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Export " />
+
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
@@ -59,9 +71,9 @@
             android:layout_height="1dp" />
 
         <FrameLayout
-            android:background="#444"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#444"
             android:padding="16dp">
 
             <com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView

@@ -6,6 +6,10 @@ function getBody() {
     return document.body
 }
 
+function getEditor() {
+    return document.getElementById("editor")
+}
+
 function onAttributesChange(callback) {
     const mutationObserver = new MutationObserver(callback);
     const config = { subtree: true, attributes: true };
@@ -18,6 +22,12 @@ function onBodyResize(callback) {
 }
 
 // Core logic
+
+function exportHtml() {
+    // TODO: don't cloneNode if nothing else is modified
+    let editorContentCopy = getEditor().cloneNode(true)
+    window.editor.exportHtml(editorContentCopy.innerHTML)
+}
 
 function reportSelectionStateChangedIfNecessary() {
     const newSelectionState = getCurrentSelectionState();

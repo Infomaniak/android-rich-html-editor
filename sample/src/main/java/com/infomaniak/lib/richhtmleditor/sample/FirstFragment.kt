@@ -1,13 +1,13 @@
 package com.infomaniak.lib.richhtmleditor.sample
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentFirstBinding
-import com.infomaniak.lib.richhtmleditor.TextFormat.EditorStatusCommand
 import kotlinx.coroutines.launch
 
 class FirstFragment : Fragment() {
@@ -25,13 +25,15 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        editor.loadHtml(testHtmlHard)
+        editor.setHtml(testHtmlHard)
 
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
         buttonStrikeThrough.setOnClickListener { editor.textFormat.setStrikeThrough() }
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
+
+        buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.e("gibran", "onViewCreated - html: ${html}") } }
 
         viewLifecycleOwner.lifecycleScope.launch {
             editor.textFormat.editorStatusesFlow.collect {

@@ -25,7 +25,7 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
         addScript(context.readAsset("command_status_listener.js"))
     }
 
-    private fun WebView.insertUserHtml() {
+    private fun WebView.insertUserHtml() { // TODO: Reuse `getEditor()`?
         evaluateJavascript("""document.getElementById("editor").innerHTML = `${html}`""", null)
     }
 

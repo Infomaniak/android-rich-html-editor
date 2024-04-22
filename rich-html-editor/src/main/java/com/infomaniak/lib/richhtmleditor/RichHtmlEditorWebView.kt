@@ -11,8 +11,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 ) : WebView(context, attrs, defStyleAttr) {
 
     val textFormat = TextFormat(this)
-
     private val richHtmlEditorWebViewClient = RichHtmlEditorWebViewClient()
+
+    private var htmlExportCallback: ((html: String) -> Unit)? = null
 
     init {
         settings.javaScriptEnabled = true
@@ -25,11 +26,22 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     /**
      * subscribedStates: set of the EditorStatusCommand that the TextFormatter needs to detect. null means everything is detected
      * */
-    fun loadHtml(html: String = "", subscribedStates: Set<TextFormat.EditorStatusCommand>? = null) {
+    fun setHtml(html: String = "", subscribedStates: Set<TextFormat.EditorStatusCommand>? = null) {
         richHtmlEditorWebViewClient.init(html, subscribedStates)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null) // TODO
+    }
+
+    // TODO: Find the best way to notify of new html
+    fun exportHtml(callback: (html: String) -> Unit) {
+        htmlExportCallback = callback
+        evaluateJavascript("exportHtml()", null)
+    }
+
+    fun notifyExportedHtml(html: String) {
+        htmlExportCallback?.invoke(html)
+        htmlExportCallback = null
     }
 
     // TODO : Use correct message in deprecated annotation
