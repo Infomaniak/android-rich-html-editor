@@ -1,6 +1,7 @@
 package com.infomaniak.lib.richhtmleditor
 
 import android.graphics.Color
+import android.graphics.Rect
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
@@ -12,6 +13,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class TextFormat(private val webView: RichHtmlEditorWebView) {
 
@@ -103,6 +105,20 @@ class TextFormat(private val webView: RichHtmlEditorWebView) {
         coroutineScope.launch(Dispatchers.Main) {
             updateWebViewHeight(newHeight)
         }
+    }
+
+    @JavascriptInterface
+    fun focusCursorOnScreen(left: Int, top: Int, right: Int, bottom: Int) {
+        val density: Float = webView.resources.displayMetrics.density
+
+        webView.requestRectangleOnScreen(
+            Rect(
+                (left * density).roundToInt(),
+                (top * density).roundToInt(),
+                (right * density).roundToInt(),
+                (bottom * density).roundToInt()
+            )
+        )
     }
 
     @JavascriptInterface

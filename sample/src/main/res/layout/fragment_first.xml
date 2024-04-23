@@ -70,17 +70,23 @@
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 
-        <FrameLayout
+        <androidx.core.widget.NestedScrollView
+            android:fillViewport="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#444"
-            android:padding="16dp">
+            android:layout_height="wrap_content">
 
-            <com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView
-                android:id="@+id/editor"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:background="#444"
+                android:padding="16dp">
 
-        </FrameLayout>
+                <com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView
+                    android:id="@+id/editor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
