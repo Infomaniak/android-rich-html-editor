@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.infomaniak.lib.richhtmleditor.readAsset
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentFirstBinding
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,8 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        editor.setHtml(testHtmlHard)
+        val customCss = requireContext().readAsset("editor_custom_css.css") // TODO: Do not access readAsset from lib
+        editor.setHtml(testHtmlHard, customCss = listOf(customCss))
 
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
