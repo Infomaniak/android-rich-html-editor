@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class TextFormat(private val webView: RichHtmlEditorWebView) {
+class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyExportedHtml: (String) -> Unit) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
@@ -122,7 +122,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView) {
     }
 
     @JavascriptInterface
-    fun exportHtml(html: String) = webView.notifyExportedHtml(html)
+    fun exportHtml(html: String) = notifyExportedHtml(html)
 
     private fun updateWebViewHeight(newHeight: Int) {
         webView.updateLayoutParams<ViewGroup.LayoutParams> {

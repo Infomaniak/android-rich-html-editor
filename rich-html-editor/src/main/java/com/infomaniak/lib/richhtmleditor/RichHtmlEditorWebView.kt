@@ -10,7 +10,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
-    val textFormat = TextFormat(this)
+    val textFormat = TextFormat(this, ::notifyExportedHtml)
     private val richHtmlEditorWebViewClient = RichHtmlEditorWebViewClient()
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
@@ -39,7 +39,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         evaluateJavascript("exportHtml()", null)
     }
 
-    fun notifyExportedHtml(html: String) {
+    private fun notifyExportedHtml(html: String) {
         htmlExportCallback?.invoke(html)
         htmlExportCallback = null
     }
