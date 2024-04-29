@@ -1,4 +1,4 @@
-let currentSelectionState = {};
+let currentSelectionState = {}
 
 // Helper functions
 
@@ -11,9 +11,9 @@ function getEditor() {
 }
 
 function onAttributesChange(callback) {
-    const mutationObserver = new MutationObserver(callback);
-    const config = { subtree: true, attributes: true };
-    mutationObserver.observe(getBody(), config);
+    const mutationObserver = new MutationObserver(callback)
+    const config = { subtree: true, attributes: true }
+    mutationObserver.observe(getBody(), config)
 }
 
 function onBodyResize(callback) {
@@ -68,9 +68,9 @@ function getCaretRect() {
 }
 
 function reportSelectionStateChangedIfNecessary() {
-    const newSelectionState = getCurrentSelectionState();
+    const newSelectionState = getCurrentSelectionState()
     if (!areSelectionStatesTheSame(currentSelectionState, newSelectionState)) {
-        currentSelectionState = newSelectionState;
+        currentSelectionState = newSelectionState
         console.log("New selection changed:", currentSelectionState)
         window.editor.reportCommandDataChange(
             newSelectionState["bold"],
@@ -81,25 +81,25 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["fontSize"],
             newSelectionState["foreColor"],
             newSelectionState["backColor"]
-        );
+        )
     }
 }
 
 function getCurrentSelectionState() {
-    let currentState = {};
+    let currentState = {}
 
     for (const property of stateCommands) {
-        currentState[property] = document.queryCommandState(property);
+        currentState[property] = document.queryCommandState(property)
     }
     for (const property of valueCommands) {
-        currentState[property] = document.queryCommandValue(property);
+        currentState[property] = document.queryCommandValue(property)
     }
 
-    return currentState;
+    return currentState
 }
 
 function areSelectionStatesTheSame(state1, state2) {
-    return stateCommands.every(property => state1[property] === state2[property]) && valueCommands.every(property => state1[property] === state2[property]);
+    return stateCommands.every(property => state1[property] === state2[property]) && valueCommands.every(property => state1[property] === state2[property])
 }
 
 function updateWebViewHeightWithBodyHeight() {
