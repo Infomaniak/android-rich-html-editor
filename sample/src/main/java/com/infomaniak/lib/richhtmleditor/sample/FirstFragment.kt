@@ -26,7 +26,8 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        val customCss = requireContext().readAsset("editor_custom_css.css") // TODO: Do not access readAsset from lib
+        // TODO: Do not access readAsset from lib, nor store editor_custom_css.css inside the library module
+        val customCss = requireContext().readAsset("editor_custom_css.css")
         editor.setHtml(testHtmlHard, customCss = listOf(customCss))
 
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
