@@ -106,11 +106,11 @@ function areSelectionStatesTheSame(state1, state2) {
 }
 
 function updateWebViewHeightWithBodyHeight() {
-    let body = getBody()
-    let paddingTop = parseInt(window.getComputedStyle(body)["margin-top"])
-    let paddingBottom = parseInt(window.getComputedStyle(body)["margin-bottom"])
+    let documentElement = document.documentElement
+    let paddingTop = parseInt(window.getComputedStyle(documentElement)["margin-top"])
+    let paddingBottom = parseInt(window.getComputedStyle(documentElement)["margin-bottom"])
 
-    window.editor.reportNewDocumentHeight((body.offsetHeight + paddingTop + paddingBottom) * window.devicePixelRatio)
+    window.editor.reportNewDocumentHeight((documentElement.offsetHeight + paddingTop + paddingBottom) * window.devicePixelRatio)
 }
 
 // Actually using the listeners
