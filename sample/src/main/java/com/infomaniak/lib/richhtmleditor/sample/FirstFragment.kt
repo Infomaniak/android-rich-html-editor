@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentFirstBinding
@@ -16,10 +17,6 @@ class FirstFragment : Fragment() {
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView
 
-    private val testHtmlHard = """
-        <h1 style="color:red; background-color:#8F0">Hello World</h1><blblue>Yo</blblue>
-    """.trimIndent()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return FragmentFirstBinding.inflate(inflater, container, false).also { _binding = it }.root
     }
@@ -27,12 +24,13 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-        val customCss = requireContext().assets
-            .open("editor_custom_css.css")
-            .bufferedReader()
-            .use(BufferedReader::readText)
+        val customCss = readAsset("editor_custom_css.css")
+        val html = readAsset("example1.html")
 
-        editor.setHtml(testHtmlHard, customCss = listOf(customCss))
+        editor.apply {
+            setHtml(html, customCss = listOf(customCss))
+            isVisible = true
+        }
 
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
@@ -55,5 +53,12 @@ class FirstFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun readAsset(fileName: String): String {
+        return requireContext().assets
+            .open(fileName)
+            .bufferedReader()
+            .use(BufferedReader::readText)
     }
 }
