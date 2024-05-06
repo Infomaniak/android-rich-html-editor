@@ -22,7 +22,6 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
     private fun WebView.setupDocument() {
         insertUserHtml()
 
-        // TODO: Would it make sens to insert this inside the editor template?
         customCss.forEach { css -> addCss(css) }
         addScript(createSubscribedStatesScript())
         addScript(context.readAsset("command_status_listener.js"))
