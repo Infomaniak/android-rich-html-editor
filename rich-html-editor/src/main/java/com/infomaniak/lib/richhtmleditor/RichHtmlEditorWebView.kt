@@ -23,6 +23,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         addJavascriptInterface(textFormat, "editor")
     }
 
+    // TODO: Doc
     /**
      * subscribedStates: set of the EditorStatusCommand that the TextFormatter needs to detect. null means everything is detected
      * */
