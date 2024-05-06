@@ -31,7 +31,7 @@ function exportHtml() {
 
 function focusCursorOnScreen() {
     let rect = getCaretRect()
-    window.editor.focusCursorOnScreen(rect.left, rect.top, rect.right, rect.bottom)
+    if (rect) window.editor.focusCursorOnScreen(rect.left, rect.top, rect.right, rect.bottom)
 }
 
 function findElementNode(element) {
@@ -43,6 +43,9 @@ function findElementNode(element) {
 function getCaretRect() {
     var selection = window.getSelection()
     var lastSelectedNode = selection.focusNode
+
+    if (selection.rangeCount == 0) return
+
     var range = selection.getRangeAt(0).cloneRange()
 
     // Create a range around the last selected node so the webview can scroll and follow the cursor even if the whole range is
