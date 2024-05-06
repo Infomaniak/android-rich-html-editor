@@ -25,7 +25,7 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val customCss = readAsset("editor_custom_css.css")
-        val html = readAsset("example1.html")
+        val html = readAsset("example2.html")
 
         editor.apply {
             setHtml(html, customCss = listOf(customCss))
