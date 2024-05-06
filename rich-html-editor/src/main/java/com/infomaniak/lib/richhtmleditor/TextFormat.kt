@@ -101,7 +101,6 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     @JavascriptInterface
     fun reportNewDocumentHeight(newHeight: Int) {
-        // TODO: Also report this when images are loaded and other causes that can make the webpage change size?
         coroutineScope.launch(Dispatchers.Main) {
             updateWebViewHeight(newHeight)
         }
