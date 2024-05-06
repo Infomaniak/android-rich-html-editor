@@ -13,12 +13,12 @@ function getEditor() {
 function onAttributesChange(callback) {
     const mutationObserver = new MutationObserver(callback)
     const config = { subtree: true, attributes: true }
-    mutationObserver.observe(getBody(), config)
+    mutationObserver.observe(getEditor(), config)
 }
 
 function onBodyResize(callback) {
     let resizeObserver = new ResizeObserver(callback)
-    resizeObserver.observe(getBody())
+    resizeObserver.observe(getEditor())
 }
 
 // Core logic
