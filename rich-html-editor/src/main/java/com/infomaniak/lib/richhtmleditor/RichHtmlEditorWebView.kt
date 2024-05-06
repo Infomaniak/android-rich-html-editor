@@ -35,7 +35,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         richHtmlEditorWebViewClient.init(html, subscribedStates, customCss)
 
         val template = context.readAsset("editor_template.html")
-        super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null) // TODO
+        super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
     }
 
     // TODO: Find the best way to notify of new html
