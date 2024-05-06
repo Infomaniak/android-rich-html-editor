@@ -26,7 +26,7 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        // TODO: Do not access readAsset from lib, nor store editor_custom_css.css inside the library module
+        // TODO: Do not access readAsset from lib
         val customCss = requireContext().readAsset("editor_custom_css.css")
         editor.setHtml(testHtmlHard, customCss = listOf(customCss))
 
