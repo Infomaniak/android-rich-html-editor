@@ -3,6 +3,8 @@ package com.infomaniak.lib.richhtmleditor
 import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebView
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class RichHtmlEditorWebView @JvmOverloads constructor(
     context: Context,
@@ -12,6 +14,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     val textFormat = TextFormat(this, ::notifyExportedHtml)
     private val richHtmlEditorWebViewClient = RichHtmlEditorWebViewClient()
+
+    private val htmlFlow = MutableSharedFlow<String>()
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
@@ -39,9 +43,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     // TODO: Find the best way to notify of new html
-    fun exportHtml(callback: (html: String) -> Unit) {
+    fun exportHtml(callback: (html: String) -> Unit): MutableSharedFlow<String> {
         htmlExportCallback = callback
         evaluateJavascript("exportHtml()", null)
+        return htmlFlow
     }
 
     private fun notifyExportedHtml(html: String) {

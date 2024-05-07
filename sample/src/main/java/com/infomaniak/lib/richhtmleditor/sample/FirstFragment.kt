@@ -9,6 +9,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentFirstBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 
@@ -38,7 +40,10 @@ class FirstFragment : Fragment() {
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
 
-        buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.e("gibran", "onViewCreated - html: ${html}") } }
+        buttonExportHtml.setOnClickListener {
+            Log.e("gibran", "onViewCreated: about to start exporting");
+            editor.exportHtml { html -> Log.e("gibran", "onViewCreated - html: ${html}") }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             editor.textFormat.editorStatusesFlow.collect {
@@ -46,6 +51,18 @@ class FirstFragment : Fragment() {
                 buttonItalic.isActivated = it.isItalic
                 buttonStrikeThrough.isActivated = it.isStrikeThrough
                 buttonUnderline.isActivated = it.isUnderlined
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val editor = binding.editor
+
+        lifecycleScope.launch {
+            delay(10_000)
+            editor.exportHtml { }.collect {
+                Log.e("gibran", "onStop - it: ${it}")
             }
         }
     }
