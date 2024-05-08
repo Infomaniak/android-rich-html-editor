@@ -38,9 +38,14 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
-    private fun execCommand(command: ExecCommand, callback: ((executionResult: String) -> Unit)? = null) {
+    fun createLink(url: String) = execCommand(OtherCommand.CREATE_LINK, url)
+
+    private fun execCommand(command: ExecCommand, argument: String? = null, callback: ((executionResult: String) -> Unit)? = null) {
         val valueCallback = callback?.let { ValueCallback<String> { value -> it(value) } }
-        webView.evaluateJavascript("document.execCommand('${command.argumentName}')", valueCallback)
+
+        val commandArgument = "'${command.argumentName}'"
+        val jsArgument = argument?.let { "'$it'" } ?: "null"
+        webView.evaluateJavascript("document.execCommand($commandArgument, false, $jsArgument)", valueCallback)
     }
 
     private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand) {
@@ -147,6 +152,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
     }
 
     enum class OtherCommand(override val argumentName: String) : ExecCommand {
-        REMOVE_FORMAT("removeFormat")
+        REMOVE_FORMAT("removeFormat"),
+        CREATE_LINK("createlink"),
     }
 }

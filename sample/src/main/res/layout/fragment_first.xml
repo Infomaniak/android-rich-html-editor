@@ -46,6 +46,13 @@
             android:layout_height="wrap_content"
             android:text="X" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonLink"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Link" />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
