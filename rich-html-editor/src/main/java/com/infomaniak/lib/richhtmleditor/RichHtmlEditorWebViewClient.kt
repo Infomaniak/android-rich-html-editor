@@ -38,13 +38,18 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
         val valueCommands = mutableListOf<TextFormat.EditorStatusCommand>()
 
         subscribedStates.forEach {
-            if (it.commandType == TextFormat.CommandType.STATE) stateCommands.add(it) else valueCommands.add(it)
+            when (it.commandType) {
+                TextFormat.CommandType.STATE -> stateCommands.add(it)
+                TextFormat.CommandType.VALUE -> valueCommands.add(it)
+                TextFormat.CommandType.COMPLEX -> Unit
+            }
         }
 
         val firstLine = generateConstTable("stateCommands", stateCommands)
         val secondLine = generateConstTable("valueCommands", valueCommands)
+        val reportLinkStatusLine = "const REPORT_LINK_STATUS = ${subscribedStates.contains(TextFormat.EditorStatusCommand.CREATE_LINK)}"
 
-        return "$firstLine\n$secondLine"
+        return "$firstLine\n$secondLine\n$reportLinkStatusLine"
     }
 
     private fun generateConstTable(name: String, commands: Collection<TextFormat.EditorStatusCommand>): String {

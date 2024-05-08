@@ -38,7 +38,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
-    fun createLink(url: String) = execCommand(OtherCommand.CREATE_LINK, url)
+    fun createLink(url: String) = execCommandAndRefreshButtonStatus(EditorStatusCommand.CREATE_LINK, url)
 
     private fun execCommand(command: ExecCommand, argument: String? = null, callback: ((executionResult: String) -> Unit)? = null) {
         val valueCallback = callback?.let { ValueCallback<String> { value -> it(value) } }
@@ -48,9 +48,9 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         webView.evaluateJavascript("document.execCommand($commandArgument, false, $jsArgument)", valueCallback)
     }
 
-    private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand) {
+    private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand, argument: String? = null) {
         withSelectionState { isCaret ->
-            execCommand(command) {
+            execCommand(command, argument) {
                 if (isCaret) reportSelectionStateChangedIfNecessary()
             }
         }
@@ -88,6 +88,8 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         fontSize: String,
         textColor: String,
         backgroundColor: String,
+        linkUrl: String,
+        linkText: String,
     ) {
         coroutineScope.launch {
             editorStatuses.updateStatusesAtomically(
@@ -99,6 +101,8 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
                 fontSize.toFloatOrNull(),
                 textColor.toColorIntOrNull(),
                 backgroundColor.toColorIntOrNull(),
+                linkUrl.ifEmpty { null },
+                linkText.ifEmpty { null },
             )
             _editorStatusesFlow.emit(editorStatuses)
         }
@@ -138,7 +142,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         val argumentName: String
     }
 
-    enum class CommandType { STATE, VALUE }
+    enum class CommandType { STATE, VALUE, COMPLEX }
 
     enum class EditorStatusCommand(override val argumentName: String, val commandType: CommandType) : ExecCommand {
         BOLD("bold", CommandType.STATE),
@@ -149,10 +153,10 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         FONT_SIZE("fontSize", CommandType.VALUE),
         TEXT_COLOR("foreColor", CommandType.VALUE),
         BACKGROUND_COLOR("backColor", CommandType.VALUE),
+        CREATE_LINK("createLink", CommandType.COMPLEX),
     }
 
     enum class OtherCommand(override val argumentName: String) : ExecCommand {
         REMOVE_FORMAT("removeFormat"),
-        CREATE_LINK("createlink"),
     }
 }

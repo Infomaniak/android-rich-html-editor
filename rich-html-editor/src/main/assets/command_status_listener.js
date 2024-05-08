@@ -83,7 +83,9 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["fontName"],
             newSelectionState["fontSize"],
             newSelectionState["foreColor"],
-            newSelectionState["backColor"]
+            newSelectionState["backColor"],
+            newSelectionState["linkUrl"],
+            newSelectionState["linkText"]
         )
     }
 }
@@ -98,11 +100,29 @@ function getCurrentSelectionState() {
         currentState[property] = document.queryCommandValue(property)
     }
 
+    if (REPORT_LINK_STATUS) {
+        var linkStatus = computeLinkStatus()
+        var linkUrl, linkText
+
+        [linkUrl, linkText] = (linkStatus) ? linkStatus : ["", ""]
+        currentState["linkUrl"] = linkUrl
+        currentState["linkText"] = linkText
+    }
+
     return currentState
 }
 
+function computeLinkStatus() {
+    var element = document.getSelection().focusNode.parentNode
+    return element.tagName == "A" ? [element.href, element.textContent] : null
+}
+
 function areSelectionStatesTheSame(state1, state2) {
-    return stateCommands.every(property => state1[property] === state2[property]) && valueCommands.every(property => state1[property] === state2[property])
+    let isLinkTheSame = (REPORT_LINK_STATUS) ? state1["linkUrl"] === state2["linkUrl"] && state1["linkText"] === state2["linkText"] : true
+
+    return stateCommands.every(property => state1[property] === state2[property])
+            && valueCommands.every(property => state1[property] === state2[property])
+            && isLinkTheSame
 }
 
 function updateWebViewHeightWithBodyHeight() {

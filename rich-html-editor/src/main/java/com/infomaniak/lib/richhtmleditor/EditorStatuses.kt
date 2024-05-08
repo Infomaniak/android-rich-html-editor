@@ -13,6 +13,8 @@ data class EditorStatuses(
     var fontSize: Float? = null,
     var textColor: Int? = null,
     var backgroundColor: Int? = null,
+    var linkUrl: String? = null,
+    var linkText: String? = null,
 ) {
     private val mutex = Mutex()
 
@@ -25,6 +27,8 @@ data class EditorStatuses(
         fontSize: Float?,
         @ColorInt textColor: Int?,
         @ColorInt backgroundColor: Int?,
+        linkUrl: String?,
+        linkText: String?,
     ) {
         mutex.withLock {
             this.isBold = isBold
@@ -35,6 +39,8 @@ data class EditorStatuses(
             this.fontSize = fontSize
             this.textColor = textColor
             this.backgroundColor = backgroundColor
+            this.linkUrl = linkUrl
+            this.linkText = linkText
         }
     }
 }

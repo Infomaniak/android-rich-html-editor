@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
@@ -18,6 +19,7 @@ class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private val createLinkDialog by lazy { CreateLinkDialog() }
 
@@ -36,6 +38,12 @@ class FirstFragment : Fragment() {
             isVisible = true
         }
 
+        setEditorButtonClickListeners()
+        observeEditorStatusUpdates()
+        observeLinkData()
+    }
+
+    private fun setEditorButtonClickListeners() = with(binding) {
         buttonBold.setOnClickListener { editor.textFormat.setBold() }
         buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
         buttonStrikeThrough.setOnClickListener { editor.textFormat.setStrikeThrough() }
@@ -46,14 +54,29 @@ class FirstFragment : Fragment() {
         }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.e("gibran", "onViewCreated - html: ${html}") } }
+    }
 
+    private fun observeEditorStatusUpdates() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             editor.textFormat.editorStatusesFlow.collect {
                 buttonBold.isActivated = it.isBold
                 buttonItalic.isActivated = it.isItalic
                 buttonStrikeThrough.isActivated = it.isStrikeThrough
                 buttonUnderline.isActivated = it.isUnderlined
+
+                mainViewModel.linkUrl.value = it.linkUrl
+                mainViewModel.linkText.value = it.linkText
             }
+        }
+    }
+
+    private fun observeLinkData() = with(binding) {
+        mainViewModel.linkUrl.observe(viewLifecycleOwner) {
+            linkUrlDisplay.text = it
+        }
+
+        mainViewModel.linkText.observe(viewLifecycleOwner) {
+            linkTextDisplay.text = it
         }
     }
 
