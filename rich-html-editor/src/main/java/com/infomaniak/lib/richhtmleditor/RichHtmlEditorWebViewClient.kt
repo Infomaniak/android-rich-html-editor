@@ -23,6 +23,9 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
         insertUserHtml()
 
         customCss.forEach { css -> addCss(css) }
+
+        addScript(context.readAsset("link_detection.js"))
+
         addScript(createSubscribedStatesScript())
         addScript(context.readAsset("command_status_listener.js"))
     }

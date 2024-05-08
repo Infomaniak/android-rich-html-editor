@@ -50,7 +50,9 @@ class FirstFragment : Fragment() {
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
         buttonLink.setOnClickListener {
-            createLinkDialog.show { editor.textFormat.createLink(it) }
+            createLinkDialog.show(mainViewModel.linkUrl.value, mainViewModel.linkText.value) { url, _ ->
+                editor.textFormat.createLink(url)
+            }
         }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.e("gibran", "onViewCreated - html: ${html}") } }
@@ -93,19 +95,30 @@ class FirstFragment : Fragment() {
     }
 
     inner class CreateLinkDialog {
-        private var callback: ((String) -> Unit)? = null
+        private var callback: ((String, String) -> Unit)? = null
+        private var binding: CreateLinkTextInputBinding
 
         private val dialog = with(CreateLinkTextInputBinding.inflate(layoutInflater)) {
+            binding = this
             MaterialAlertDialogBuilder(requireContext())
                 .setView(root)
                 .setTitle(R.string.link_dialog_title)
-                .setPositiveButton(R.string.link_dialog_title_button_positive) { _, _ -> callback?.invoke(textInputEditTextUrl.text.toString()) }
+                .setPositiveButton(R.string.link_dialog_title_button_positive) { _, _ ->
+                    callback?.invoke(
+                        textInputEditTextUrl.text.toString(),
+                        textInputEditTextPlaceholder.text.toString()
+                    )
+                }
                 .setNegativeButton(R.string.link_dialog_title_button_negative, null)
                 .create()
         }
 
-        fun show(callback: (String) -> Unit) {
+        fun show(url: String? = null, text: String?, callback: (String, String) -> Unit) {
             this.callback = callback
+            with(binding) {
+                textInputEditTextUrl.setText(url ?: "")
+                textInputEditTextPlaceholder.setText(text ?: "")
+            }
             dialog.show()
         }
     }
