@@ -113,7 +113,9 @@ function getCurrentSelectionState() {
 }
 
 function computeLinkStatus() {
-    var element = document.getSelection().focusNode.parentNode
+    let selection = document.getSelection()
+    var element = selection.rangeCount > 0 ? selection.getRangeAt(0).commonAncestorContainer.parentNode : null
+    if (!element) return null
     return element.tagName == "A" ? [element.href, element.textContent] : null
 }
 
