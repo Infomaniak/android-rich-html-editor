@@ -67,46 +67,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/link_data_text"
-            android:textColor="@color/subtitleColor" />
-
-        <TextView
-            android:id="@+id/linkTextDisplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="My favorite website" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/link_data_url"
-            android:textColor="@color/subtitleColor" />
-
-        <TextView
-            android:id="@+id/linkUrlDisplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="https://www.example.com" />
-
-    </LinearLayout>
-
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="1dp"

@@ -84,8 +84,7 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["fontSize"],
             newSelectionState["foreColor"],
             newSelectionState["backColor"],
-            newSelectionState["linkUrl"],
-            newSelectionState["linkText"]
+            newSelectionState["isLinkSelected"]
         )
     }
 }
@@ -102,25 +101,18 @@ function getCurrentSelectionState() {
 
     if (REPORT_LINK_STATUS) {
         var linkStatus = computeLinkStatus()
-        var linkUrl, linkText
-
-        [linkUrl, linkText] = (linkStatus) ? linkStatus : ["", ""]
-        currentState["linkUrl"] = linkUrl
-        currentState["linkText"] = linkText
+        currentState["isLinkSelected"] = linkStatus
     }
 
     return currentState
 }
 
 function computeLinkStatus() {
-    let selection = document.getSelection()
-    var element = selection.rangeCount > 0 ? selection.getRangeAt(0).commonAncestorContainer.parentNode : null
-    if (!element) return null
-    return element.tagName == "A" ? [element.href, element.textContent] : null
+    return getAllLinksPartiallyContainedInsideSelection().length > 0
 }
 
 function areSelectionStatesTheSame(state1, state2) {
-    let isLinkTheSame = (REPORT_LINK_STATUS) ? state1["linkUrl"] === state2["linkUrl"] && state1["linkText"] === state2["linkText"] : true
+    let isLinkTheSame = (REPORT_LINK_STATUS) ? state1["isLinkSelected"] === state2["isLinkSelected"] : true
 
     return stateCommands.every(property => state1[property] === state2[property])
             && valueCommands.every(property => state1[property] === state2[property])

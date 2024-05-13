@@ -40,7 +40,6 @@ class FirstFragment : Fragment() {
 
         setEditorButtonClickListeners()
         observeEditorStatusUpdates()
-        observeLinkData()
     }
 
     private fun setEditorButtonClickListeners() = with(binding) {
@@ -50,8 +49,11 @@ class FirstFragment : Fragment() {
         buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
         buttonLink.setOnClickListener {
-            createLinkDialog.show(mainViewModel.linkUrl.value, mainViewModel.linkText.value) { url, _ ->
-                editor.textFormat.createLink(url)
+            if (buttonLink.isActivated) {
+            } else {
+                createLinkDialog.show("", "") { url, _ ->
+                    editor.textFormat.createLink(url)
+                }
             }
         }
 
@@ -66,19 +68,8 @@ class FirstFragment : Fragment() {
                 buttonStrikeThrough.isActivated = it.isStrikeThrough
                 buttonUnderline.isActivated = it.isUnderlined
 
-                mainViewModel.linkUrl.value = it.linkUrl
-                mainViewModel.linkText.value = it.linkText
+                buttonLink.isActivated = it.isLinkSelected
             }
-        }
-    }
-
-    private fun observeLinkData() = with(binding) {
-        mainViewModel.linkUrl.observe(viewLifecycleOwner) {
-            linkUrlDisplay.text = it
-        }
-
-        mainViewModel.linkText.observe(viewLifecycleOwner) {
-            linkTextDisplay.text = it
         }
     }
 

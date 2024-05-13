@@ -88,8 +88,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         fontSize: String,
         textColor: String,
         backgroundColor: String,
-        linkUrl: String,
-        linkText: String,
+        isLinkSelected: Boolean,
     ) {
         coroutineScope.launch {
             editorStatuses.updateStatusesAtomically(
@@ -101,8 +100,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
                 fontSize.toFloatOrNull(),
                 textColor.toColorIntOrNull(),
                 backgroundColor.toColorIntOrNull(),
-                linkUrl.ifEmpty { null },
-                linkText.ifEmpty { null },
+                isLinkSelected,
             )
             _editorStatusesFlow.emit(editorStatuses)
         }
