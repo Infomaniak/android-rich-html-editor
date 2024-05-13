@@ -50,6 +50,7 @@ class FirstFragment : Fragment() {
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
         buttonLink.setOnClickListener {
             if (buttonLink.isActivated) {
+                editor.textFormat.unlink()
             } else {
                 createLinkDialog.show("", "") { url, _ ->
                     editor.textFormat.createLink(url)
