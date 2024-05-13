@@ -100,7 +100,7 @@ function getCurrentSelectionState() {
     }
 
     if (REPORT_LINK_STATUS) {
-        var linkStatus = computeLinkStatus()
+        var linkStatus = computeLinkStatus() // TODO: Single line if nothing more comes here
         currentState["isLinkSelected"] = linkStatus
     }
 

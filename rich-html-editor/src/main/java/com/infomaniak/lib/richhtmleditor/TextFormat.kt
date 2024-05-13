@@ -38,6 +38,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
+    // TODO: Do we need to refresh button status only when caret?
     fun createLink(url: String) = execCommandAndRefreshButtonStatus(EditorStatusCommand.CREATE_LINK, url)
 
     private fun execCommand(command: ExecCommand, argument: String? = null, callback: ((executionResult: String) -> Unit)? = null) {
