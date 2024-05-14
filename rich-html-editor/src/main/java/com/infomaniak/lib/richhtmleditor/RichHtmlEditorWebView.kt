@@ -31,8 +31,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         html: String = "",
         subscribedStates: Set<TextFormat.EditorStatusCommand>? = null,
         customCss: List<String> = emptyList(),
+        customScripts: List<String> = emptyList(),
     ) {
-        richHtmlEditorWebViewClient.init(html, subscribedStates, customCss)
+        richHtmlEditorWebViewClient.init(html, subscribedStates, customCss, customScripts)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)

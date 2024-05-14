@@ -9,26 +9,34 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
     private var html: String? = null
     private var subscribedStates: Set<TextFormat.EditorStatusCommand>? = null
     private var customCss: List<String> = emptyList()
+    private var customScripts: List<String> = emptyList()
 
     @CallSuper
     override fun onPageFinished(view: WebView, url: String?) = view.setupDocument()
 
-    fun init(html: String, subscribedStates: Set<TextFormat.EditorStatusCommand>?, customCss: List<String>) {
+    fun init(
+        html: String,
+        subscribedStates: Set<TextFormat.EditorStatusCommand>?,
+        customCss: List<String>,
+        customScripts: List<String>,
+    ) {
         this.html = html
         this.subscribedStates = subscribedStates
         this.customCss = customCss
+        this.customScripts = customScripts
     }
 
     private fun WebView.setupDocument() {
         insertUserHtml()
-
-        customCss.forEach { css -> addCss(css) }
 
         addScript(context.readAsset("link_detection.js"))
         addScript(context.readAsset("manage_links.js"))
 
         addScript(createSubscribedStatesScript())
         addScript(context.readAsset("command_status_listener.js"))
+
+        customCss.forEach { css -> addCss(css) }
+        customScripts.forEach { script -> addScript(script) }
     }
 
     private fun WebView.insertUserHtml() {
@@ -51,7 +59,9 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
 
         val firstLine = generateConstTable("stateCommands", stateCommands)
         val secondLine = generateConstTable("valueCommands", valueCommands)
-        val reportLinkStatusLine = "const REPORT_LINK_STATUS = ${subscribedStates.contains(TextFormat.EditorStatusCommand.CREATE_LINK)}"
+
+        val areLinksSubscribedTo = subscribedStates.contains(TextFormat.EditorStatusCommand.CREATE_LINK)
+        val reportLinkStatusLine = "const REPORT_LINK_STATUS = $areLinksSubscribedTo"
 
         return "$firstLine\n$secondLine\n$reportLinkStatusLine"
     }
