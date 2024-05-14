@@ -29,11 +29,8 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
     private fun WebView.setupDocument() {
         insertUserHtml()
 
-        addScript(context.readAsset("link_detection.js"))
-        addScript(context.readAsset("manage_links.js"))
-
         addScript(createSubscribedStatesScript())
-        addScript(context.readAsset("command_status_listener.js"))
+        addScript(context.readAsset("attach_listeners.js")) // Needs to only be called once the page has finished loading
 
         customCss.forEach { css -> addCss(css) }
         customScripts.forEach { script -> addScript(script) }
