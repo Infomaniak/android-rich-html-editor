@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
@@ -19,7 +18,6 @@ class EditorSampleFragment : Fragment() {
 
     private var _binding: FragmentEditorSampleBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView
-    private val mainViewModel: MainViewModel by activityViewModels()
 
     private val createLinkDialog by lazy { CreateLinkDialog() }
 
