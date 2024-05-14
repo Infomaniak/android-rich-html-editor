@@ -30,11 +30,11 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-        val customCss = readAsset("editor_custom_css.css")
+        // val customCss = readAsset("editor_custom_css.css")
         val html = readAsset("example1.html")
 
         editor.apply {
-            setHtml(html, customCss = listOf(customCss))
+            setHtml(html)
             isVisible = true
         }
 
