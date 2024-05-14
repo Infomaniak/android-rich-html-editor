@@ -11,20 +11,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
-import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentFirstBinding
+import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentEditorSampleBinding
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 
-class FirstFragment : Fragment() {
+class EditorSampleFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentEditorSampleBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private val createLinkDialog by lazy { CreateLinkDialog() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return FragmentFirstBinding.inflate(inflater, container, false).also { _binding = it }.root
+        return FragmentEditorSampleBinding.inflate(inflater, container, false).also { _binding = it }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {

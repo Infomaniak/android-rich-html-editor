@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/EditorSampleFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.infomaniak.lib.richhtmleditor.sample.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first" />
+        android:id="@+id/EditorSampleFragment"
+        android:name="com.infomaniak.lib.richhtmleditor.sample.EditorSampleFragment"
+        android:label="EditorSampleFragment"
+        tools:layout="@layout/fragment_editor_sample" />
 
 </navigation>
