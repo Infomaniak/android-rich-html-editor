@@ -52,8 +52,8 @@ class FirstFragment : Fragment() {
             if (buttonLink.isActivated) {
                 editor.textFormat.unlink()
             } else {
-                createLinkDialog.show("", "") { url, _ ->
-                    editor.textFormat.createLink(url)
+                createLinkDialog.show("", "") { url, displayText ->
+                    editor.textFormat.createLink(displayText, url)
                 }
             }
         }

@@ -38,8 +38,12 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
-    // TODO: Do we need to refresh button status only when caret?
-    fun createLink(url: String) = execCommand(EditorStatusCommand.CREATE_LINK, url)
+    // TODO: Do we need to refresh button status?
+    fun createLink(displayText: String?, url: String) {
+        val escapedDisplayText = displayText?.let { looselyEscapeStringForJs(it, "'") } ?: "null"
+        val escapedUrl = looselyEscapeStringForJs(url, "'")
+        webView.evaluateJavascript("createLink('$escapedDisplayText', '$escapedUrl')", null)
+    }
 
     fun unlink() = execCommand(OtherCommand.UNLINK)
 
