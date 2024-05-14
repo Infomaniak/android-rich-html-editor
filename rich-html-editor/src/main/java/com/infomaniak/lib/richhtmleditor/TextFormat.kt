@@ -45,9 +45,13 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         webView.evaluateJavascript("createLink('$escapedDisplayText', '$escapedUrl')", null)
     }
 
-    fun unlink() = execCommand(OtherCommand.UNLINK)
+    fun unlink() = webView.evaluateJavascript("unlink()", null)
 
-    private fun execCommand(command: ExecCommand, argument: String? = null, callback: ((executionResult: String) -> Unit)? = null) {
+    private fun execCommand(
+        command: ExecCommand,
+        argument: String? = null,
+        callback: ((executionResult: String) -> Unit)? = null,
+    ) {
         val valueCallback = callback?.let { ValueCallback<String> { value -> it(value) } }
 
         val commandArgument = "'${command.argumentName}'"
@@ -163,6 +167,5 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     enum class OtherCommand(override val argumentName: String) : ExecCommand {
         REMOVE_FORMAT("removeFormat"),
-        UNLINK("unlink"),
     }
 }

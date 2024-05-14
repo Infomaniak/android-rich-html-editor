@@ -1,3 +1,5 @@
+// Create link
+
 function createLink(displayText, url) {
     let range = document.getSelection().getRangeAt(0)
     if (range.collapsed) {
@@ -36,4 +38,22 @@ function updateAnchorDisplayText(anchor, displayText) {
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
+}
+
+// Unlink
+
+function unlink() {
+    getAllLinksPartiallyContainedInsideSelection().forEach(anchor => unlinkAnchorNode(anchor))
+}
+
+function unlinkAnchorNode(anchor) {
+    let selection = document.getSelection()
+
+    let range = selection.getRangeAt(0)
+    let rangeBackup = range.cloneRange()
+    range.selectNodeContents(anchor)
+    document.execCommand("unlink")
+
+    selection.removeAllRanges()
+    selection.addRange(rangeBackup)
 }
