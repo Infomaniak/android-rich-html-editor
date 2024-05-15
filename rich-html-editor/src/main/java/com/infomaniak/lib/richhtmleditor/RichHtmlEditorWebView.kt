@@ -33,6 +33,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         customCss: List<String> = emptyList(),
         customScripts: List<String> = emptyList(),
     ) {
+        // TODO: Provide a way to override the webview client without any issue
         richHtmlEditorWebViewClient.init(html, subscribedStates, customCss, customScripts)
 
         val template = context.readAsset("editor_template.html")
