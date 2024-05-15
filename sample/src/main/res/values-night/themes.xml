@@ -1,4 +1,4 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.HtmlEditor" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Base.Theme.HtmlEditor" parent="LightAndDarkCommonBaseTheme" />
 </resources>
