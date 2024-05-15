@@ -41,10 +41,10 @@ class EditorSampleFragment : Fragment() {
     }
 
     private fun setEditorButtonClickListeners() = with(binding) {
-        buttonBold.setOnClickListener { editor.textFormat.setBold() }
-        buttonItalic.setOnClickListener { editor.textFormat.setItalic() }
-        buttonStrikeThrough.setOnClickListener { editor.textFormat.setStrikeThrough() }
-        buttonUnderline.setOnClickListener { editor.textFormat.setUnderline() }
+        buttonBold.setOnClickListener { editor.textFormat.toggleBold() }
+        buttonItalic.setOnClickListener { editor.textFormat.toggleItalic() }
+        buttonStrikeThrough.setOnClickListener { editor.textFormat.toggleStrikeThrough() }
+        buttonUnderline.setOnClickListener { editor.textFormat.toggleUnderline() }
         buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
         buttonLink.setOnClickListener {
             if (buttonLink.isActivated) {

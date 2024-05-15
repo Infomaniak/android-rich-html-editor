@@ -4,6 +4,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CallSuper
 
+/**
+ * A custom WebViewClient designed required by `RichHtmlEditorWebView` to work properly.
+ *
+ * The `RichHtmlEditorWebViewClient` handles the required mechanisms for the RichHtmlEditorWebView to work properly such as
+ * subscribed states notifications to the native code.
+ */
 open class RichHtmlEditorWebViewClient : WebViewClient() {
 
     private var html: String? = null

@@ -15,6 +15,35 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+/**
+ * Utility class for handling text formatting operations within `RichHtmlEditorWebView`.
+ *
+ * The `TextFormat` class provides methods for setting and removing text formatting such as bold, italic, underline,
+ * strike-through, creating and unlinking hyperlinks, and exposing an observable flow of editor statuses.
+ *
+ * To interact with text formatting in `RichHtmlEditorWebView`, access its instance of `TextFormat` and utilize this class'
+ * methods. Additionally, you can observe the editor statuses using the `editorStatusesFlow` property.
+ *
+ * Example usage:
+ * ```
+ * // Access the textFormat instance from RichHtmlEditorWebView
+ * val textFormat = richHtmlEditorWebView.textFormat
+ *
+ * buttonBold.setOnClickListener { textFormat.toggleBold() }
+ * buttonItalic.setOnClickListener { textFormat.toggleItalic() }
+ *
+ * ...
+ *
+ * viewLifecycleOwner.lifecycleScope.launch {
+ *   textFormat.editorStatusesFlow.collect {
+ *     buttonBold.isActivated = it.isBold
+ *     buttonItalic.isActivated = it.isItalic
+ *   }
+ * }
+ * ```
+ *
+ * @property editorStatusesFlow A flow representing the current status of the editor's text formatting.
+ */
 class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyExportedHtml: (String) -> Unit) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -26,15 +55,21 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
 
+    /**
+     * Flow that is notified everytime a subscribed `EditorStatuses` is updated.
+     *
+     * You can use this flow to listen to subscribed `EditorStatuses` and update your toolbar's UI accordingly to show which
+     * formatting is enabled on the current selection.
+     */
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
-    fun setBold() = execCommandAndRefreshButtonStatus(StatusCommand.BOLD)
+    fun toggleBold() = execCommandAndRefreshButtonStatus(StatusCommand.BOLD)
 
-    fun setItalic() = execCommandAndRefreshButtonStatus(StatusCommand.ITALIC)
+    fun toggleItalic() = execCommandAndRefreshButtonStatus(StatusCommand.ITALIC)
 
-    fun setStrikeThrough() = execCommandAndRefreshButtonStatus(StatusCommand.STRIKE_THROUGH)
+    fun toggleStrikeThrough() = execCommandAndRefreshButtonStatus(StatusCommand.STRIKE_THROUGH)
 
-    fun setUnderline() = execCommandAndRefreshButtonStatus(StatusCommand.UNDERLINE)
+    fun toggleUnderline() = execCommandAndRefreshButtonStatus(StatusCommand.UNDERLINE)
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
