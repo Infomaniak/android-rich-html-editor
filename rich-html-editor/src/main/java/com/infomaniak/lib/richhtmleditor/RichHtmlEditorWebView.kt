@@ -29,7 +29,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * */
     fun setHtml(
         html: String = "",
-        subscribedStates: Set<TextFormat.EditorStatusCommand>? = null,
+        subscribedStates: Set<TextFormat.StatusCommand>? = null,
         customCss: List<String> = emptyList(),
         customScripts: List<String> = emptyList(),
     ) {

@@ -28,13 +28,13 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
-    fun setBold() = execCommandAndRefreshButtonStatus(EditorStatusCommand.BOLD)
+    fun setBold() = execCommandAndRefreshButtonStatus(StatusCommand.BOLD)
 
-    fun setItalic() = execCommandAndRefreshButtonStatus(EditorStatusCommand.ITALIC)
+    fun setItalic() = execCommandAndRefreshButtonStatus(StatusCommand.ITALIC)
 
-    fun setStrikeThrough() = execCommandAndRefreshButtonStatus(EditorStatusCommand.STRIKE_THROUGH)
+    fun setStrikeThrough() = execCommandAndRefreshButtonStatus(StatusCommand.STRIKE_THROUGH)
 
-    fun setUnderline() = execCommandAndRefreshButtonStatus(EditorStatusCommand.UNDERLINE)
+    fun setUnderline() = execCommandAndRefreshButtonStatus(StatusCommand.UNDERLINE)
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
@@ -59,7 +59,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         webView.evaluateJavascript("document.execCommand($commandArgument, false, $jsArgument)", valueCallback)
     }
 
-    private fun execCommandAndRefreshButtonStatus(command: EditorStatusCommand, argument: String? = null) {
+    private fun execCommandAndRefreshButtonStatus(command: StatusCommand, argument: String? = null) {
         withSelectionState { isCaret ->
             execCommand(command, argument) {
                 if (isCaret) reportSelectionStateChangedIfNecessary()
@@ -151,18 +151,18 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         val argumentName: String
     }
 
-    enum class CommandType { STATE, VALUE, COMPLEX }
+    enum class StatusType { STATE, VALUE, COMPLEX }
 
-    enum class EditorStatusCommand(override val argumentName: String, val commandType: CommandType) : ExecCommand {
-        BOLD("bold", CommandType.STATE),
-        ITALIC("italic", CommandType.STATE),
-        STRIKE_THROUGH("strikeThrough", CommandType.STATE),
-        UNDERLINE("underline", CommandType.STATE),
-        FONT_NAME("fontName", CommandType.VALUE),
-        FONT_SIZE("fontSize", CommandType.VALUE),
-        TEXT_COLOR("foreColor", CommandType.VALUE),
-        BACKGROUND_COLOR("backColor", CommandType.VALUE),
-        CREATE_LINK("createLink", CommandType.COMPLEX),
+    enum class StatusCommand(override val argumentName: String, val statusType: StatusType) : ExecCommand {
+        BOLD("bold", StatusType.STATE),
+        ITALIC("italic", StatusType.STATE),
+        STRIKE_THROUGH("strikeThrough", StatusType.STATE),
+        UNDERLINE("underline", StatusType.STATE),
+        FONT_NAME("fontName", StatusType.VALUE),
+        FONT_SIZE("fontSize", StatusType.VALUE),
+        TEXT_COLOR("foreColor", StatusType.VALUE),
+        BACKGROUND_COLOR("backColor", StatusType.VALUE),
+        CREATE_LINK("createLink", StatusType.COMPLEX),
     }
 
     enum class OtherCommand(override val argumentName: String) : ExecCommand {
