@@ -43,12 +43,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * calling the method without parameters will still initialize everything necessary for the editor to function.
      *
      * @param html The HTML content to be displayed. Defaults to an empty string.
-     * @param subscribedStates A set of status commands to be subscribed to. Defaults to null, which means subscribing to all
-     * available status commands.
-     * @param customCss A list of custom CSS strings to be applied. Defaults to an empty list. These CSS styles will be loaded
-     * when the page has finished loading. Supports new lines inside the CSS.
-     * @param customScripts A list of custom scripts to be included. Defaults to an empty list. These scripts will be loaded when
-     * the page has finished loading. Supports new lines inside the script.
+     * @param editorConfig A wrapper containing the different configurations you can do on the editor.
      *
      * Example usage:
      * ```
@@ -60,6 +55,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * setHtml(htmlContent, editorConfig)
      * ```
+     *
+     * @see EditorConfig
      */
 
     fun setHtml(html: String = "", editorConfig: EditorConfig? = null) {
