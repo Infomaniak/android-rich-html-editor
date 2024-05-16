@@ -24,9 +24,7 @@ function onBodyResize(callback) {
 // Core logic
 
 function exportHtml() {
-    // TODO: don't cloneNode if nothing else is modified
-    let editorContentCopy = getEditor().cloneNode(true)
-    window.editor.exportHtml(editorContentCopy.innerHTML)
+    window.editor.exportHtml(getEditor().innerHTML)
 }
 
 function focusCursorOnScreen() {
