@@ -20,11 +20,16 @@ open class RichHtmlEditorWebViewClient : WebViewClient() {
     @CallSuper
     override fun onPageFinished(view: WebView, url: String?) = view.setupDocument()
 
-    fun init(html: String, editorConfig: EditorConfig? = null) {
+    fun init(
+        html: String,
+        subscribedStates: Set<TextFormat.StatusCommand>?,
+        customCss: List<String>?,
+        customScripts: List<String>?,
+    ) {
         this.html = html
-        subscribedStates = editorConfig?.subscribedStates
-        editorConfig?.let { customCss = it.customCss }
-        editorConfig?.let { customScripts = it.customScripts }
+        this.subscribedStates = subscribedStates
+        customCss?.let { this.customCss = it }
+        customScripts?.let { this.customScripts = it }
     }
 
     private fun WebView.setupDocument() {

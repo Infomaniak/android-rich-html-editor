@@ -23,14 +23,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 ) : WebView(context, attrs, defStyleAttr) {
 
     val textFormat = TextFormat(this, ::notifyExportedHtml)
-    private val richHtmlEditorWebViewClient = RichHtmlEditorWebViewClient()
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
     init {
         settings.javaScriptEnabled = true
         isFocusableInTouchMode = true
-        webViewClient = richHtmlEditorWebViewClient
 
         addJavascriptInterface(textFormat, "editor")
     }
@@ -60,8 +58,16 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      */
 
     fun setHtml(html: String = "", editorConfig: EditorConfig? = null) {
-        // TODO: Provide a way to override the webview client without any issue
-        richHtmlEditorWebViewClient.init(html, editorConfig)
+        (editorConfig?.customWebViewClient ?: RichHtmlEditorWebViewClient()).let { richHtmlEditorWebViewClient ->
+            richHtmlEditorWebViewClient.init(
+                html = html,
+                subscribedStates = editorConfig?.subscribedStates,
+                customCss = editorConfig?.customCss,
+                customScripts = editorConfig?.customScripts
+            )
+
+            webViewClient = richHtmlEditorWebViewClient
+        }
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
