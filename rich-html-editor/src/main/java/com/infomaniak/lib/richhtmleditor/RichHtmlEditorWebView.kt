@@ -56,19 +56,15 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * val states = setOf(TextFormat.StatusCommand.BOLD, TextFormat.StatusCommand.ITALIC)
      * val css = listOf("body { background-color: #f0f0f0; }")
      * val scripts = listOf("console.log('Custom script loaded');")
+     * val editorConfig = EditorConfig(states, css, scripts)
      *
-     * setHtml(htmlContent, states, css, scripts)
+     * setHtml(htmlContent, editorConfig)
      * ```
      */
 
-    fun setHtml(
-        html: String = "",
-        subscribedStates: Set<TextFormat.StatusCommand>? = null,
-        customCss: List<String> = emptyList(),
-        customScripts: List<String> = emptyList(),
-    ) {
+    fun setHtml(html: String = "", editorConfig: EditorConfig? = null) {
         // TODO: Provide a way to override the webview client without any issue
-        richHtmlEditorWebViewClient.init(html, subscribedStates, customCss, customScripts)
+        richHtmlEditorWebViewClient.init(html, editorConfig)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
