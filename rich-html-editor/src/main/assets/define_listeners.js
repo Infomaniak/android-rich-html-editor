@@ -97,10 +97,7 @@ function getCurrentSelectionState() {
         currentState[property] = document.queryCommandValue(property)
     }
 
-    if (REPORT_LINK_STATUS) {
-        var linkStatus = computeLinkStatus() // TODO: Single line if nothing more comes here
-        currentState["isLinkSelected"] = linkStatus
-    }
+    if (REPORT_LINK_STATUS) currentState["isLinkSelected"] = computeLinkStatus()
 
     return currentState
 }
