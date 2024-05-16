@@ -8,13 +8,13 @@ function getAllLinksPartiallyContainedInsideSelection() {
     // TODO: Investigate RoosterJs issues with startContainer and endContainer https://github.com/microsoft/roosterjs/blob/b1d4bab67dcae342cfdc043a8cbe2b96bb823a44/packages/roosterjs-editor-dom/lib/utils/queryElements.ts#L30
 
     elements = elements.filter(element =>
-        isIntersectWithNodeRange(element, startContainer, endContainer)
+        doesIntersectWithNodeRange(element, startContainer, endContainer)
     )
 
     return elements
 }
 
-function isIntersectWithNodeRange(node, startNode, endNode) {
+function doesIntersectWithNodeRange(node, startNode, endNode) {
     const startPosition = node.compareDocumentPosition(startNode)
     const endPosition = node.compareDocumentPosition(endNode)
     const targetPositions = [DOCUMENT_POSITION_SAME, Node.DOCUMENT_POSITION_CONTAINS, Node.DOCUMENT_POSITION_CONTAINED_BY]
