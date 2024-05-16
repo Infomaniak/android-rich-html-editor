@@ -18,7 +18,7 @@ function onAttributesChange(callback) {
 
 function onBodyResize(callback) {
     let resizeObserver = new ResizeObserver(callback)
-    resizeObserver.observe(getEditor())
+    resizeObserver.observe(document.documentElement)
 }
 
 // Core logic
