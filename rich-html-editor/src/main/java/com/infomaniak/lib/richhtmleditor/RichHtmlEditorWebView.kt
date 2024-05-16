@@ -24,11 +24,15 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     val textFormat = TextFormat(this, ::notifyExportedHtml)
 
+    private val documentInitializer = DocumentInitializer()
+
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
     init {
         settings.javaScriptEnabled = true
         isFocusableInTouchMode = true
+
+        webViewClient = RichHtmlEditorWebViewClient { notifyPageHasLoaded() }
 
         addJavascriptInterface(textFormat, "editor")
     }
@@ -58,19 +62,26 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      */
 
     fun setHtml(html: String = "", editorConfig: EditorConfig? = null) {
-        (editorConfig?.customWebViewClient ?: RichHtmlEditorWebViewClient()).let { richHtmlEditorWebViewClient ->
-            richHtmlEditorWebViewClient.init(
-                html = html,
-                subscribedStates = editorConfig?.subscribedStates,
-                customCss = editorConfig?.customCss,
-                customScripts = editorConfig?.customScripts
-            )
-
-            webViewClient = richHtmlEditorWebViewClient
-        }
+        documentInitializer.init(
+            html = html,
+            subscribedStates = editorConfig?.subscribedStates,
+            customCss = editorConfig?.customCss,
+            customScripts = editorConfig?.customScripts
+        )
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
+    }
+
+    /**
+     * Notify the WebView to setup the editor template document provided during [setHtml]
+     *
+     * This method is only required if you want to use your own custom WebViewClient. To use your own custom WebViewClient call
+     * this method inside onPageFinished() of your WebViewClient so the editor can setup itself correctly.
+     */
+    // If you want to use your own custom WebViewClient, call this method inside onPageFinished() so
+    fun notifyPageHasLoaded() {
+        documentInitializer.setupDocument(this)
     }
 
     // TODO: Find the best way to notify of new html

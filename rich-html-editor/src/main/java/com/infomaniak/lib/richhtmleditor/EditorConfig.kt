@@ -9,8 +9,6 @@ package com.infomaniak.lib.richhtmleditor
  * the page has finished loading. Supports new lines within the CSS.
  * @param customScripts A list of custom scripts to be included. Defaults to an empty list. These scripts will be executed
  * when the page has finished loading. Supports new lines within the script.
- * @param customWebViewClient If you wish to provide a custom WebViewClient, pass it here. This allows the editor to
- * initialize the RichHtmlEditorWebViewClient to function correctly.
  *
  * @see RichHtmlEditorWebViewClient
  */
@@ -18,5 +16,4 @@ data class EditorConfig(
     val subscribedStates: Set<TextFormat.StatusCommand>? = null,
     val customCss: List<String> = emptyList(),
     val customScripts: List<String> = emptyList(),
-    val customWebViewClient: RichHtmlEditorWebViewClient? = null,
 )
