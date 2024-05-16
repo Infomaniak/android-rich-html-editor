@@ -71,15 +71,16 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     fun toggleUnderline() = execCommandAndRefreshButtonStatus(StatusCommand.UNDERLINE)
 
-    fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
+    fun removeFormat() = execCommandAndRefreshButtonStatus(OtherCommand.REMOVE_FORMAT)
 
-    // TODO: Do we need to refresh button status?
+    // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
     fun createLink(displayText: String?, url: String) {
         val escapedDisplayText = displayText?.let { looselyEscapeStringForJs(it, "'") } ?: "null"
         val escapedUrl = looselyEscapeStringForJs(url, "'")
         webView.evaluateJavascript("createLink('$escapedDisplayText', '$escapedUrl')", null)
     }
 
+    // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
     fun unlink() = webView.evaluateJavascript("unlink()", null)
 
     private fun execCommand(
@@ -94,7 +95,7 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
         webView.evaluateJavascript("document.execCommand($commandArgument, false, $jsArgument)", valueCallback)
     }
 
-    private fun execCommandAndRefreshButtonStatus(command: StatusCommand, argument: String? = null) {
+    private fun execCommandAndRefreshButtonStatus(command: ExecCommand, argument: String? = null) {
         withSelectionState { isCaret ->
             execCommand(command, argument) {
                 if (isCaret) reportSelectionStateChangedIfNecessary()
