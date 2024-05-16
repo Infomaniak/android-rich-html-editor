@@ -56,7 +56,7 @@ class EditorSampleFragment : Fragment() {
             }
         }
 
-        buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.e("gibran", "onViewCreated - html: ${html}") } }
+        buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {
