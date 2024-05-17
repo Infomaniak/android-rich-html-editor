@@ -75,8 +75,8 @@ class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyE
 
     // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
     fun createLink(displayText: String?, url: String) {
-        val escapedDisplayText = displayText?.let { looselyEscapeStringForJs(it, "'") } ?: "null"
-        val escapedUrl = looselyEscapeStringForJs(url, "'")
+        val escapedDisplayText = displayText?.let { looselyEscapeStringForJs(it) } ?: "null"
+        val escapedUrl = looselyEscapeStringForJs(url)
         webView.evaluateJavascript("createLink('$escapedDisplayText', '$escapedUrl')", null)
     }
 

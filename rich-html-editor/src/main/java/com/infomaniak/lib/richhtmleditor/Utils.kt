@@ -11,10 +11,20 @@ internal fun Context.readAsset(fileName: String): String {
 }
 
 // TODO: This method might not be enough to escape user inputs and prevent access to js code execution
-internal fun looselyEscapeStringForJs(string: String, stringDelimiterChar: String): String {
-    return string
-        .replace("""\""", """\\""")
-        .replace(stringDelimiterChar, """\${stringDelimiterChar}""")
-        .replace("\n", "")
-        .replace("\r", "")
+internal fun looselyEscapeStringForJs(string: String): String {
+    val stringBuilder = StringBuilder()
+
+    string.forEach {
+        val char = when (it) {
+            '"' -> "\\\""
+            '\'' -> "\\'"
+            '\n' -> "\\n"
+            '\r' -> "\\r"
+            '\u000c' -> "\\u000c"
+            else -> it
+        }
+        stringBuilder.append(char)
+    }
+
+    return stringBuilder.toString()
 }
