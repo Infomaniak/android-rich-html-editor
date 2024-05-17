@@ -1,0 +1,3 @@
+function requestFocus() {
+    getEditor().focus()
+}

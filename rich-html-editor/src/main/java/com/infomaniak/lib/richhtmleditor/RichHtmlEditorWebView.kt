@@ -1,8 +1,11 @@
 package com.infomaniak.lib.richhtmleditor
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.webkit.WebView
+import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
+import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 
 /**
  * A custom WebView designed to provide simple formatting and editing capabilities to an existing HTML content.
@@ -26,6 +29,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     private val documentInitializer = DocumentInitializer()
     private val jsExecutor = JsExecutor(this)
+    private val keyboardOpener = KeyboardOpener(this)
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
@@ -37,6 +41,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
         addJavascriptInterface(textFormat, "editor")
     }
+
+    override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect)
+        if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus()"))
+    }
+
 
     /**
      * Sets the HTML content to be displayed in the rich HTML editor.
@@ -84,12 +94,17 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun notifyPageHasLoaded() {
         documentInitializer.setupDocument(this)
         jsExecutor.notifyDomLoaded()
+        keyboardOpener.notifyDomLoaded()
+    }
+
+    fun requestFocusAndOpenKeyboard() {
+        keyboardOpener.executeWhenDomIsLoaded(Unit)
     }
 
     // TODO: Find the best way to notify of new html
     fun exportHtml(callback: (html: String) -> Unit) {
         htmlExportCallback = callback
-        jsExecutor.executeWhenDomIsLoaded("exportHtml()")
+        jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml()"))
     }
 
     private fun notifyExportedHtml(html: String) {

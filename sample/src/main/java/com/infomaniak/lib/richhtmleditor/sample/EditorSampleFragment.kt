@@ -57,6 +57,8 @@ class EditorSampleFragment : Fragment() {
         }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
+
+        focusEditorButton.setOnClickListener { editor.requestFocusAndOpenKeyboard() }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {
