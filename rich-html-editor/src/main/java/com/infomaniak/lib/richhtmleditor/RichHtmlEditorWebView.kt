@@ -25,6 +25,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     val textFormat = TextFormat(this, ::notifyExportedHtml)
 
     private val documentInitializer = DocumentInitializer()
+    private val jsExecutor = JsExecutor(this)
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
@@ -82,12 +83,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     // If you want to use your own custom WebViewClient, call this method inside onPageFinished() so
     fun notifyPageHasLoaded() {
         documentInitializer.setupDocument(this)
+        jsExecutor.notifyDomLoaded()
     }
 
     // TODO: Find the best way to notify of new html
     fun exportHtml(callback: (html: String) -> Unit) {
         htmlExportCallback = callback
-        evaluateJavascript("exportHtml()", null)
+        jsExecutor.executeWhenDomIsLoaded("exportHtml()")
     }
 
     private fun notifyExportedHtml(html: String) {
