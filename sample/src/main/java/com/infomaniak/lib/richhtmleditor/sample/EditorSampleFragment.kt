@@ -41,17 +41,17 @@ class EditorSampleFragment : Fragment() {
     }
 
     private fun setEditorButtonClickListeners() = with(binding) {
-        buttonBold.setOnClickListener { editor.textFormat.toggleBold() }
-        buttonItalic.setOnClickListener { editor.textFormat.toggleItalic() }
-        buttonStrikeThrough.setOnClickListener { editor.textFormat.toggleStrikeThrough() }
-        buttonUnderline.setOnClickListener { editor.textFormat.toggleUnderline() }
-        buttonRemoveFormat.setOnClickListener { editor.textFormat.removeFormat() }
+        buttonBold.setOnClickListener { editor.toggleBold() }
+        buttonItalic.setOnClickListener { editor.toggleItalic() }
+        buttonStrikeThrough.setOnClickListener { editor.toggleStrikeThrough() }
+        buttonUnderline.setOnClickListener { editor.toggleUnderline() }
+        buttonRemoveFormat.setOnClickListener { editor.removeFormat() }
         buttonLink.setOnClickListener {
             if (buttonLink.isActivated) {
-                editor.textFormat.unlink()
+                editor.unlink()
             } else {
                 createLinkDialog.show("", "") { url, displayText ->
-                    editor.textFormat.createLink(displayText, url)
+                    editor.createLink(displayText, url)
                 }
             }
         }
@@ -63,7 +63,7 @@ class EditorSampleFragment : Fragment() {
 
     private fun observeEditorStatusUpdates() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
-            editor.textFormat.editorStatusesFlow.collect {
+            editor.editorStatusesFlow.collect {
                 buttonBold.isActivated = it.isBold
                 buttonItalic.isActivated = it.isItalic
                 buttonStrikeThrough.isActivated = it.isStrikeThrough

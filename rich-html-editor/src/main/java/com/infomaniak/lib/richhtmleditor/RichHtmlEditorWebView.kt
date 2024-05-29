@@ -25,7 +25,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
-    val textFormat = TextFormat(this, ::notifyExportedHtml)
+    private val textFormat = TextFormat(this, ::notifyExportedHtml)
+    val editorStatusesFlow by textFormat::editorStatusesFlow
 
     private val documentInitializer = DocumentInitializer()
     private val jsExecutor = JsExecutor(this)
@@ -41,12 +42,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
         addJavascriptInterface(textFormat, "editor")
     }
-
-    override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect)
-        if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus()"))
-    }
-
 
     /**
      * Sets the HTML content to be displayed in the rich HTML editor.
@@ -71,7 +66,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * @see EditorConfig
      */
-
     fun setHtml(html: String = "", editorConfig: EditorConfig? = null) {
         documentInitializer.init(
             html = html,
@@ -83,6 +77,15 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
     }
+
+
+    fun toggleBold() = textFormat.toggleBold()
+    fun toggleItalic() = textFormat.toggleItalic()
+    fun toggleStrikeThrough() = textFormat.toggleStrikeThrough()
+    fun toggleUnderline() = textFormat.toggleUnderline()
+    fun removeFormat() = textFormat.removeFormat()
+    fun createLink(displayText: String?, url: String) = textFormat.createLink(displayText, url)
+    fun unlink() = textFormat.unlink()
 
     /**
      * Notify the WebView to setup the editor template document provided during [setHtml]
@@ -105,6 +108,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun exportHtml(callback: (html: String) -> Unit) {
         htmlExportCallback = callback
         jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml()"))
+    }
+
+    override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect)
+        if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus()"))
     }
 
     private fun notifyExportedHtml(html: String) {
