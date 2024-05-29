@@ -121,28 +121,34 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     @Deprecated(
-        "Use setHtml instead to initialize the editor with the desired HTML content.",
+        "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadUrl(url: String) = super.loadUrl(url)
+    override fun loadUrl(url: String) {
+        throw UnsupportedOperationException("Use setHtml() instead")
+    }
 
     @Deprecated(
-        "Use setHtml instead to initialize the editor with the desired HTML content.",
+        "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) =
-        super.loadUrl(url, additionalHttpHeaders)
+    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) {
+        throw UnsupportedOperationException("Use setHtml() instead")
+    }
 
     @Deprecated(
-        "Use setHtml instead to initialize the editor with the desired HTML content.",
+        "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadData(data: String, mimeType: String?, encoding: String?) = super.loadData(data, mimeType, encoding)
+    override fun loadData(data: String, mimeType: String?, encoding: String?) {
+        throw UnsupportedOperationException("Use setHtml() instead")
+    }
 
     @Deprecated(
-        "Use setHtml instead to initialize the editor with the desired HTML content.",
+        "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadDataWithBaseURL(baseUrl: String?, data: String, mimeType: String?, encoding: String?, historyUrl: String?) =
-        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
+    override fun loadDataWithBaseURL(baseUrl: String?, data: String, mimeType: String?, encoding: String?, historyUrl: String?) {
+        throw UnsupportedOperationException("Use setHtml() instead")
+    }
 }
