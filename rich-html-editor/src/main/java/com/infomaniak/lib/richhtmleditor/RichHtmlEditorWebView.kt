@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.webkit.WebView
+import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import kotlinx.coroutines.CoroutineScope
@@ -109,12 +110,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     // TODO: Find the best way to notify of new html
     fun exportHtml(callback: (html: String) -> Unit) {
         htmlExportCallback = callback
-        jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml()"))
+        jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
     }
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
-        if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus()"))
+        if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus"))
     }
 
     private fun notifyExportedHtml(html: String) {

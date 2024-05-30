@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import androidx.annotation.ColorInt
 import androidx.core.view.updateLayoutParams
+import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod.Companion.looselyEscapeStringForJs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
