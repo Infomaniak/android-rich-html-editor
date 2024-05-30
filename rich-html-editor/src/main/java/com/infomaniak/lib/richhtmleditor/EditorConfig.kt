@@ -13,7 +13,7 @@ package com.infomaniak.lib.richhtmleditor
  * @see RichHtmlEditorWebViewClient
  */
 data class EditorConfig(
-    val subscribedStates: Set<TextFormat.StatusCommand>? = null,
+    val subscribedStates: Set<StatusCommand>? = null,
     val customCss: List<String> = emptyList(),
     val customScripts: List<String> = emptyList(),
 )

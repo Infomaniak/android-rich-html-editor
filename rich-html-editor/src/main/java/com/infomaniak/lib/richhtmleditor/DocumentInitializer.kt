@@ -1,17 +1,17 @@
-package com.infomaniak.lib.richhtmleditor 
+package com.infomaniak.lib.richhtmleditor
 
 import android.webkit.WebView
 
 internal class DocumentInitializer {
 
     private var html: String? = null
-    private var subscribedStates: Set<TextFormat.StatusCommand>? = null
+    private var subscribedStates: Set<StatusCommand>? = null
     private var customCss: List<String> = emptyList()
     private var customScripts: List<String> = emptyList()
 
     fun init(
         html: String,
-        subscribedStates: Set<TextFormat.StatusCommand>?,
+        subscribedStates: Set<StatusCommand>?,
         customCss: List<String>?,
         customScripts: List<String>?,
     ) {
@@ -36,29 +36,29 @@ internal class DocumentInitializer {
     }
 
     private fun createSubscribedStatesScript(): String {
-        val subscribedStates = subscribedStates ?: TextFormat.StatusCommand.entries
+        val subscribedStates = subscribedStates ?: StatusCommand.entries
 
-        val stateCommands = mutableListOf<TextFormat.StatusCommand>()
-        val valueCommands = mutableListOf<TextFormat.StatusCommand>()
+        val stateCommands = mutableListOf<StatusCommand>()
+        val valueCommands = mutableListOf<StatusCommand>()
 
         subscribedStates.forEach {
             when (it.statusType) {
-                TextFormat.StatusType.STATE -> stateCommands.add(it)
-                TextFormat.StatusType.VALUE -> valueCommands.add(it)
-                TextFormat.StatusType.COMPLEX -> Unit
+                StatusType.STATE -> stateCommands.add(it)
+                StatusType.VALUE -> valueCommands.add(it)
+                StatusType.COMPLEX -> Unit
             }
         }
 
         val firstLine = generateConstTable("stateCommands", stateCommands)
         val secondLine = generateConstTable("valueCommands", valueCommands)
 
-        val areLinksSubscribedTo = subscribedStates.contains(TextFormat.StatusCommand.CREATE_LINK)
+        val areLinksSubscribedTo = subscribedStates.contains(StatusCommand.CREATE_LINK)
         val reportLinkStatusLine = "const REPORT_LINK_STATUS = $areLinksSubscribedTo"
 
         return "$firstLine\n$secondLine\n$reportLinkStatusLine"
     }
 
-    private fun generateConstTable(name: String, commands: Collection<TextFormat.StatusCommand>): String {
+    private fun generateConstTable(name: String, commands: Collection<StatusCommand>): String {
         return commands.joinToString(prefix = "const $name = [ ", postfix = " ]", separator = ", ") { "'${it.argumentName}'" }
     }
 

@@ -45,7 +45,7 @@ import kotlin.math.roundToInt
  *
  * @property editorStatusesFlow A flow representing the current status of the editor's text formatting.
  */
-class TextFormat(
+internal class TextFormat(
     private val webView: RichHtmlEditorWebView,
     private val coroutineScope: CoroutineScope,
     private val notifyExportedHtml: (String) -> Unit,
@@ -184,27 +184,5 @@ class TextFormat(
         webView.updateLayoutParams<ViewGroup.LayoutParams> {
             height = newHeight
         }
-    }
-
-    interface ExecCommand {
-        val argumentName: String
-    }
-
-    enum class StatusType { STATE, VALUE, COMPLEX }
-
-    enum class StatusCommand(override val argumentName: String, val statusType: StatusType) : ExecCommand {
-        BOLD("bold", StatusType.STATE),
-        ITALIC("italic", StatusType.STATE),
-        STRIKE_THROUGH("strikeThrough", StatusType.STATE),
-        UNDERLINE("underline", StatusType.STATE),
-        FONT_NAME("fontName", StatusType.VALUE),
-        FONT_SIZE("fontSize", StatusType.VALUE),
-        TEXT_COLOR("foreColor", StatusType.VALUE),
-        BACKGROUND_COLOR("backColor", StatusType.VALUE),
-        CREATE_LINK("createLink", StatusType.COMPLEX),
-    }
-
-    enum class OtherCommand(override val argumentName: String) : ExecCommand {
-        REMOVE_FORMAT("removeFormat"),
     }
 }
