@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.webkit.WebView
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 /**
  * A custom WebView designed to provide simple formatting and editing capabilities to an existing HTML content.
@@ -25,7 +27,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
-    private val textFormat = TextFormat(this, ::notifyExportedHtml)
+    private val textFormat = TextFormat(this, CoroutineScope(Dispatchers.Default), ::notifyExportedHtml)
     val editorStatusesFlow by textFormat::editorStatusesFlow
 
     private val documentInitializer = DocumentInitializer()

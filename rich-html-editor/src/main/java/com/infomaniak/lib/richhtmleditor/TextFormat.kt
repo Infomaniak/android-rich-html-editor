@@ -44,9 +44,11 @@ import kotlin.math.roundToInt
  *
  * @property editorStatusesFlow A flow representing the current status of the editor's text formatting.
  */
-class TextFormat(private val webView: RichHtmlEditorWebView, private val notifyExportedHtml: (String) -> Unit) {
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+class TextFormat(
+    private val webView: RichHtmlEditorWebView,
+    private val coroutineScope: CoroutineScope,
+    private val notifyExportedHtml: (String) -> Unit,
+) {
 
     private val editorStatuses = EditorStatuses()
 
