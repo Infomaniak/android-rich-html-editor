@@ -7,4 +7,9 @@ internal class JsExecutor(private val webView: WebView) : JsLifecycleAwareExecut
     override fun executeImmediately(value: JsExecutableMethod) {
         value.executeOn(webView)
     }
+
+    fun executeImmediatelyAndRefreshToolbar(method: JsExecutableMethod) {
+        method.addCallback { JsExecutableMethod("reportSelectionStateChangedIfNecessary").executeOn(webView) }
+        executeImmediately(method)
+    }
 }

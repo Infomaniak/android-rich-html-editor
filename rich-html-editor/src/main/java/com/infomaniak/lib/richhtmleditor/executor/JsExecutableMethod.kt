@@ -5,25 +5,41 @@ import android.webkit.WebView
 class JsExecutableMethod(
     private val methodName: String,
     private vararg val args: Any?,
-    private val callback: ((String) -> Unit)? = null,
+    callback: ((String) -> Unit)? = null,
 ) {
+    private val callbacks: MutableList<(String) -> Unit> = callback?.let { mutableListOf(it) } ?: mutableListOf()
+
     fun executeOn(webView: WebView) {
         val formattedArgs = if (args.isNotEmpty()) {
-            "'" + args.joinToString("', '", transform = ::encodeArgsForJs) + "'"
+            args.joinToString(", ", transform = ::encodeArgsForJs)
         } else {
             ""
         }
 
         val jsCode = "$methodName($formattedArgs)"
 
-        webView.evaluateJavascript(jsCode, callback)
+        val evaluationCallback: ((String) -> Unit)? = if (callbacks.isEmpty()) {
+            null
+        } else {
+            { jsExecutionOutput ->
+                callbacks.forEach { callback -> callback(jsExecutionOutput) }
+            }
+        }
+
+        webView.evaluateJavascript(jsCode, evaluationCallback)
     }
+
+    fun addCallback(callback: (String) -> Unit) {
+        callbacks.add(callback)
+    }
+
 
     companion object {
         private fun encodeArgsForJs(value: Any?): String {
             return when (value) {
                 null -> "null"
-                is String -> looselyEscapeStringForJs(value)
+                is String -> "'${looselyEscapeStringForJs(value)}'"
+                is Boolean -> value.toString()
                 else -> throw NotImplementedError("Encoding ${value::class} for JS is not yet implemented")
             }
         }

@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
-import android.webkit.ValueCallback
 import androidx.annotation.ColorInt
 import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
@@ -68,50 +67,31 @@ internal class TextFormat(
      */
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
-    fun toggleBold() = execCommandAndRefreshButtonStatus(StatusCommand.BOLD)
+    fun toggleBold() = execCommand(StatusCommand.BOLD)
 
-    fun toggleItalic() = execCommandAndRefreshButtonStatus(StatusCommand.ITALIC)
+    fun toggleItalic() = execCommand(StatusCommand.ITALIC)
 
-    fun toggleStrikeThrough() = execCommandAndRefreshButtonStatus(StatusCommand.STRIKE_THROUGH)
+    fun toggleStrikeThrough() = execCommand(StatusCommand.STRIKE_THROUGH)
 
-    fun toggleUnderline() = execCommandAndRefreshButtonStatus(StatusCommand.UNDERLINE)
+    fun toggleUnderline() = execCommand(StatusCommand.UNDERLINE)
 
-    fun removeFormat() = execCommandAndRefreshButtonStatus(OtherCommand.REMOVE_FORMAT)
+    fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
-    // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
     fun createLink(displayText: String?, url: String) {
-        jsExecutor.executeImmediately(JsExecutableMethod("createLink", displayText, url))
+        jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("createLink", displayText, url))
     }
 
-    // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
-    fun unlink() = jsExecutor.executeImmediately(JsExecutableMethod("unlink"))
+    fun unlink() = jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("unlink"))
 
-    private fun execCommand(
-        command: ExecCommand,
-        argument: String? = null,
-        callback: ((executionResult: String) -> Unit)? = null,
-    ) {
-        val valueCallback = callback?.let { ValueCallback<String> { value -> it(value) } }
-
-        val commandArgument = "'${command.argumentName}'"
-        val jsArgument = argument?.let { "'$it'" } ?: "null"
-        webView.evaluateJavascript("document.execCommand($commandArgument, false, $jsArgument)", valueCallback)
-    }
-
-    private fun execCommandAndRefreshButtonStatus(command: ExecCommand, argument: String? = null) {
-        withSelectionState { isCaret ->
-            execCommand(command, argument) {
-                if (isCaret) reportSelectionStateChangedIfNecessary()
-            }
-        }
-    }
-
-    private fun withSelectionState(block: (Boolean) -> Unit) {
-        webView.evaluateJavascript("window.getSelection().type == 'Caret'") { isCaret -> block((isCaret == "true")) }
-    }
-
-    private fun reportSelectionStateChangedIfNecessary() {
-        webView.evaluateJavascript("reportSelectionStateChangedIfNecessary()", null)
+    private fun execCommand(command: ExecCommand, argument: String? = null) {
+        jsExecutor.executeImmediatelyAndRefreshToolbar(
+            JsExecutableMethod(
+                "document.execCommand",
+                command.argumentName,
+                false,
+                argument,
+            )
+        )
     }
 
     // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt
