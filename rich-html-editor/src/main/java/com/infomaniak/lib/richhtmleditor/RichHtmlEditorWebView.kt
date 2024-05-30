@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
  * activates the necessary JavaScript mechanisms for the editor to update different format statuses and function properly.
  *
  * To interact with the editor, you can either listen to format status notifications or call methods to modify the current format
- * using [textFormat].
+ * using [jsBridge].
  */
 class RichHtmlEditorWebView @JvmOverloads constructor(
     context: Context,
@@ -32,8 +32,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private val jsExecutor = JsExecutor(this)
     private val keyboardOpener = KeyboardOpener(this)
 
-    private val textFormat = TextFormat(this, CoroutineScope(Dispatchers.Default), jsExecutor, ::notifyExportedHtml)
-    val editorStatusesFlow by textFormat::editorStatusesFlow
+    private val jsBridge = JsBridge(this, CoroutineScope(Dispatchers.Default), jsExecutor, ::notifyExportedHtml)
+    val editorStatusesFlow by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
@@ -43,7 +43,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
         webViewClient = RichHtmlEditorWebViewClient { notifyPageHasLoaded() }
 
-        addJavascriptInterface(textFormat, "editor")
+        addJavascriptInterface(jsBridge, "editor")
     }
 
     /**
@@ -82,13 +82,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
 
-    fun toggleBold() = textFormat.toggleBold()
-    fun toggleItalic() = textFormat.toggleItalic()
-    fun toggleStrikeThrough() = textFormat.toggleStrikeThrough()
-    fun toggleUnderline() = textFormat.toggleUnderline()
-    fun removeFormat() = textFormat.removeFormat()
-    fun createLink(displayText: String?, url: String) = textFormat.createLink(displayText, url)
-    fun unlink() = textFormat.unlink()
+    fun toggleBold() = jsBridge.toggleBold()
+    fun toggleItalic() = jsBridge.toggleItalic()
+    fun toggleStrikeThrough() = jsBridge.toggleStrikeThrough()
+    fun toggleUnderline() = jsBridge.toggleUnderline()
+    fun removeFormat() = jsBridge.removeFormat()
+    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText, url)
+    fun unlink() = jsBridge.unlink()
 
     /**
      * Notify the WebView to setup the editor template document provided during [setHtml]

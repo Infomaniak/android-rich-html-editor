@@ -45,7 +45,7 @@ import kotlin.math.roundToInt
  *
  * @property editorStatusesFlow A flow representing the current status of the editor's text formatting.
  */
-internal class TextFormat(
+internal class JsBridge(
     private val webView: RichHtmlEditorWebView,
     private val coroutineScope: CoroutineScope,
     private val jsExecutor: JsExecutor,
