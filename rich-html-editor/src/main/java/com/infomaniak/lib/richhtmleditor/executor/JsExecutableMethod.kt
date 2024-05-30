@@ -54,7 +54,6 @@ class JsExecutableMethod(
                     '\'' -> "\\'"
                     '\n' -> "\\n"
                     '\r' -> "\\r"
-                    '\u000c' -> "\\u000c"
                     else -> it
                 }
                 stringBuilder.append(char)
