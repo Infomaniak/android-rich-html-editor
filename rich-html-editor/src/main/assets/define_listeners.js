@@ -21,6 +21,10 @@ function onBodyResize(callback) {
     resizeObserver.observe(document.documentElement)
 }
 
+function reportError(error, source) {
+    window.editor.reportJsError(error.name, error.message, error.stack, source)
+}
+
 // Core logic
 
 function exportHtml() {

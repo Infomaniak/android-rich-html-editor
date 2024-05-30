@@ -47,6 +47,7 @@ internal class JsBridge(
     private val notifyExportedHtml: (String) -> Unit,
     private val requestRectangleOnScreen: (left: Int, top: Int, right: Int, bottom: Int) -> Unit,
     private val updateWebViewHeight: (Int) -> Unit,
+    private val onJsError: (String, String, String, String) -> Unit,
 ) {
 
     private val editorStatuses = EditorStatuses()
@@ -147,4 +148,9 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun exportHtml(html: String) = notifyExportedHtml(html)
+
+    @JavascriptInterface
+    fun reportJsError(errorName: String, errorMessage: String, errorStack: String, source: String) {
+        onJsError(errorName, errorMessage, errorStack, source)
+    }
 }

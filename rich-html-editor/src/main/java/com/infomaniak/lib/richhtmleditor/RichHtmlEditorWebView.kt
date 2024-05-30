@@ -41,11 +41,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         notifyExportedHtml = ::notifyExportedHtml,
         requestRectangleOnScreen = ::requestRectangleOnScreen,
         updateWebViewHeight = ::updateWebViewHeight,
+        onJsError = ::reportJsError,
     )
 
     val editorStatusesFlow by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
+    private var jsErrorCallback: ((String, String, String, String) -> Unit)? = null
 
     init {
         settings.javaScriptEnabled = true
@@ -123,6 +125,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
     }
 
+    fun onJsError(callback: ((String, String, String, String) -> Unit)? = null) {
+        jsErrorCallback = callback
+    }
+
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
         if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus"))
@@ -150,6 +156,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         updateLayoutParams<ViewGroup.LayoutParams> {
             height = newHeight
         }
+    }
+
+    private fun reportJsError(errorName: String, errorMessage: String, errorStack: String, source: String) {
+        jsErrorCallback?.invoke(errorName, errorMessage, errorStack, source)
     }
 
     @Deprecated(

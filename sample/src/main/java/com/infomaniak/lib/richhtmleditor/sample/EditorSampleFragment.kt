@@ -34,6 +34,12 @@ class EditorSampleFragment : Fragment() {
         editor.apply {
             setHtml(html)
             isVisible = true
+            onJsError { errorName, errorMessage, errorStack, source ->
+                Log.e("gibran", "onJsError - errorName: ${errorName}")
+                Log.e("gibran", "onJsError - errorMessage: ${errorMessage}")
+                Log.e("gibran", "onJsError - errorStack: ${errorStack}")
+                Log.e("gibran", "onJsError - source: ${source}")
+            }
         }
 
         setEditorButtonClickListeners()
