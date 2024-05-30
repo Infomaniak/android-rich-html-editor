@@ -18,47 +18,54 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonBold"
-                style="@style/EditorButton"
+            <LinearLayout
+                android:id="@+id/toolbarLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="B" />
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonItalic"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="I" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonBold"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonStrikeThrough"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonItalic"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="I" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonUnderline"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="U" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonStrikeThrough"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonRemoveFormat"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="X" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonUnderline"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="U" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonLink"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Link" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRemoveFormat"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="X" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonLink"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Link" />
+            </LinearLayout>
 
             <Space
                 android:layout_width="0dp"
@@ -75,9 +82,18 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/removeEditorFocusButton"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Loose focus" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/focusEditorButton"
@@ -87,7 +103,7 @@
             android:layout_gravity="end"
             android:text="Focus editor" />
 
-    </FrameLayout>
+    </LinearLayout>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"

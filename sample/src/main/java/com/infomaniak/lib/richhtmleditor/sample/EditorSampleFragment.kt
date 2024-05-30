@@ -1,10 +1,13 @@
 package com.infomaniak.lib.richhtmleditor.sample
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -31,9 +34,11 @@ class EditorSampleFragment : Fragment() {
         // val customCss = readAsset("editor_custom_css.css")
         val html = readAsset("example1.html")
 
+        setToolbarEnabledStatus(false)
         editor.apply {
             setHtml(html)
             isVisible = true
+            setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }
         }
 
         setEditorButtonClickListeners()
@@ -58,6 +63,11 @@ class EditorSampleFragment : Fragment() {
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
 
+        removeEditorFocusButton.setOnClickListener {
+            editor.clearFocus()
+            val inputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(editor.windowToken, 0)
+        }
         focusEditorButton.setOnClickListener { editor.requestFocusAndOpenKeyboard() }
     }
 
@@ -84,6 +94,10 @@ class EditorSampleFragment : Fragment() {
             .open(fileName)
             .bufferedReader()
             .use(BufferedReader::readText)
+    }
+
+    private fun setToolbarEnabledStatus(isEnabled: Boolean) {
+        binding.toolbarLayout.forEach { view -> view.isEnabled = isEnabled }
     }
 
     inner class CreateLinkDialog {
