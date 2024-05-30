@@ -1,11 +1,8 @@
 package com.infomaniak.lib.richhtmleditor
 
 import android.graphics.Color
-import android.graphics.Rect
-import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import androidx.annotation.ColorInt
-import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +11,6 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 /**
  * Utility class for handling text formatting operations within `RichHtmlEditorWebView`.
@@ -46,10 +42,11 @@ import kotlin.math.roundToInt
  * @property editorStatusesFlow A flow representing the current status of the editor's text formatting.
  */
 internal class JsBridge(
-    private val webView: RichHtmlEditorWebView,
     private val coroutineScope: CoroutineScope,
     private val jsExecutor: JsExecutor,
     private val notifyExportedHtml: (String) -> Unit,
+    private val requestRectangleOnScreen: (left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+    private val updateWebViewHeight: (Int) -> Unit,
 ) {
 
     private val editorStatuses = EditorStatuses()
@@ -145,24 +142,9 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun focusCursorOnScreen(left: Int, top: Int, right: Int, bottom: Int) {
-        val density: Float = webView.resources.displayMetrics.density
-
-        webView.requestRectangleOnScreen(
-            Rect(
-                (left * density).roundToInt(),
-                (top * density).roundToInt(),
-                (right * density).roundToInt(),
-                (bottom * density).roundToInt()
-            )
-        )
+        requestRectangleOnScreen(left, top, right, bottom)
     }
 
     @JavascriptInterface
     fun exportHtml(html: String) = notifyExportedHtml(html)
-
-    private fun updateWebViewHeight(newHeight: Int) {
-        webView.updateLayoutParams<ViewGroup.LayoutParams> {
-            height = newHeight
-        }
-    }
 }

@@ -3,12 +3,15 @@ package com.infomaniak.lib.richhtmleditor
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlin.math.roundToInt
 
 /**
  * A custom WebView designed to provide simple formatting and editing capabilities to an existing HTML content.
@@ -32,7 +35,14 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private val jsExecutor = JsExecutor(this)
     private val keyboardOpener = KeyboardOpener(this)
 
-    private val jsBridge = JsBridge(this, CoroutineScope(Dispatchers.Default), jsExecutor, ::notifyExportedHtml)
+    private val jsBridge = JsBridge(
+        coroutineScope = CoroutineScope(Dispatchers.Default),
+        jsExecutor = jsExecutor,
+        notifyExportedHtml = ::notifyExportedHtml,
+        requestRectangleOnScreen = ::requestRectangleOnScreen,
+        updateWebViewHeight = ::updateWebViewHeight,
+    )
+
     val editorStatusesFlow by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
@@ -121,6 +131,25 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private fun notifyExportedHtml(html: String) {
         htmlExportCallback?.invoke(html)
         htmlExportCallback = null
+    }
+
+    private fun requestRectangleOnScreen(left: Int, top: Int, right: Int, bottom: Int) {
+        val density: Float = resources.displayMetrics.density
+
+        requestRectangleOnScreen(
+            Rect(
+                (left * density).roundToInt(),
+                (top * density).roundToInt(),
+                (right * density).roundToInt(),
+                (bottom * density).roundToInt()
+            )
+        )
+    }
+
+    private fun updateWebViewHeight(newHeight: Int) {
+        updateLayoutParams<ViewGroup.LayoutParams> {
+            height = newHeight
+        }
     }
 
     @Deprecated(
