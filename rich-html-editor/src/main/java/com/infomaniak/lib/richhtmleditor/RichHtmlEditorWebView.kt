@@ -28,12 +28,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
-    private val textFormat = TextFormat(this, CoroutineScope(Dispatchers.Default), ::notifyExportedHtml)
-    val editorStatusesFlow by textFormat::editorStatusesFlow
-
     private val documentInitializer = DocumentInitializer()
     private val jsExecutor = JsExecutor(this)
     private val keyboardOpener = KeyboardOpener(this)
+
+    private val textFormat = TextFormat(this, CoroutineScope(Dispatchers.Default), jsExecutor, ::notifyExportedHtml)
+    val editorStatusesFlow by textFormat::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 

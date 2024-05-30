@@ -7,7 +7,8 @@ import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import androidx.annotation.ColorInt
 import androidx.core.view.updateLayoutParams
-import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod.Companion.looselyEscapeStringForJs
+import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
+import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -48,6 +49,7 @@ import kotlin.math.roundToInt
 internal class TextFormat(
     private val webView: RichHtmlEditorWebView,
     private val coroutineScope: CoroutineScope,
+    private val jsExecutor: JsExecutor,
     private val notifyExportedHtml: (String) -> Unit,
 ) {
 
@@ -78,13 +80,11 @@ internal class TextFormat(
 
     // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
     fun createLink(displayText: String?, url: String) {
-        val escapedDisplayText = displayText?.let { looselyEscapeStringForJs(it) } ?: "null"
-        val escapedUrl = looselyEscapeStringForJs(url)
-        webView.evaluateJavascript("createLink('$escapedDisplayText', '$escapedUrl')", null)
+        jsExecutor.executeImmediately(JsExecutableMethod("createLink", displayText, url))
     }
 
     // This will always modify the content of the html and will therefore trigger the status updates so no need to force update it
-    fun unlink() = webView.evaluateJavascript("unlink()", null)
+    fun unlink() = jsExecutor.executeImmediately(JsExecutableMethod("unlink"))
 
     private fun execCommand(
         command: ExecCommand,
