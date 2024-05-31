@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
@@ -18,10 +19,10 @@ import kotlin.math.roundToInt
 /**
  * A custom WebView designed to provide simple formatting and editing capabilities to an existing HTML content.
  *
- * The `RichHtmlEditorWebView` class utilizes the `contenteditable` attribute in HTML along with a combination of `execCommand`
+ * The [RichHtmlEditorWebView] class utilizes the `contenteditable` attribute in HTML along with a combination of `execCommand`
  * and custom logic to enable editing and basic formatting of existing HTML.
  *
- * When [setHtml] is called, it inserts the provided HTML content into the RichHtmlEditorWebView's editor template HTML and
+ * When [setHtml] is called, it inserts the provided HTML content into the [RichHtmlEditorWebView]'s editor template HTML and
  * activates the necessary JavaScript mechanisms for the editor to update different format statuses and function properly.
  *
  * To interact with the editor, you can either listen to format status notifications or call methods to modify the current format
@@ -66,25 +67,23 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     /**
-     * Sets the HTML content to be displayed in the rich HTML editor.
+     * Initializes the [RichHtmlEditorWebView] with the HTML content to be displayed.
      *
-     * This method initializes the web view client with the provided HTML content, subscribed states, custom CSS, and custom
-     * scripts. It then loads the HTML editor template into the web view. No HTML content is needed to have an empty editor;
-     * calling the method without parameters will still initialize everything necessary for the editor to function.
+     * This method initializes the WebView to work properly and can also load the provided HTML content and subscribed states. No
+     * HTML content is needed to have an empty editor; calling the method without parameters will still initialize everything
+     * necessary for the editor to function properly.
      *
-     * @param html The HTML content to be displayed. Defaults to an empty string.
-     * @param subscribedStates A set of status commands to subscribe to. Defaults to null, meaning all available status commands
-     *  * will be subscribed to.
+     * @param html The HTML content to be displayed. Defaults to an empty string. If the string is empty it means the editor will
+     * start empty and simply won't load any initial data
+     * @param subscribedStates A set of [StatusCommand] to subscribe to. Defaults to null, meaning all available [StatusCommand]
+     * will be subscribed to.
      *
      * Example usage:
      * ```
      * val htmlContent = "<p>Hello, World!</p>"
-     * val states = setOf(TextFormat.StatusCommand.BOLD, TextFormat.StatusCommand.ITALIC)
-     * val css = listOf("body { background-color: #f0f0f0; }")
-     * val scripts = listOf("console.log('Custom script loaded');")
-     * val editorConfig = EditorConfig(states, css, scripts)
+     * val subscribedStates = setOf(StatusCommand.BOLD, StatusCommand.ITALIC)
      *
-     * setHtml(htmlContent, editorConfig)
+     * setHtml(htmlContent, subscribedStates)
      * ```
      */
     fun setHtml(html: String = "", subscribedStates: Set<StatusCommand>? = null) {
@@ -98,7 +97,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.CSS, css))
     }
 
-    // The html loaded with setHtml is not guaranteed to be loaded inside the editor by the time this injected script is loaded
+    /**
+     * Injects a custom script inside the editor template's `<head>`.
+     *
+     * The html loaded with [setHtml] is not guaranteed to be loaded inside the editor by the time this injected script is loaded
+     * */
     fun addScript(script: String) {
         scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.SCRIPT, script))
     }
@@ -112,10 +115,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun unlink() = jsBridge.unlink()
 
     /**
-     * Notify the WebView to setup the editor template document provided during [setHtml]
+     * Notifies the [RichHtmlEditorWebView] to setup the editor.
      *
      * This method is only required if you want to use your own custom WebViewClient. To use your own custom WebViewClient call
-     * this method inside onPageFinished() of your WebViewClient so the editor can setup itself correctly.
+     * this method inside [WebViewClient.onPageFinished] of your [WebViewClient] so the editor can setup itself correctly.
      */
     fun notifyPageHasLoaded() {
         documentInitializer.setupDocument(this)
@@ -129,7 +132,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         keyboardOpener.executeWhenDomIsLoaded(Unit)
     }
 
-    // TODO: Find the best way to notify of new html
     fun exportHtml(callback: (html: String) -> Unit) {
         htmlExportCallback = callback
         jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))

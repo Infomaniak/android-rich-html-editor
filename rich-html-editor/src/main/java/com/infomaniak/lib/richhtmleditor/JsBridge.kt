@@ -12,35 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
-/**
- * Utility class for handling text formatting operations within `RichHtmlEditorWebView`.
- *
- * The `TextFormat` class provides methods for setting and removing text formatting such as bold, italic, underline,
- * strike-through, creating and unlinking hyperlinks, and exposing an observable flow of editor statuses.
- *
- * To interact with text formatting in `RichHtmlEditorWebView`, access its instance of `TextFormat` and utilize this class'
- * methods. Additionally, you can observe the editor statuses using the `editorStatusesFlow` property.
- *
- * Example usage:
- * ```
- * // Access the textFormat instance from RichHtmlEditorWebView
- * val textFormat = richHtmlEditorWebView.textFormat
- *
- * buttonBold.setOnClickListener { textFormat.toggleBold() }
- * buttonItalic.setOnClickListener { textFormat.toggleItalic() }
- *
- * ...
- *
- * viewLifecycleOwner.lifecycleScope.launch {
- *   textFormat.editorStatusesFlow.collect {
- *     buttonBold.isActivated = it.isBold
- *     buttonItalic.isActivated = it.isItalic
- *   }
- * }
- * ```
- *
- * @property editorStatusesFlow A flow representing the current status of the editor's text formatting.
- */
 internal class JsBridge(
     private val coroutineScope: CoroutineScope,
     private val jsExecutor: JsExecutor,
