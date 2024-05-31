@@ -5,10 +5,8 @@ import android.webkit.WebViewClient
 
 
 /**
- * A custom WebViewClient designed required by `RichHtmlEditorWebView` to work properly.
- *
- * The `RichHtmlEditorWebViewClient` handles the required mechanisms for the RichHtmlEditorWebView to work properly such as
- * subscribed states notifications to the native code.
+ * A custom WebViewClient used to notify `RichHtmlEditorWebView` when the template has loaded. It is required by
+ * `RichHtmlEditorWebView` to call [RichHtmlEditorWebView.notifyPageHasLoaded] so `RichHtmlEditorWebView` works properly.
  */
 class RichHtmlEditorWebViewClient(private val onPageLoaded: () -> Unit) : WebViewClient() {
     override fun onPageFinished(webView: WebView, url: String?) = onPageLoaded()

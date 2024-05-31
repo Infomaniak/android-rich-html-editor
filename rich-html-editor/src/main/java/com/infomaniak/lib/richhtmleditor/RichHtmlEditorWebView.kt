@@ -25,7 +25,7 @@ import kotlin.math.roundToInt
  * activates the necessary JavaScript mechanisms for the editor to update different format statuses and function properly.
  *
  * To interact with the editor, you can either listen to format status notifications or call methods to modify the current format
- * using [jsBridge].
+ * such as [toggleBold].
  */
 class RichHtmlEditorWebView @JvmOverloads constructor(
     context: Context,
@@ -46,6 +46,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         updateWebViewHeight = ::updateWebViewHeight,
     )
 
+    /**
+     * Flow that is notified everytime a subscribed [EditorStatuses] is updated.
+     *
+     * You can use this flow to listen to subscribed [EditorStatuses] and update your toolbar's UI accordingly to show which
+     * formatting is enabled on the current selection.
+     */
     val editorStatusesFlow by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
@@ -111,7 +117,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * This method is only required if you want to use your own custom WebViewClient. To use your own custom WebViewClient call
      * this method inside onPageFinished() of your WebViewClient so the editor can setup itself correctly.
      */
-    // If you want to use your own custom WebViewClient, call this method inside onPageFinished() so
     fun notifyPageHasLoaded() {
         documentInitializer.setupDocument(this)
 

@@ -55,13 +55,6 @@ internal class JsBridge(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-
-    /**
-     * Flow that is notified everytime a subscribed `EditorStatuses` is updated.
-     *
-     * You can use this flow to listen to subscribed `EditorStatuses` and update your toolbar's UI accordingly to show which
-     * formatting is enabled on the current selection.
-     */
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
 
     fun toggleBold() = execCommand(StatusCommand.BOLD)
