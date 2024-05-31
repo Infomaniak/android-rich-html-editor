@@ -9,6 +9,8 @@ import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
+import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector
+import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlin.math.roundToInt
@@ -33,6 +35,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     private val documentInitializer = DocumentInitializer()
     private val jsExecutor = JsExecutor(this)
+    private val scriptCssInjector = ScriptCssInjector(this)
     private val keyboardOpener = KeyboardOpener(this)
 
     private val jsBridge = JsBridge(
@@ -64,7 +67,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * calling the method without parameters will still initialize everything necessary for the editor to function.
      *
      * @param html The HTML content to be displayed. Defaults to an empty string.
-     * @param editorConfig A wrapper containing the different configurations you can do on the editor.
+     * @param subscribedStates A set of status commands to subscribe to. Defaults to null, meaning all available status commands
+     *  * will be subscribed to.
      *
      * Example usage:
      * ```
@@ -76,21 +80,22 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * setHtml(htmlContent, editorConfig)
      * ```
-     *
-     * @see EditorConfig
      */
-    fun setHtml(html: String = "", editorConfig: EditorConfig? = null) {
-        documentInitializer.init(
-            html = html,
-            subscribedStates = editorConfig?.subscribedStates,
-            customCss = editorConfig?.customCss,
-            customScripts = editorConfig?.customScripts
-        )
+    fun setHtml(html: String = "", subscribedStates: Set<StatusCommand>? = null) {
+        documentInitializer.init(html = html, subscribedStates = subscribedStates)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
     }
 
+    fun addCss(css: String) {
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.CSS, css))
+    }
+
+    // The html loaded with setHtml is not guaranteed to be loaded inside the editor by the time this injected script is loaded
+    fun addScript(script: String) {
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.SCRIPT, script))
+    }
 
     fun toggleBold() = jsBridge.toggleBold()
     fun toggleItalic() = jsBridge.toggleItalic()
@@ -109,7 +114,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     // If you want to use your own custom WebViewClient, call this method inside onPageFinished() so
     fun notifyPageHasLoaded() {
         documentInitializer.setupDocument(this)
+
         jsExecutor.notifyDomLoaded()
+        scriptCssInjector.notifyDomLoaded()
         keyboardOpener.notifyDomLoaded()
     }
 
