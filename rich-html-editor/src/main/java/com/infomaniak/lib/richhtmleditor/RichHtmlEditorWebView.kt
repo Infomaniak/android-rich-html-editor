@@ -10,6 +10,7 @@ import android.view.AbsSavedState
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.ColorInt
 import androidx.core.os.bundleOf
 import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
@@ -123,6 +124,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun toggleStrikeThrough() = jsBridge.toggleStrikeThrough()
     fun toggleUnderline() = jsBridge.toggleUnderline()
     fun removeFormat() = jsBridge.removeFormat()
+    fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(color)
+    fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(color)
     fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
 

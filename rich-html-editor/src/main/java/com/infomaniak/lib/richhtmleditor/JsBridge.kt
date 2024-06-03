@@ -41,6 +41,10 @@ internal class JsBridge(
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
+    fun setTextColor(@ColorInt color: Int) = execCommand(StatusCommand.TEXT_COLOR, colorToRgbHex(color))
+
+    fun setTextBackgroundColor(@ColorInt color: Int) = execCommand(StatusCommand.BACKGROUND_COLOR, colorToRgbHex(color))
+
     fun createLink(displayText: String?, url: String) {
         jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("createLink", displayText, url))
     }
@@ -67,6 +71,9 @@ internal class JsBridge(
 
         return Color.argb(255, r.toInt(), g.toInt(), b.toInt())
     }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun colorToRgbHex(color: Int) = color.toHexString(HexFormat.UpperCase).takeLast(6)
 
     @JavascriptInterface
     fun reportCommandDataChange(
