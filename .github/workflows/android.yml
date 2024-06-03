@@ -1,0 +1,40 @@
+name: Android CI
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  instrumentation-tests:
+    if: github.event.pull_request.draft == false
+    runs-on: [ self-hosted, Android ]
+    strategy:
+      matrix:
+        api-level: [ 34 ]
+        target: [ google_apis ]
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout the code
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ github.token }}
+          submodules: recursive
+
+      # Setup Gradle and run Build
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      # Run tests
+      - name: Run Unit tests
+        run: ./gradlew testDebugUnitTest --stacktrace
