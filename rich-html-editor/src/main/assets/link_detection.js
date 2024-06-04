@@ -1,9 +1,9 @@
 const DOCUMENT_POSITION_SAME = 0 // TODO: Check usefulness
 
 function getAllLinksPartiallyContainedInsideSelection() {
-    var elements = [...getEditor().querySelectorAll("a[href]")]
-    var range = document.getSelection().getRangeAt(0)
-    var { startContainer, endContainer } = range
+    let elements = [...getEditor().querySelectorAll("a[href]")]
+    const range = document.getSelection().getRangeAt(0)
+    const { startContainer, endContainer } = range
 
     // TODO: Investigate RoosterJs issues with startContainer and endContainer https://github.com/microsoft/roosterjs/blob/b1d4bab67dcae342cfdc043a8cbe2b96bb823a44/packages/roosterjs-editor-dom/lib/utils/queryElements.ts#L30
 

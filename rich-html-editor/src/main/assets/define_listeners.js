@@ -39,18 +39,18 @@ function findElementNode(element) {
 }
 
 function getCaretRect() {
-    var selection = window.getSelection()
-    var lastSelectedNode = selection.focusNode
+    const selection = window.getSelection()
+    const lastSelectedNode = selection.focusNode
 
     if (selection.rangeCount == 0) return
 
-    var range = selection.getRangeAt(0).cloneRange()
+    const range = selection.getRangeAt(0).cloneRange()
 
     // Create a range around the last selected node so the webview can scroll and follow the cursor even if the whole range is
     // bigger than the screen
     range.selectNodeContents(lastSelectedNode)
 
-    var rangeRects = range.getClientRects()
+    const rangeRects = range.getClientRects()
 
     let rect
     switch (rangeRects.length) {

@@ -4,7 +4,7 @@ function createLink(displayText, url) {
     let range = document.getSelection().getRangeAt(0)
     if (range.collapsed) {
         // There's no selection, only a cursor. We can add the link manually
-        var anchor = getAnchorNodeAtCursor()
+        let anchor = getAnchorNodeAtCursor()
 
         // If there is already a link, just change its href
         if (anchor) {
