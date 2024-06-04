@@ -33,8 +33,8 @@ function focusCursorOnScreen() {
 }
 
 function findElementNode(element) {
-    if (element == null) return null
-    if (element.nodeType == Node.ELEMENT_NODE) return element
+    if (element === null) return null
+    if (element.nodeType === Node.ELEMENT_NODE) return element
     return findElementNode(element.parentNode)
 }
 
@@ -42,7 +42,7 @@ function getCaretRect() {
     const selection = window.getSelection()
     const lastSelectedNode = selection.focusNode
 
-    if (selection.rangeCount == 0) return
+    if (selection.rangeCount === 0) return
 
     const range = selection.getRangeAt(0).cloneRange()
 
