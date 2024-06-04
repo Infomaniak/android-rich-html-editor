@@ -3,6 +3,7 @@ package com.infomaniak.lib.richhtmleditor
 import android.graphics.Color
 import android.webkit.JavascriptInterface
 import androidx.annotation.ColorInt
+import androidx.annotation.IntRange
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import kotlinx.coroutines.CoroutineDispatcher
@@ -41,9 +42,11 @@ internal class JsBridge(
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
-    fun setTextColor(@ColorInt color: Int) = execCommand(StatusCommand.TEXT_COLOR, colorToRgbHex(color))
+    fun setTextColor(color: JsColor) = execCommand(StatusCommand.TEXT_COLOR, color)
 
-    fun setTextBackgroundColor(@ColorInt color: Int) = execCommand(StatusCommand.BACKGROUND_COLOR, colorToRgbHex(color))
+    fun setTextBackgroundColor(color: JsColor) = execCommand(StatusCommand.BACKGROUND_COLOR, color)
+
+    fun setFontSize(@IntRange(from = 1, to = 7) fontSize: Int) = execCommand(StatusCommand.FONT_SIZE, fontSize)
 
     fun createLink(displayText: String?, url: String) {
         jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("createLink", displayText, url))
@@ -51,7 +54,7 @@ internal class JsBridge(
 
     fun unlink() = jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("unlink"))
 
-    private fun execCommand(command: ExecCommand, argument: String? = null) {
+    private fun execCommand(command: ExecCommand, argument: Any? = null) {
         jsExecutor.executeImmediatelyAndRefreshToolbar(
             JsExecutableMethod(
                 "document.execCommand",
@@ -71,9 +74,6 @@ internal class JsBridge(
 
         return Color.argb(255, r.toInt(), g.toInt(), b.toInt())
     }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private fun colorToRgbHex(color: Int) = color.toHexString(HexFormat.UpperCase).takeLast(6)
 
     @JavascriptInterface
     fun reportCommandDataChange(

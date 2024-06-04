@@ -86,6 +86,10 @@ class EditorSampleFragment : Fragment() {
         textColorBlue.setOnClickListener { editor.setTextColor(BLUE) }
         textBackgroundColorRed.setOnClickListener { editor.setTextBackgroundColor(RED) }
         textBackgroundColorBlue.setOnClickListener { editor.setTextBackgroundColor(BLUE) }
+
+        fontSmallButton.setOnClickListener { editor.setFontSize(2) }
+        fontMediumButton.setOnClickListener { editor.setFontSize(4) }
+        fontBigButton.setOnClickListener { editor.setFontSize(6) }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {
