@@ -20,16 +20,16 @@ function doesIntersectWithNodeRange(node, startNode, endNode) {
     const targetPositions = [DOCUMENT_POSITION_SAME, Node.DOCUMENT_POSITION_CONTAINS, Node.DOCUMENT_POSITION_CONTAINED_BY]
 
     return (
-        checkPosition(startPosition, targetPositions) || // intersectStart
-        checkPosition(endPosition, targetPositions) || // intersectEnd
-        (checkPosition(startPosition, [Node.DOCUMENT_POSITION_PRECEDING]) && // Contains
-            checkPosition(endPosition, [Node.DOCUMENT_POSITION_FOLLOWING]) &&
-            !checkPosition(endPosition, [Node.DOCUMENT_POSITION_CONTAINED_BY]))
+        doesPositionMatchTargets(startPosition, targetPositions) || // intersectStart
+        doesPositionMatchTargets(endPosition, targetPositions) || // intersectEnd
+        (doesPositionMatchTargets(startPosition, [Node.DOCUMENT_POSITION_PRECEDING]) && // Contains
+            doesPositionMatchTargets(endPosition, [Node.DOCUMENT_POSITION_FOLLOWING]) &&
+            !doesPositionMatchTargets(endPosition, [Node.DOCUMENT_POSITION_CONTAINED_BY]))
     )
 }
 
-function checkPosition(position, targets) {
+function doesPositionMatchTargets(position, targets) {
     return targets.some(target =>
-        target == DOCUMENT_POSITION_SAME ? position == DOCUMENT_POSITION_SAME : (position & target) == target
+        target === DOCUMENT_POSITION_SAME ? position === DOCUMENT_POSITION_SAME : (position & target) === target
     )
 }
