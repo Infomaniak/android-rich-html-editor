@@ -1,9 +1,9 @@
 [versions]
-agp = "8.3.1"
+agp = "8.3.2"
 kotlin = "2.0.0"
-coreKtx = "1.12.0"
-appcompat = "1.6.1"
-material = "1.11.0"
+coreKtx = "1.13.1"
+appcompat = "1.7.0"
+material = "1.12.0"
 constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
