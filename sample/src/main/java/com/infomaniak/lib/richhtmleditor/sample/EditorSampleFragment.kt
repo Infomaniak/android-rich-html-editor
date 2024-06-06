@@ -82,10 +82,10 @@ class EditorSampleFragment : Fragment() {
         }
         focusEditorButton.setOnClickListener { editor.requestFocusAndOpenKeyboard() }
 
-        textColorRed.setOnClickListener { editor.setTextColor(Color.parseColor("#FF0000")) }
-        textColorBlue.setOnClickListener { editor.setTextColor(Color.parseColor("#0000FF")) }
-        textBackgroundColorRed.setOnClickListener { editor.setTextBackgroundColor(Color.parseColor("#FF0000")) }
-        textBackgroundColorBlue.setOnClickListener { editor.setTextBackgroundColor(Color.parseColor("#0000FF")) }
+        textColorRed.setOnClickListener { editor.setTextColor(RED) }
+        textColorBlue.setOnClickListener { editor.setTextColor(BLUE) }
+        textBackgroundColorRed.setOnClickListener { editor.setTextBackgroundColor(RED) }
+        textBackgroundColorBlue.setOnClickListener { editor.setTextBackgroundColor(BLUE) }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {
@@ -150,5 +150,10 @@ class EditorSampleFragment : Fragment() {
             }
             dialog.show()
         }
+    }
+
+    companion object {
+        private val RED = Color.parseColor("#FF0000")
+        private val BLUE = Color.parseColor("#0000FF")
     }
 }
