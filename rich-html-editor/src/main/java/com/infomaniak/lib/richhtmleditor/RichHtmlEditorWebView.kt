@@ -117,7 +117,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun toggleStrikeThrough() = jsBridge.toggleStrikeThrough()
     fun toggleUnderline() = jsBridge.toggleUnderline()
     fun removeFormat() = jsBridge.removeFormat()
-    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText, url)
+    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
 
     /**
