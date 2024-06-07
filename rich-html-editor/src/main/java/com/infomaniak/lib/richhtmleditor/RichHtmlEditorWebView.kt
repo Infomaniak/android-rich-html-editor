@@ -170,31 +170,29 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadUrl(url: String) {
-        throw UnsupportedOperationException("Use setHtml() instead")
-    }
+    override fun loadUrl(url: String) = unsupported()
 
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) {
-        throw UnsupportedOperationException("Use setHtml() instead")
-    }
+    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) = unsupported()
 
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadData(data: String, mimeType: String?, encoding: String?) {
-        throw UnsupportedOperationException("Use setHtml() instead")
-    }
+    override fun loadData(data: String, mimeType: String?, encoding: String?) = unsupported()
 
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
     override fun loadDataWithBaseURL(baseUrl: String?, data: String, mimeType: String?, encoding: String?, historyUrl: String?) {
+        unsupported()
+    }
+
+    private fun unsupported() {
         throw UnsupportedOperationException("Use setHtml() instead")
     }
 }
