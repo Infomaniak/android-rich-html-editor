@@ -16,6 +16,11 @@ function onBodyResize(callback) {
     resizeObserver.observe(document.documentElement)
 }
 
+function getSelectionRangeOrNull() {
+    const selection = document.getSelection()
+    return (selection.rangeCount > 0) ? selection.getRangeAt(0) : null
+}
+
 // Core logic
 
 function exportHtml() {
