@@ -23,7 +23,7 @@ function createLink(displayText, url) {
 
         // Update the newly created link's display text if we have a custom text
         if (displayText) {
-            let anchor = getAnchorNodeAtCursor(editor)
+            let anchor = getAnchorNodeAtCursor()
             updateAnchorDisplayText(anchor, displayText)
         }
     }
