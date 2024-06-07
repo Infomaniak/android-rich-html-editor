@@ -10,12 +10,7 @@ class JsExecutableMethod(
     private val callbacks: MutableList<(String) -> Unit> = callback?.let { mutableListOf(it) } ?: mutableListOf()
 
     fun executeOn(webView: WebView) {
-        val formattedArgs = if (args.isNotEmpty()) {
-            args.joinToString(", ", transform = ::encodeArgsForJs)
-        } else {
-            ""
-        }
-
+        val formattedArgs = args.joinToString(transform = ::encodeArgsForJs)
         val jsCode = "$methodName($formattedArgs)"
 
         val evaluationCallback: ((String) -> Unit)? = if (callbacks.isEmpty()) {
@@ -32,7 +27,6 @@ class JsExecutableMethod(
     fun addCallback(callback: (String) -> Unit) {
         callbacks.add(callback)
     }
-
 
     companion object {
         private fun encodeArgsForJs(value: Any?): String {
