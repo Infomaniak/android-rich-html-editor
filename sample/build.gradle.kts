@@ -9,12 +9,10 @@ android {
 
     defaultConfig {
         applicationId = "com.infomaniak.lib.richhtmleditor.sample"
-        minSdk = 25
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -36,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":rich-html-editor"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -43,8 +42,4 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    implementation(project(":rich-html-editor"))
 }
