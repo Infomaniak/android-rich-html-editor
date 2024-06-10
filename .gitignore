@@ -13,6 +13,7 @@ captures/
 .externalNativeBuild/
 .cxx/
 *.apk
+*.aab
 output.json
 
 # IntelliJ
@@ -31,3 +32,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Missing gitignore compared to mail
+.DS_Store
