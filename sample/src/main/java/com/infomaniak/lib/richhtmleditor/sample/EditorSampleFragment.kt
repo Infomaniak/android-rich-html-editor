@@ -72,6 +72,8 @@ class EditorSampleFragment : Fragment() {
                 }
             }
         }
+        orderedList.setOnClickListener { editor.toggleOrderedList() }
+        unorderedList.setOnClickListener { editor.toggleUnorderedList() }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
 
@@ -101,6 +103,9 @@ class EditorSampleFragment : Fragment() {
                 buttonUnderline.isActivated = it.isUnderlined
 
                 buttonLink.isActivated = it.isLinkSelected
+
+                orderedList.isActivated = it.isOrderedListSelected
+                unorderedList.isActivated = it.isUnorderedListSelected
             }
         }
     }

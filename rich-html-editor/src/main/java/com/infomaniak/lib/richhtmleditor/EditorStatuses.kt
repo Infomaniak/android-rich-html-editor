@@ -14,6 +14,8 @@ data class EditorStatuses(
     var textColor: Int? = null,
     var backgroundColor: Int? = null,
     var isLinkSelected: Boolean = false,
+    var isOrderedListSelected: Boolean = false,
+    var isUnorderedListSelected: Boolean = false,
 ) {
     private val mutex = Mutex()
 
@@ -27,6 +29,8 @@ data class EditorStatuses(
         @ColorInt textColor: Int?,
         @ColorInt backgroundColor: Int?,
         isLinkSelected: Boolean,
+        isOrderedListSelected: Boolean,
+        isUnorderedListSelected: Boolean,
     ) {
         mutex.withLock {
             this.isBold = isBold
@@ -38,6 +42,8 @@ data class EditorStatuses(
             this.textColor = textColor
             this.backgroundColor = backgroundColor
             this.isLinkSelected = isLinkSelected
+            this.isOrderedListSelected = isOrderedListSelected
+            this.isUnorderedListSelected = isUnorderedListSelected
         }
     }
 }

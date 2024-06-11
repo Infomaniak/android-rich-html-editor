@@ -126,6 +126,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun toggleItalic() = jsBridge.toggleItalic()
     fun toggleStrikeThrough() = jsBridge.toggleStrikeThrough()
     fun toggleUnderline() = jsBridge.toggleUnderline()
+    fun toggleOrderedList() = jsBridge.toggleOrderedList()
+    fun toggleUnorderedList() = jsBridge.toggleUnorderedList()
     fun removeFormat() = jsBridge.removeFormat()
     fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(JsColor(color))
     fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(JsColor(color))
