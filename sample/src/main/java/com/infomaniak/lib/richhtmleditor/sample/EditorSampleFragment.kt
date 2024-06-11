@@ -74,6 +74,8 @@ class EditorSampleFragment : Fragment() {
         }
         orderedList.setOnClickListener { editor.toggleOrderedList() }
         unorderedList.setOnClickListener { editor.toggleUnorderedList() }
+        buttonSubscript.setOnClickListener { editor.toggleSubscript() }
+        buttonSuperscript.setOnClickListener { editor.toggleSuperscript() }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
 
@@ -106,6 +108,8 @@ class EditorSampleFragment : Fragment() {
 
                 orderedList.isActivated = it.isOrderedListSelected
                 unorderedList.isActivated = it.isUnorderedListSelected
+                buttonSubscript.isActivated = it.isSubscript
+                buttonSuperscript.isActivated = it.isSuperscript
             }
         }
     }
