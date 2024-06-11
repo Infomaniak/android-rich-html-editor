@@ -99,6 +99,20 @@
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_superscript" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonOutdent"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_outdent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonIndent"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_indent" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </HorizontalScrollView>

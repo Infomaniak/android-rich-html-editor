@@ -76,6 +76,8 @@ class EditorSampleFragment : Fragment() {
         unorderedList.setOnClickListener { editor.toggleUnorderedList() }
         buttonSubscript.setOnClickListener { editor.toggleSubscript() }
         buttonSuperscript.setOnClickListener { editor.toggleSuperscript() }
+        buttonOutdent.setOnClickListener { editor.outdent() }
+        buttonIndent.setOnClickListener { editor.indent() }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
 
