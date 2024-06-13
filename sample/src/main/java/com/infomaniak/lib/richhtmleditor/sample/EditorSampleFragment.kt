@@ -87,9 +87,9 @@ class EditorSampleFragment : Fragment() {
         textBackgroundColorRed.setOnClickListener { editor.setTextBackgroundColor(RED) }
         textBackgroundColorBlue.setOnClickListener { editor.setTextBackgroundColor(BLUE) }
 
-        fontSmallButton.setOnClickListener { editor.setFontSize(2) }
-        fontMediumButton.setOnClickListener { editor.setFontSize(4) }
-        fontBigButton.setOnClickListener { editor.setFontSize(6) }
+        fontSmallButton.setOnClickListener { editor.setFontSize(SMALL_FONT_SIZE) }
+        fontMediumButton.setOnClickListener { editor.setFontSize(MEDIUM_FONT_SIZE) }
+        fontBigButton.setOnClickListener { editor.setFontSize(BIG_FONT_SIZE) }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {
@@ -159,5 +159,9 @@ class EditorSampleFragment : Fragment() {
     companion object {
         private val RED = Color.parseColor("#FF0000")
         private val BLUE = Color.parseColor("#0000FF")
+
+        private const val SMALL_FONT_SIZE = 2
+        private const val MEDIUM_FONT_SIZE = 4
+        private const val BIG_FONT_SIZE = 6
     }
 }
