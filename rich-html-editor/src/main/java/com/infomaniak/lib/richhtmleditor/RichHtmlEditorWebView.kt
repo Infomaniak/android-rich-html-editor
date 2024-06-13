@@ -143,6 +143,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * called with the argument `fontSize`.
      */
     fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
+    fun undo() = jsBridge.undo()
+    fun redo() = jsBridge.redo()
     fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
 
