@@ -1,6 +1,9 @@
 package com.infomaniak.lib.richhtmleditor
 
 import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import android.view.AbsSavedState
 import android.webkit.WebView
 import java.io.BufferedReader
 
@@ -32,4 +35,12 @@ internal fun WebView.injectCss(css: String) {
         """.trimIndent()
 
     evaluateJavascript(addCssJs, null)
+}
+
+fun Bundle.getParcelableCompat(key: String, clazz: Class<AbsSavedState>): AbsSavedState? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getParcelable(key, clazz)
+    } else {
+        getParcelable(key)
+    }
 }
