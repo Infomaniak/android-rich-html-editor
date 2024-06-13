@@ -175,6 +175,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        keyboardOpener.removePendingListener()
         jsBridgeJob.cancel()
     }
 
