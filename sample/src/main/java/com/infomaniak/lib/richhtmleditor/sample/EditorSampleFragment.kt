@@ -125,6 +125,7 @@ class EditorSampleFragment : Fragment() {
     private fun setToolbarEnabledStatus(isEnabled: Boolean) = with(binding) {
         toolbarLayout.forEach { view -> view.isEnabled = isEnabled }
         colorLayout.forEach { view -> view.isEnabled = isEnabled }
+        fontLayout.forEach { view -> view.isEnabled = isEnabled }
     }
 
     inner class CreateLinkDialog {
