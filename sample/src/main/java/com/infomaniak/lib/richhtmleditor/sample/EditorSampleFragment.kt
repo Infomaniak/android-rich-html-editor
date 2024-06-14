@@ -34,9 +34,9 @@ class EditorSampleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-        setEditorHtml()
-
         setToolbarEnabledStatus(false)
+
+        setEditorContent()
         editor.apply {
             // You can add custom scripts and css such as:
             // addCss(readAsset("editor_custom_css.css"))
@@ -50,20 +50,10 @@ class EditorSampleFragment : Fragment() {
         observeEditorStatusUpdates()
     }
 
-    private fun setEditorHtml() = with(binding) {
-        if (editorSampleViewModel.needToReloadHtml) {
-            lifecycleScope.launch {
-                editorSampleViewModel.savedHtml.collect {
-                    if (it == null) return@collect
-
-                    editorSampleViewModel.resetSavedHtml()
-                    editor.setHtml(it)
-                }
-            }
-        } else {
-            editor.setHtml(readAsset("example1.html"))
+    private fun setEditorContent() {
+        lifecycleScope.launch {
+            editorSampleViewModel.editorReloader.load(binding.editor, readAsset("example1.html"))
         }
-        editorSampleViewModel.enableHtmlReload()
     }
 
     private fun setEditorButtonClickListeners() = with(binding) {
@@ -106,9 +96,7 @@ class EditorSampleFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        binding.editor.exportHtml {
-            editorSampleViewModel.saveHtml(it)
-        }
+        editorSampleViewModel.editorReloader.save(binding.editor)
         super.onSaveInstanceState(outState)
     }
 
