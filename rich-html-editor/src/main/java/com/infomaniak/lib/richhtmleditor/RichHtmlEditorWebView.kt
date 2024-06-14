@@ -131,6 +131,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun toggleSubscript() = jsBridge.toggleSubscript()
     fun toggleSuperscript() = jsBridge.toggleSuperscript()
     fun removeFormat() = jsBridge.removeFormat()
+    fun justify(justification: Justification) = jsBridge.justify(justification)
     fun indent() = jsBridge.indent()
     fun outdent() = jsBridge.outdent()
     fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(JsColor(color))

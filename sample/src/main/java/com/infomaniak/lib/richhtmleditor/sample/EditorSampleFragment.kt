@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.infomaniak.lib.richhtmleditor.Justification
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentEditorSampleBinding
 import kotlinx.coroutines.launch
@@ -78,6 +79,10 @@ class EditorSampleFragment : Fragment() {
         buttonSuperscript.setOnClickListener { editor.toggleSuperscript() }
         buttonOutdent.setOnClickListener { editor.outdent() }
         buttonIndent.setOnClickListener { editor.indent() }
+        justifyLeft.setOnClickListener { editor.justify(Justification.LEFT) }
+        justifyCenter.setOnClickListener { editor.justify(Justification.CENTER) }
+        justifyRight.setOnClickListener { editor.justify(Justification.RIGHT) }
+        justifyFull.setOnClickListener { editor.justify(Justification.FULL) }
 
         buttonExportHtml.setOnClickListener { editor.exportHtml { html -> Log.d("editor", "Output html: $html") } }
 
@@ -114,6 +119,11 @@ class EditorSampleFragment : Fragment() {
                 unorderedList.isActivated = it.isUnorderedListSelected
                 buttonSubscript.isActivated = it.isSubscript
                 buttonSuperscript.isActivated = it.isSuperscript
+
+                justifyLeft.isActivated = it.justification == Justification.LEFT
+                justifyCenter.isActivated = it.justification == Justification.CENTER
+                justifyRight.isActivated = it.justification == Justification.RIGHT
+                justifyFull.isActivated = it.justification == Justification.FULL
             }
         }
     }
