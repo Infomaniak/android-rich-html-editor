@@ -41,6 +41,8 @@ class EditorReloader(private val coroutineScope: CoroutineScope) {
      *     }
      * }
      * ```
+     *
+     * @throws IllegalStateException If the method is not called on the main thread.
      */
     suspend fun load(editor: RichHtmlEditorWebView, defaultHtml: String) {
         if (Looper.myLooper() != Looper.getMainLooper()) error("The load method needs to be called on the main thread")
