@@ -47,6 +47,6 @@ internal class DocumentInitializer {
     }
 
     private fun generateConstTable(name: String, commands: Collection<StatusCommand>): String {
-        return commands.joinToString(prefix = "const $name = [ ", postfix = " ]", separator = ", ") { "'${it.argumentName}'" }
+        return commands.joinToString(prefix = "const $name = [ ", postfix = " ]") { "'${it.argumentName}'" }
     }
 }

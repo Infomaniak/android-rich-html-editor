@@ -1,5 +1,6 @@
 package com.infomaniak.lib.richhtmleditor
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -12,6 +13,7 @@ import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
+import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -60,10 +62,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
     init {
+        @SuppressLint("SetJavaScriptEnabled")
         settings.javaScriptEnabled = true
-        isFocusableInTouchMode = true
+        isFocusableInTouchMode = true // Else the WebView can't be written in
 
-        webViewClient = RichHtmlEditorWebViewClient { notifyPageHasLoaded() }
+        webViewClient = RichHtmlEditorWebViewClient(::notifyPageHasLoaded)
 
         addJavascriptInterface(jsBridge, "editor")
     }
@@ -89,14 +92,14 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * ```
      */
     fun setHtml(html: String = "", subscribedStates: Set<StatusCommand>? = null) {
-        documentInitializer.init(html = html, subscribedStates = subscribedStates)
+        documentInitializer.init(html, subscribedStates)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
     }
 
     fun addCss(css: String) {
-        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.CSS, css))
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
     }
 
     /**
@@ -105,7 +108,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * The html loaded with [setHtml] is not guaranteed to be loaded inside the editor by the time this injected script is loaded
      * */
     fun addScript(script: String) {
-        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.SCRIPT, script))
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.SCRIPT, script))
     }
 
     fun toggleBold() = jsBridge.toggleBold()
@@ -134,8 +137,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         keyboardOpener.executeWhenDomIsLoaded(Unit)
     }
 
-    fun exportHtml(callback: (html: String) -> Unit) {
-        htmlExportCallback = callback
+    fun exportHtml(resultCallback: (html: String) -> Unit) {
+        htmlExportCallback = resultCallback
         jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
     }
 
@@ -162,8 +165,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
                 (left * density).roundToInt(),
                 (top * density).roundToInt(),
                 (right * density).roundToInt(),
-                (bottom * density).roundToInt()
-            )
+                (bottom * density).roundToInt(),
+            ),
         )
     }
 

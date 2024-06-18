@@ -25,7 +25,7 @@ internal class JsBridge(
 
     private val editorStatuses = EditorStatuses()
 
-    private val _editorStatusesFlow: MutableSharedFlow<EditorStatuses> = MutableSharedFlow(
+    private val _editorStatusesFlow = MutableSharedFlow<EditorStatuses>(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
@@ -67,9 +67,9 @@ internal class JsBridge(
             else -> return null
         }
 
-        val (r, g, b) = substring(startIndex, length - 1).replace(" ", "").split(",").map { it.toInt() }
+        val (r, g, b) = substring(startIndex, lastIndex).replace(" ", "").split(",")
 
-        return Color.argb(255, r, g, b)
+        return Color.argb(255, r.toInt(), g.toInt(), b.toInt())
     }
 
     @JavascriptInterface
