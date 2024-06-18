@@ -1,5 +1,6 @@
 package com.infomaniak.lib.richhtmleditor
 
+import android.os.Looper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +43,8 @@ class EditorReloader(private val coroutineScope: CoroutineScope) {
      * ```
      */
     suspend fun load(editor: RichHtmlEditorWebView, defaultHtml: String) {
+        if (Looper.myLooper() != Looper.getMainLooper()) throw error("The load method needs to be called on the main thread")
+
         if (needToReloadHtml) {
             savedHtml.collectLatest {
                 if (it == null) return@collectLatest
