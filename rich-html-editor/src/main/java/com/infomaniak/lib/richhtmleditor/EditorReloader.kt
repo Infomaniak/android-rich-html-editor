@@ -43,7 +43,7 @@ class EditorReloader(private val coroutineScope: CoroutineScope) {
      * ```
      */
     suspend fun load(editor: RichHtmlEditorWebView, defaultHtml: String) {
-        if (Looper.myLooper() != Looper.getMainLooper()) throw error("The load method needs to be called on the main thread")
+        if (Looper.myLooper() != Looper.getMainLooper()) error("The load method needs to be called on the main thread")
 
         if (needToReloadHtml) {
             savedHtml.collectLatest {
