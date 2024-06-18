@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface
 import androidx.annotation.ColorInt
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -14,6 +15,8 @@ import kotlinx.coroutines.launch
 
 internal class JsBridge(
     private val coroutineScope: CoroutineScope,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val jsExecutor: JsExecutor,
     private val notifyExportedHtml: (String) -> Unit,
     private val requestRectangleOnScreen: (left: Int, top: Int, right: Int, bottom: Int) -> Unit,
@@ -81,7 +84,7 @@ internal class JsBridge(
         backgroundColor: String,
         isLinkSelected: Boolean,
     ) {
-        coroutineScope.launch {
+        coroutineScope.launch(defaultDispatcher) {
             editorStatuses.updateStatusesAtomically(
                 isBold,
                 isItalic,
@@ -99,7 +102,7 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun reportNewDocumentHeight(newHeight: Int) {
-        coroutineScope.launch(Dispatchers.Main) {
+        coroutineScope.launch(mainDispatcher) {
             updateWebViewHeight(newHeight)
         }
     }

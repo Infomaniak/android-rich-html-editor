@@ -12,8 +12,9 @@ import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlin.math.roundToInt
 
 /**
@@ -39,8 +40,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private val scriptCssInjector = ScriptCssInjector(this)
     private val keyboardOpener = KeyboardOpener(this)
 
+    private val jsBridgeJob = Job()
     private val jsBridge = JsBridge(
-        coroutineScope = CoroutineScope(Dispatchers.Default),
+        coroutineScope = CoroutineScope(CoroutineName("JsBridgeCoroutine") + jsBridgeJob),
         jsExecutor = jsExecutor,
         notifyExportedHtml = ::notifyExportedHtml,
         requestRectangleOnScreen = ::requestRectangleOnScreen,
@@ -140,6 +142,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
         if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus"))
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        jsBridgeJob.cancel()
     }
 
     private fun notifyExportedHtml(html: String) {
