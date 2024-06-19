@@ -105,6 +105,72 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/colorLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Text color:"
+                    android:textColor="@color/subtitleColor" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textColorRed"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="Red" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textColorBlue"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="Blue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Bg color:"
+                    android:textColor="@color/subtitleColor" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textBackgroundColorRed"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="Red" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/textBackgroundColorBlue"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="Blue" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="1dp"

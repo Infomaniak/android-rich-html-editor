@@ -7,12 +7,18 @@ function getBody() {
 }
 
 function getEditor() {
+    // The id of this HTML tag is shared across multiple files and needs to remain the same
     return document.getElementById("editor")
 }
 
 function onBodyResize(callback) {
     let resizeObserver = new ResizeObserver(callback)
     resizeObserver.observe(document.documentElement)
+}
+
+function getSelectionRangeOrNull() {
+    const selection = document.getSelection()
+    return (selection.rangeCount > 0) ? selection.getRangeAt(0) : null
 }
 
 // Core logic

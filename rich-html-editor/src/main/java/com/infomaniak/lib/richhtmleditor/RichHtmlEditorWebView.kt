@@ -3,10 +3,15 @@ package com.infomaniak.lib.richhtmleditor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.AbsSavedState
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.ColorInt
+import androidx.core.os.bundleOf
 import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
@@ -17,6 +22,7 @@ import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjectio
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlin.math.roundToInt
 
 /**
@@ -36,6 +42,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
+
+    private var keepKeyboardOpenedOnConfigurationChanged: Boolean = false
 
     private val documentInitializer = DocumentInitializer()
     private val jsExecutor = JsExecutor(this)
@@ -57,7 +65,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * You can use this flow to listen to subscribed [EditorStatuses] and update your toolbar's UI accordingly to show which
      * formatting is enabled on the current selection.
      */
-    val editorStatusesFlow by jsBridge::editorStatusesFlow
+    val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
@@ -116,7 +124,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun toggleStrikeThrough() = jsBridge.toggleStrikeThrough()
     fun toggleUnderline() = jsBridge.toggleUnderline()
     fun removeFormat() = jsBridge.removeFormat()
-    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText, url)
+    fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(color)
+    fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(color)
+    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
 
     /**
@@ -134,6 +144,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     fun requestFocusAndOpenKeyboard() {
+        keepKeyboardOpenedOnConfigurationChanged = true
         keyboardOpener.executeWhenDomIsLoaded(Unit)
     }
 
@@ -142,13 +153,32 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
     }
 
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        return bundleOf(
+            KEYBOARD_SHOULD_REOPEN_KEY to keepKeyboardOpenedOnConfigurationChanged,
+            SUPER_STATE_KEY to superState,
+        )
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as Bundle?)?.getBoolean(KEYBOARD_SHOULD_REOPEN_KEY)?.let { keepKeyboardOpenedOnConfigurationChanged = it }
+        super.onRestoreInstanceState(state?.getParcelableCompat(SUPER_STATE_KEY, AbsSavedState::class.java))
+    }
+
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
-        if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus"))
+        if (focused) {
+            jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus"))
+            if (keepKeyboardOpenedOnConfigurationChanged) keyboardOpener.executeWhenDomIsLoaded(Unit)
+        } else {
+            keepKeyboardOpenedOnConfigurationChanged = false
+        }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        keyboardOpener.removePendingListener()
         jsBridgeJob.cancel()
     }
 
@@ -204,5 +234,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     private fun unsupported() {
         throw UnsupportedOperationException("Use setHtml() instead")
+    }
+
+    companion object {
+        private const val KEYBOARD_SHOULD_REOPEN_KEY = "keyboardShouldReopen"
+        private const val SUPER_STATE_KEY = "superState"
     }
 }
