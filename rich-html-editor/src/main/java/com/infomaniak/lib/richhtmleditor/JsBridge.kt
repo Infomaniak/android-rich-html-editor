@@ -46,7 +46,9 @@ internal class JsBridge(
 
     fun setTextBackgroundColor(color: JsColor) = execCommand(StatusCommand.BACKGROUND_COLOR, color)
 
-    fun setFontSize(@IntRange(from = 1, to = 7) fontSize: Int) = execCommand(StatusCommand.FONT_SIZE, fontSize)
+    fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) {
+        execCommand(StatusCommand.FONT_SIZE, fontSize)
+    }
 
     fun createLink(displayText: String?, url: String) {
         jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("createLink", displayText, url))
@@ -120,5 +122,7 @@ internal class JsBridge(
 
     companion object {
         private val CHARACTERS_TO_REMOVE = setOf('r', 'g', 'b', 'a', '(', ')', ' ')
+        const val FONT_MIN_SIZE: Long = 1
+        const val FONT_MAX_SIZE: Long = 7
     }
 }

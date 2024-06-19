@@ -14,6 +14,8 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.core.os.bundleOf
 import androidx.core.view.updateLayoutParams
+import com.infomaniak.lib.richhtmleditor.JsBridge.Companion.FONT_MAX_SIZE
+import com.infomaniak.lib.richhtmleditor.JsBridge.Companion.FONT_MIN_SIZE
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
@@ -127,7 +129,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun removeFormat() = jsBridge.removeFormat()
     fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(JsColor(color))
     fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(JsColor(color))
-    fun setFontSize(@IntRange(from = 1, to = 7) fontSize: Int) = jsBridge.setFontSize(fontSize)
+    fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
     fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
 
