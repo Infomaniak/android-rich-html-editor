@@ -129,6 +129,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun removeFormat() = jsBridge.removeFormat()
     fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(JsColor(color))
     fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(JsColor(color))
+
+    /**
+     * Updates the font size of the text.
+     *
+     * @param fontSize The new size of the text. This value's range constraint comes from the JavaScript `execCommand` method
+     * called with the argument `fontSize`.
+     */
     fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
     fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
