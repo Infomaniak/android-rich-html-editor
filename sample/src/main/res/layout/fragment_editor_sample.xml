@@ -7,10 +7,125 @@
     android:orientation="vertical"
     tools:context=".EditorSampleFragment">
 
-    <TextView
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/toolbarLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonBold"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonItalic"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="I" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonStrikeThrough"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonUnderline"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="U" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRemoveFormat"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="X" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonLink"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Link" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonExportHtml"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Export " />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/removeEditorFocusButton"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Loose focus" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/focusEditorButton"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Focus editor" />
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/app_name" />
+        android:fillViewport="true">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView
+                android:id="@+id/editor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

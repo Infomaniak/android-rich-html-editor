@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Editor sample</string>
+
+    <string name="link_dialog_title_url">URL</string>
+    <string name="link_dialog_title_placeholder">Name</string>
+    <string name="link_dialog_title">Insert a URL</string>
+    <string name="link_dialog_title_button_positive">Add</string>
+    <string name="link_dialog_title_button_negative">Cancel</string>
+    <string name="link_data_text">Link text:\u0020</string>
+    <string name="link_data_url">Link url:\u0020</string>
 </resources>
