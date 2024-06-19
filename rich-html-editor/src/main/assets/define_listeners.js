@@ -7,6 +7,7 @@ function getBody() {
 }
 
 function getEditor() {
+    // The id of this HTML tag is shared across multiple files and needs to remain the same
     return document.getElementById("editor")
 }
 

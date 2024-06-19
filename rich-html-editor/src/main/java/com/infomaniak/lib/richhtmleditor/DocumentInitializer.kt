@@ -20,7 +20,7 @@ internal class DocumentInitializer {
     }
 
     private fun WebView.insertUserHtml() {
-        evaluateJavascript("""document.getElementById("editor").innerHTML = `${html}`""", null)
+        evaluateJavascript("""document.getElementById("$EDITOR_ID").innerHTML = `${html}`""", null)
     }
 
     private fun createSubscribedStatesScript(): String {
@@ -48,5 +48,10 @@ internal class DocumentInitializer {
 
     private fun generateConstTable(name: String, commands: Collection<StatusCommand>): String {
         return commands.joinToString(prefix = "const $name = [ ", postfix = " ]") { "'${it.argumentName}'" }
+    }
+
+    companion object {
+        // The id of this HTML tag is shared across multiple files and needs to remain the same
+        private const val EDITOR_ID = "editor"
     }
 }
