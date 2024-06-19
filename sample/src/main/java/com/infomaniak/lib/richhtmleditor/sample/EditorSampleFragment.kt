@@ -1,6 +1,7 @@
 package com.infomaniak.lib.richhtmleditor.sample
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -80,6 +81,11 @@ class EditorSampleFragment : Fragment() {
             inputMethodManager.hideSoftInputFromWindow(editor.windowToken, 0)
         }
         focusEditorButton.setOnClickListener { editor.requestFocusAndOpenKeyboard() }
+
+        textColorRed.setOnClickListener { editor.setTextColor(RED) }
+        textColorBlue.setOnClickListener { editor.setTextColor(BLUE) }
+        textBackgroundColorRed.setOnClickListener { editor.setTextBackgroundColor(RED) }
+        textBackgroundColorBlue.setOnClickListener { editor.setTextBackgroundColor(BLUE) }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {
@@ -112,8 +118,9 @@ class EditorSampleFragment : Fragment() {
             .use(BufferedReader::readText)
     }
 
-    private fun setToolbarEnabledStatus(isEnabled: Boolean) {
-        binding.toolbarLayout.forEach { view -> view.isEnabled = isEnabled }
+    private fun setToolbarEnabledStatus(isEnabled: Boolean) = with(binding) {
+        toolbarLayout.forEach { view -> view.isEnabled = isEnabled }
+        colorLayout.forEach { view -> view.isEnabled = isEnabled }
     }
 
     inner class CreateLinkDialog {
@@ -143,5 +150,10 @@ class EditorSampleFragment : Fragment() {
             }
             dialog.show()
         }
+    }
+
+    companion object {
+        private val RED = Color.parseColor("#FF0000")
+        private val BLUE = Color.parseColor("#0000FF")
     }
 }
