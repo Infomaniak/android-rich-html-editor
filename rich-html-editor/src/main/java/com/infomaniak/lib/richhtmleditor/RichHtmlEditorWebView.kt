@@ -17,6 +17,7 @@ import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjectio
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlin.math.roundToInt
 
 /**
@@ -57,7 +58,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * You can use this flow to listen to subscribed [EditorStatuses] and update your toolbar's UI accordingly to show which
      * formatting is enabled on the current selection.
      */
-    val editorStatusesFlow by jsBridge::editorStatusesFlow
+    val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
