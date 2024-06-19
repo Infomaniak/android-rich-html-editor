@@ -1,7 +1,9 @@
 // Create link
 
 function createLink(displayText, url) {
-    let range = document.getSelection().getRangeAt(0)
+    let range = getSelectionRangeOrNull()
+    if (range === null) return
+
     if (range.collapsed) {
         // There's no selection, only a cursor. We can add the link manually
         let anchor = getAnchorNodeAtCursor()
@@ -48,6 +50,7 @@ function unlink() {
 
 function unlinkAnchorNode(anchor) {
     let selection = document.getSelection()
+    if (selection.rangeCount === 0) return
 
     let range = selection.getRangeAt(0)
     let rangeBackup = range.cloneRange()
