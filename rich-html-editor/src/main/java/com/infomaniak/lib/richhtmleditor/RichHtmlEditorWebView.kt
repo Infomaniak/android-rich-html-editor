@@ -1,5 +1,6 @@
 package com.infomaniak.lib.richhtmleditor
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -12,8 +13,10 @@ import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
+import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlin.math.roundToInt
 
 /**
@@ -39,8 +42,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private val scriptCssInjector = ScriptCssInjector(this)
     private val keyboardOpener = KeyboardOpener(this)
 
+    private val jsBridgeJob = Job()
     private val jsBridge = JsBridge(
-        coroutineScope = CoroutineScope(Dispatchers.Default),
+        coroutineScope = CoroutineScope(CoroutineName("JsBridgeCoroutine") + jsBridgeJob),
         jsExecutor = jsExecutor,
         notifyExportedHtml = ::notifyExportedHtml,
         requestRectangleOnScreen = ::requestRectangleOnScreen,
@@ -58,10 +62,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private var htmlExportCallback: ((html: String) -> Unit)? = null
 
     init {
+        @SuppressLint("SetJavaScriptEnabled")
         settings.javaScriptEnabled = true
-        isFocusableInTouchMode = true
+        isFocusableInTouchMode = true // Else the WebView can't be written in
 
-        webViewClient = RichHtmlEditorWebViewClient { notifyPageHasLoaded() }
+        webViewClient = RichHtmlEditorWebViewClient(::notifyPageHasLoaded)
 
         addJavascriptInterface(jsBridge, "editor")
     }
@@ -87,14 +92,14 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * ```
      */
     fun setHtml(html: String = "", subscribedStates: Set<StatusCommand>? = null) {
-        documentInitializer.init(html = html, subscribedStates = subscribedStates)
+        documentInitializer.init(html, subscribedStates)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
     }
 
     fun addCss(css: String) {
-        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.CSS, css))
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
     }
 
     /**
@@ -103,7 +108,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * The html loaded with [setHtml] is not guaranteed to be loaded inside the editor by the time this injected script is loaded
      * */
     fun addScript(script: String) {
-        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(CodeInjection.InjectionType.SCRIPT, script))
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.SCRIPT, script))
     }
 
     fun toggleBold() = jsBridge.toggleBold()
@@ -132,14 +137,19 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         keyboardOpener.executeWhenDomIsLoaded(Unit)
     }
 
-    fun exportHtml(callback: (html: String) -> Unit) {
-        htmlExportCallback = callback
+    fun exportHtml(resultCallback: (html: String) -> Unit) {
+        htmlExportCallback = resultCallback
         jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
     }
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
         if (focused) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("requestFocus"))
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        jsBridgeJob.cancel()
     }
 
     private fun notifyExportedHtml(html: String) {
@@ -155,8 +165,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
                 (left * density).roundToInt(),
                 (top * density).roundToInt(),
                 (right * density).roundToInt(),
-                (bottom * density).roundToInt()
-            )
+                (bottom * density).roundToInt(),
+            ),
         )
     }
 
@@ -170,31 +180,29 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadUrl(url: String) {
-        throw UnsupportedOperationException("Use setHtml() instead")
-    }
+    override fun loadUrl(url: String) = unsupported()
 
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) {
-        throw UnsupportedOperationException("Use setHtml() instead")
-    }
+    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) = unsupported()
 
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
-    override fun loadData(data: String, mimeType: String?, encoding: String?) {
-        throw UnsupportedOperationException("Use setHtml() instead")
-    }
+    override fun loadData(data: String, mimeType: String?, encoding: String?) = unsupported()
 
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
     )
     override fun loadDataWithBaseURL(baseUrl: String?, data: String, mimeType: String?, encoding: String?, historyUrl: String?) {
+        unsupported()
+    }
+
+    private fun unsupported() {
         throw UnsupportedOperationException("Use setHtml() instead")
     }
 }

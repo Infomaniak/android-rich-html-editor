@@ -35,6 +35,7 @@ class EditorSampleFragment : Fragment() {
 
         setToolbarEnabledStatus(false)
         editor.apply {
+            // You can add custom scripts and css such as:
             // addCss(readAsset("editor_custom_css.css"))
             // addScript("document.body.style['background'] = '#00FFFF'")
 

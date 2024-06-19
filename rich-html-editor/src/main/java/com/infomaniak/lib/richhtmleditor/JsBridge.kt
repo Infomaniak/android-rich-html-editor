@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface
 import androidx.annotation.ColorInt
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -14,6 +15,8 @@ import kotlinx.coroutines.launch
 
 internal class JsBridge(
     private val coroutineScope: CoroutineScope,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val jsExecutor: JsExecutor,
     private val notifyExportedHtml: (String) -> Unit,
     private val requestRectangleOnScreen: (left: Int, top: Int, right: Int, bottom: Int) -> Unit,
@@ -22,7 +25,7 @@ internal class JsBridge(
 
     private val editorStatuses = EditorStatuses()
 
-    private val _editorStatusesFlow: MutableSharedFlow<EditorStatuses> = MutableSharedFlow(
+    private val _editorStatusesFlow = MutableSharedFlow<EditorStatuses>(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
@@ -58,15 +61,11 @@ internal class JsBridge(
     // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt
     @ColorInt
     fun String.toColorIntOrNull(): Int? {
-        val startIndex = when {
-            startsWith("rgb(") -> 4
-            startsWith("rgba(") -> 5
-            else -> return null
-        }
+        if (!startsWith("rgb")) return null
 
-        val (r, g, b) = substring(startIndex, length - 1).replace(" ", "").split(",").map { it.toInt() }
+        val (r, g, b) = filterNot { it in CHARACTERS_TO_REMOVE }.split(",").takeIf { it.size == 3 || it.size == 4 } ?: return null
 
-        return Color.argb(255, r, g, b)
+        return Color.argb(255, r.toInt(), g.toInt(), b.toInt())
     }
 
     @JavascriptInterface
@@ -81,7 +80,7 @@ internal class JsBridge(
         backgroundColor: String,
         isLinkSelected: Boolean,
     ) {
-        coroutineScope.launch {
+        coroutineScope.launch(defaultDispatcher) {
             editorStatuses.updateStatusesAtomically(
                 isBold,
                 isItalic,
@@ -99,7 +98,7 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun reportNewDocumentHeight(newHeight: Int) {
-        coroutineScope.launch(Dispatchers.Main) {
+        coroutineScope.launch(mainDispatcher) {
             updateWebViewHeight(newHeight)
         }
     }
@@ -111,4 +110,8 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun exportHtml(html: String) = notifyExportedHtml(html)
+
+    companion object {
+        private val CHARACTERS_TO_REMOVE = setOf('r', 'g', 'b', 'a', '(', ')', ' ')
+    }
 }

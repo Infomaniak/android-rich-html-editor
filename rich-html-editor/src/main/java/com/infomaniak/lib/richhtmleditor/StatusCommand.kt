@@ -1,6 +1,5 @@
 package com.infomaniak.lib.richhtmleditor
 
-
 enum class StatusCommand(override val argumentName: String, val statusType: StatusType) : ExecCommand {
     BOLD("bold", StatusType.STATE),
     ITALIC("italic", StatusType.STATE),

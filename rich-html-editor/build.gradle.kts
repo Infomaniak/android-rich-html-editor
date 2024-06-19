@@ -14,8 +14,7 @@ android {
     defaultConfig {
         minSdk = sharedMinSdk
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("proguard-rules.pro")
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {

@@ -2,6 +2,7 @@ package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
+import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
 import com.infomaniak.lib.richhtmleditor.injectCss
 import com.infomaniak.lib.richhtmleditor.injectScript
 
@@ -9,8 +10,8 @@ internal class ScriptCssInjector(private val webView: WebView) : JsLifecycleAwar
 
     override fun executeImmediately(value: CodeInjection): Unit = with(webView) {
         when (value.type) {
-            CodeInjection.InjectionType.SCRIPT -> injectScript(value.code)
-            CodeInjection.InjectionType.CSS -> injectCss(value.code)
+            InjectionType.SCRIPT -> injectScript(value.code)
+            InjectionType.CSS -> injectCss(value.code)
         }
     }
 

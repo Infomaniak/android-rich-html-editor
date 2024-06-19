@@ -5,17 +5,12 @@ import android.webkit.WebView
 class JsExecutableMethod(
     private val methodName: String,
     private vararg val args: Any?,
-    callback: ((String) -> Unit)? = null,
+    resultCallback: ((String) -> Unit)? = null,
 ) {
-    private val callbacks: MutableList<(String) -> Unit> = callback?.let { mutableListOf(it) } ?: mutableListOf()
+    private val callbacks: MutableList<(String) -> Unit> = resultCallback?.let { mutableListOf(it) } ?: mutableListOf()
 
     fun executeOn(webView: WebView) {
-        val formattedArgs = if (args.isNotEmpty()) {
-            args.joinToString(", ", transform = ::encodeArgsForJs)
-        } else {
-            ""
-        }
-
+        val formattedArgs = args.joinToString(transform = ::encodeArgsForJs)
         val jsCode = "$methodName($formattedArgs)"
 
         val evaluationCallback: ((String) -> Unit)? = if (callbacks.isEmpty()) {
@@ -33,7 +28,6 @@ class JsExecutableMethod(
         callbacks.add(callback)
     }
 
-
     companion object {
         private fun encodeArgsForJs(value: Any?): String {
             return when (value) {
@@ -44,7 +38,7 @@ class JsExecutableMethod(
             }
         }
 
-        // TODO: This method might not be enough to escape user inputs and prevent access to js code execution
+        // TODO: This method might not be enough to escape user inputs and prevent access to JS code execution
         private fun looselyEscapeStringForJs(string: String): String {
             val stringBuilder = StringBuilder()
 

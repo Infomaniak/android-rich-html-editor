@@ -10,12 +10,6 @@ function getEditor() {
     return document.getElementById("editor")
 }
 
-function onAttributesChange(callback) {
-    const mutationObserver = new MutationObserver(callback)
-    const config = { subtree: true, attributes: true }
-    mutationObserver.observe(getEditor(), config)
-}
-
 function onBodyResize(callback) {
     let resizeObserver = new ResizeObserver(callback)
     resizeObserver.observe(document.documentElement)
