@@ -3,30 +3,35 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
+val sharedMinSdk: Int by rootProject.extra
+val sharedCompileSdk: Int by rootProject.extra
+val javaVersion: JavaVersion by rootProject.extra
+
 android {
     namespace = "com.infomaniak.lib.richhtmleditor.sample"
-    compileSdk = 34
+    compileSdk = sharedCompileSdk
 
     defaultConfig {
         applicationId = "com.infomaniak.lib.richhtmleditor.sample"
-        minSdk = 21
-        targetSdk = 34
+        minSdk = sharedMinSdk
+        targetSdk = sharedCompileSdk
         versionCode = 1
         versionName = "1.0"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = javaVersion.toString()
     }
     buildFeatures {
         viewBinding = true
