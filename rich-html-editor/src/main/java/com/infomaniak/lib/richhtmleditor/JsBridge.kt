@@ -61,13 +61,9 @@ internal class JsBridge(
     // Parses the css formatted color string obtained from the js method queryCommandValue() into an easy to use ColorInt
     @ColorInt
     fun String.toColorIntOrNull(): Int? {
-        val startIndex = when {
-            startsWith("rgb(") -> 4
-            startsWith("rgba(") -> 5
-            else -> return null
-        }
+        if (!startsWith("rgb")) return null
 
-        val (r, g, b) = substring(startIndex, lastIndex).replace(" ", "").split(",")
+        val (r, g, b) = filterNot { it in CHARACTERS_TO_REMOVE }.split(",").takeIf { it.size == 3 || it.size == 4 } ?: return null
 
         return Color.argb(255, r.toInt(), g.toInt(), b.toInt())
     }
@@ -114,4 +110,8 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun exportHtml(html: String) = notifyExportedHtml(html)
+
+    companion object {
+        private val CHARACTERS_TO_REMOVE = setOf('r', 'g', 'b', 'a', '(', ')', ' ')
+    }
 }
