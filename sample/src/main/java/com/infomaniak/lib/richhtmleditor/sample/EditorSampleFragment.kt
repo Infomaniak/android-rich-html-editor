@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
@@ -22,6 +23,8 @@ class EditorSampleFragment : Fragment() {
     private var _binding: FragmentEditorSampleBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView
 
+    private val editorSampleViewModel: EditorSampleViewModel by activityViewModels()
+
     private val createLinkDialog by lazy { CreateLinkDialog() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -31,23 +34,26 @@ class EditorSampleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-        val html = readAsset("example1.html")
-
         setToolbarEnabledStatus(false)
+
+        setEditorContent()
         editor.apply {
             // You can add custom scripts and css such as:
             // addCss(readAsset("editor_custom_css.css"))
             // addScript("document.body.style['background'] = '#00FFFF'")
 
-            setHtml(html)
-
             isVisible = true
-
             setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }
         }
 
         setEditorButtonClickListeners()
         observeEditorStatusUpdates()
+    }
+
+    private fun setEditorContent() {
+        lifecycleScope.launch {
+            editorSampleViewModel.editorReloader.load(binding.editor, readAsset("example1.html"))
+        }
     }
 
     private fun setEditorButtonClickListeners() = with(binding) {
@@ -87,6 +93,11 @@ class EditorSampleFragment : Fragment() {
                 buttonLink.isActivated = it.isLinkSelected
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        editorSampleViewModel.editorReloader.save(binding.editor)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {
