@@ -11,86 +11,96 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:fillViewport="true"
+        android:padding="8dp"
         android:scrollbars="none">
 
-        <LinearLayout
-            android:id="@+id/toolbarLayout"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/colorPrimaryContainer"
+            app:cardCornerRadius="100dp"
+            app:strokeWidth="0dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonBold"
-                style="@style/EditorButton"
+            <LinearLayout
+                android:id="@+id/toolbarLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="B" />
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonItalic"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="I" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonBold"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonStrikeThrough"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonItalic"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="I" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonUnderline"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="U" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonStrikeThrough"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonRemoveFormat"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="X" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonUnderline"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="U" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonLink"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Link" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRemoveFormat"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="X" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/orderedList"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_ordered_list" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonLink"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Link" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/unorderedList"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_unordered_list" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/orderedList"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_ordered_list" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonSubscript"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_subscript" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/unorderedList"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_unordered_list" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonSuperscript"
-                style="@style/EditorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_superscript" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSubscript"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_subscript" />
 
-        </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSuperscript"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_superscript" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </HorizontalScrollView>
 
     <LinearLayout
