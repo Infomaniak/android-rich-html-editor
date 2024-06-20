@@ -62,6 +62,10 @@ internal class JsBridge(
         execCommand(StatusCommand.FONT_SIZE, fontSize)
     }
 
+    fun undo() = execCommand(OtherCommand.UNDO)
+
+    fun redo() = execCommand(OtherCommand.REDO)
+
     fun createLink(displayText: String?, url: String) {
         jsExecutor.executeImmediatelyAndRefreshToolbar(JsExecutableMethod("createLink", displayText, url))
     }

@@ -221,7 +221,7 @@
 
     <LinearLayout
         android:id="@+id/fontLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
@@ -255,6 +255,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:text="Big" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/undoButton"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:icon="@drawable/ic_undo" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/redoButton"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:icon="@drawable/ic_redo" />
 
     </LinearLayout>
 

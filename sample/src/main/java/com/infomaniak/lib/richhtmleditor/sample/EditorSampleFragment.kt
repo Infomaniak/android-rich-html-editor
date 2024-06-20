@@ -96,6 +96,8 @@ class EditorSampleFragment : Fragment() {
         fontSmallButton.setOnClickListener { editor.setFontSize(SMALL_FONT_SIZE) }
         fontMediumButton.setOnClickListener { editor.setFontSize(MEDIUM_FONT_SIZE) }
         fontBigButton.setOnClickListener { editor.setFontSize(BIG_FONT_SIZE) }
+        undoButton.setOnClickListener { editor.undo() }
+        redoButton.setOnClickListener { editor.redo() }
     }
 
     private fun observeEditorStatusUpdates() = with(binding) {

@@ -20,6 +20,8 @@ enum class OtherCommand(override val argumentName: String) : ExecCommand {
     REMOVE_FORMAT("removeFormat"),
     INDENT("indent"),
     OUTDENT("outdent"),
+    UNDO("undo"),
+    REDO("redo"),
 }
 
 interface ExecCommand {
