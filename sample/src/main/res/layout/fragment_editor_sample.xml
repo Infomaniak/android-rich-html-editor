@@ -76,6 +76,20 @@
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_unordered_list" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSubscript"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_subscript" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSuperscript"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_superscript" />
+
         </LinearLayout>
     </HorizontalScrollView>
 

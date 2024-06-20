@@ -84,7 +84,9 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["backColor"],
             newSelectionState["isLinkSelected"],
             newSelectionState["insertOrderedList"],
-            newSelectionState["insertUnorderedList"]
+            newSelectionState["insertUnorderedList"],
+            newSelectionState["subscript"],
+            newSelectionState["superscript"]
         )
     }
 }

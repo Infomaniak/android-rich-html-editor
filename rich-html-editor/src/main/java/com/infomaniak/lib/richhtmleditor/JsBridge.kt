@@ -44,6 +44,10 @@ internal class JsBridge(
 
     fun toggleUnorderedList() = execCommand(StatusCommand.UNORDERED_LIST)
 
+    fun toggleSubscript() = execCommand(StatusCommand.SUBSCRIPT)
+
+    fun toggleSuperscript() = execCommand(StatusCommand.SUPERSCRIPT)
+
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
     fun setTextColor(color: JsColor) = execCommand(StatusCommand.TEXT_COLOR, color)
@@ -94,6 +98,8 @@ internal class JsBridge(
         isLinkSelected: Boolean,
         isOrderedListSelected: Boolean,
         isUnorderedListSelected: Boolean,
+        isSubscript: Boolean,
+        isSuperscript: Boolean,
     ) {
         coroutineScope.launch(defaultDispatcher) {
             editorStatuses.updateStatusesAtomically(
@@ -108,6 +114,8 @@ internal class JsBridge(
                 isLinkSelected,
                 isOrderedListSelected,
                 isUnorderedListSelected,
+                isSubscript,
+                isSuperscript,
             )
             _editorStatusesFlow.emit(editorStatuses)
         }

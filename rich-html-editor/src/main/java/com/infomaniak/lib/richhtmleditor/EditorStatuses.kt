@@ -16,6 +16,8 @@ data class EditorStatuses(
     var isLinkSelected: Boolean = false,
     var isOrderedListSelected: Boolean = false,
     var isUnorderedListSelected: Boolean = false,
+    var isSubscript: Boolean = false,
+    var isSuperscript: Boolean = false,
 ) {
     private val mutex = Mutex()
 
@@ -31,6 +33,8 @@ data class EditorStatuses(
         isLinkSelected: Boolean,
         isOrderedListSelected: Boolean,
         isUnorderedListSelected: Boolean,
+        isSubscript: Boolean,
+        isSuperscript: Boolean,
     ) {
         mutex.withLock {
             this.isBold = isBold
@@ -44,6 +48,8 @@ data class EditorStatuses(
             this.isLinkSelected = isLinkSelected
             this.isOrderedListSelected = isOrderedListSelected
             this.isUnorderedListSelected = isUnorderedListSelected
+            this.isSubscript = isSubscript
+            this.isSuperscript = isSuperscript
         }
     }
 }
