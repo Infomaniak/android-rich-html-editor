@@ -1,6 +1,8 @@
 package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
+import androidx.annotation.ColorInt
+import com.infomaniak.lib.richhtmleditor.JsColor
 
 class JsExecutableMethod(
     private val methodName: String,
@@ -33,7 +35,8 @@ class JsExecutableMethod(
             return when (value) {
                 null -> "null"
                 is String -> "'${looselyEscapeStringForJs(value)}'"
-                is Boolean -> value.toString()
+                is Boolean, is Number -> value.toString()
+                is JsColor -> "'${colorToRgbHex(value.color)}'"
                 else -> throw NotImplementedError("Encoding ${value::class} for JS is not yet implemented")
             }
         }
@@ -55,5 +58,8 @@ class JsExecutableMethod(
 
             return stringBuilder.toString()
         }
+
+        @OptIn(ExperimentalStdlibApi::class)
+        private fun colorToRgbHex(@ColorInt color: Int) = color.toHexString(HexFormat.UpperCase).takeLast(6)
     }
 }

@@ -11,8 +11,11 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.ColorInt
+import androidx.annotation.IntRange
 import androidx.core.os.bundleOf
 import androidx.core.view.updateLayoutParams
+import com.infomaniak.lib.richhtmleditor.JsBridge.Companion.FONT_MAX_SIZE
+import com.infomaniak.lib.richhtmleditor.JsBridge.Companion.FONT_MIN_SIZE
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
@@ -124,8 +127,16 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun toggleStrikeThrough() = jsBridge.toggleStrikeThrough()
     fun toggleUnderline() = jsBridge.toggleUnderline()
     fun removeFormat() = jsBridge.removeFormat()
-    fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(color)
-    fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(color)
+    fun setTextColor(@ColorInt color: Int) = jsBridge.setTextColor(JsColor(color))
+    fun setTextBackgroundColor(@ColorInt color: Int) = jsBridge.setTextBackgroundColor(JsColor(color))
+
+    /**
+     * Updates the font size of the text.
+     *
+     * @param fontSize The new size of the text. This value's range constraint comes from the JavaScript `execCommand` method
+     * called with the argument `fontSize`.
+     */
+    fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
     fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
 
