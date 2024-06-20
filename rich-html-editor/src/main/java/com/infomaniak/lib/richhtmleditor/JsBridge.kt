@@ -50,6 +50,8 @@ internal class JsBridge(
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
+    fun justify(justification: Justification) = execCommand(justification.execCommand)
+
     fun indent() = execCommand(OtherCommand.INDENT)
 
     fun outdent() = execCommand(OtherCommand.OUTDENT)
@@ -108,7 +110,19 @@ internal class JsBridge(
         isUnorderedListSelected: Boolean,
         isSubscript: Boolean,
         isSuperscript: Boolean,
+        isJustifyLeft: Boolean,
+        isJustifyCenter: Boolean,
+        isJustifyRight: Boolean,
+        isJustifyFull: Boolean,
     ) {
+        fun computeJustification(): Justification? = when {
+            isJustifyLeft -> Justification.LEFT
+            isJustifyCenter -> Justification.CENTER
+            isJustifyRight -> Justification.RIGHT
+            isJustifyFull -> Justification.FULL
+            else -> null
+        }
+
         coroutineScope.launch(defaultDispatcher) {
             editorStatuses.updateStatusesAtomically(
                 isBold,
@@ -124,6 +138,7 @@ internal class JsBridge(
                 isUnorderedListSelected,
                 isSubscript,
                 isSuperscript,
+                computeJustification(),
             )
             _editorStatusesFlow.emit(editorStatuses)
         }

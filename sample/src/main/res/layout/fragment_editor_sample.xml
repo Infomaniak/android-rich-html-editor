@@ -113,6 +113,34 @@
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_indent" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/justifyLeft"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_justify_left" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/justifyCenter"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_justify_center" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/justifyRight"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_justify_right" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/justifyFull"
+                    style="@style/EditorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_justify_full" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </HorizontalScrollView>

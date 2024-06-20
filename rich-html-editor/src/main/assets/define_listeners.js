@@ -86,7 +86,11 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["insertOrderedList"],
             newSelectionState["insertUnorderedList"],
             newSelectionState["subscript"],
-            newSelectionState["superscript"]
+            newSelectionState["superscript"],
+            newSelectionState["justifyLeft"],
+            newSelectionState["justifyCenter"],
+            newSelectionState["justifyRight"],
+            newSelectionState["justifyFull"]
         )
     }
 }
