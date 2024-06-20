@@ -40,6 +40,10 @@ internal class JsBridge(
 
     fun toggleUnderline() = execCommand(StatusCommand.UNDERLINE)
 
+    fun toggleOrderedList() = execCommand(StatusCommand.ORDERED_LIST)
+
+    fun toggleUnorderedList() = execCommand(StatusCommand.UNORDERED_LIST)
+
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
     fun setTextColor(color: JsColor) = execCommand(StatusCommand.TEXT_COLOR, color)
@@ -88,6 +92,8 @@ internal class JsBridge(
         textColor: String,
         backgroundColor: String,
         isLinkSelected: Boolean,
+        isOrderedListSelected: Boolean,
+        isUnorderedListSelected: Boolean,
     ) {
         coroutineScope.launch(defaultDispatcher) {
             editorStatuses.updateStatusesAtomically(
@@ -100,6 +106,8 @@ internal class JsBridge(
                 textColor.toColorIntOrNull(),
                 backgroundColor.toColorIntOrNull(),
                 isLinkSelected,
+                isOrderedListSelected,
+                isUnorderedListSelected,
             )
             _editorStatusesFlow.emit(editorStatuses)
         }

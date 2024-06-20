@@ -5,6 +5,8 @@ enum class StatusCommand(override val argumentName: String, val statusType: Stat
     ITALIC("italic", StatusType.STATE),
     STRIKE_THROUGH("strikeThrough", StatusType.STATE),
     UNDERLINE("underline", StatusType.STATE),
+    ORDERED_LIST("insertOrderedList", StatusType.STATE),
+    UNORDERED_LIST("insertUnorderedList", StatusType.STATE),
     FONT_NAME("fontName", StatusType.VALUE),
     FONT_SIZE("fontSize", StatusType.VALUE),
     TEXT_COLOR("foreColor", StatusType.VALUE),

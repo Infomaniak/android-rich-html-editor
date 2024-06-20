@@ -82,7 +82,9 @@ function reportSelectionStateChangedIfNecessary() {
             newSelectionState["fontSize"],
             newSelectionState["foreColor"],
             newSelectionState["backColor"],
-            newSelectionState["isLinkSelected"]
+            newSelectionState["isLinkSelected"],
+            newSelectionState["insertOrderedList"],
+            newSelectionState["insertUnorderedList"]
         )
     }
 }

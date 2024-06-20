@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,70 +15,66 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/toolbarLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/toolbarLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonBold"
-                    style="@style/EditorButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="B" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonItalic"
-                    style="@style/EditorButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="I" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonStrikeThrough"
-                    style="@style/EditorButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="S" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonUnderline"
-                    style="@style/EditorButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="U" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonRemoveFormat"
-                    style="@style/EditorButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="X" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonLink"
-                    style="@style/EditorButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Link" />
-            </LinearLayout>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonExportHtml"
+                android:id="@+id/buttonBold"
                 style="@style/EditorButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Export " />
+                android:text="B" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonItalic"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonStrikeThrough"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonUnderline"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="U" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonRemoveFormat"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonLink"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Link" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/orderedList"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_ordered_list" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/unorderedList"
+                style="@style/EditorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_unordered_list" />
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -86,6 +83,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonExportHtml"
+            style="@style/EditorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="Export " />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/removeEditorFocusButton"
