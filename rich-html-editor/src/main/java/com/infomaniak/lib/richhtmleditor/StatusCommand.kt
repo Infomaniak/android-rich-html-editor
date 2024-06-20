@@ -18,6 +18,8 @@ enum class StatusCommand(override val argumentName: String, val statusType: Stat
 
 enum class OtherCommand(override val argumentName: String) : ExecCommand {
     REMOVE_FORMAT("removeFormat"),
+    INDENT("indent"),
+    OUTDENT("outdent"),
 }
 
 interface ExecCommand {

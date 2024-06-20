@@ -50,6 +50,10 @@ internal class JsBridge(
 
     fun removeFormat() = execCommand(OtherCommand.REMOVE_FORMAT)
 
+    fun indent() = execCommand(OtherCommand.INDENT)
+
+    fun outdent() = execCommand(OtherCommand.OUTDENT)
+
     fun setTextColor(color: JsColor) = execCommand(StatusCommand.TEXT_COLOR, color)
 
     fun setTextBackgroundColor(color: JsColor) = execCommand(StatusCommand.BACKGROUND_COLOR, color)
