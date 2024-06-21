@@ -32,6 +32,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.Justification
+import com.infomaniak.lib.richhtmleditor.StatusCommand
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentEditorSampleBinding
 import kotlinx.coroutines.launch
@@ -57,9 +58,10 @@ class EditorSampleFragment : Fragment() {
 
         setEditorContent()
         editor.apply {
-            // You can add custom scripts and css such as:
+            // You can configure the editor as follows:
             // addCss(readAsset("editor_custom_css.css"))
             // addScript("document.body.style['background'] = '#00FFFF'")
+            // subscribeToStates(setOf(StatusCommand.BOLD, StatusCommand.ITALIC))
 
             isVisible = true
             setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }

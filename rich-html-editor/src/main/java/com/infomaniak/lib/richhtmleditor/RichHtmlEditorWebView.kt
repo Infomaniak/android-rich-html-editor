@@ -33,12 +33,14 @@ import androidx.core.os.bundleOf
 import androidx.core.view.updateLayoutParams
 import com.infomaniak.lib.richhtmleditor.JsBridge.Companion.FONT_MAX_SIZE
 import com.infomaniak.lib.richhtmleditor.JsBridge.Companion.FONT_MIN_SIZE
+import com.infomaniak.lib.richhtmleditor.executor.HtmlSetter
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod
 import com.infomaniak.lib.richhtmleditor.executor.JsExecutor
 import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
+import com.infomaniak.lib.richhtmleditor.executor.StateSubscriber
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -51,11 +53,16 @@ import kotlin.math.roundToInt
  * The [RichHtmlEditorWebView] class utilizes the `contenteditable` attribute in HTML along with a combination of `execCommand`
  * and custom logic to enable editing and basic formatting of existing HTML.
  *
- * When [setHtml] is called, it inserts the provided HTML content into the [RichHtmlEditorWebView]'s editor template HTML and
- * activates the necessary JavaScript mechanisms for the editor to update different format statuses and function properly.
+ * When the [RichHtmlEditorWebView] is instantiated it loads its HTML template and activates the necessary JavaScript mechanisms
+ * for the editor to update different format statuses and function properly.
  *
  * To interact with the editor, you can either listen to format status notifications or call methods to modify the current format
  * such as [toggleBold].
+ *
+ * @see setHtml
+ * @see subscribeToStates
+ * @see addCss
+ * @see addScript
  */
 class RichHtmlEditorWebView @JvmOverloads constructor(
     context: Context,
@@ -66,6 +73,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private var keepKeyboardOpenedOnConfigurationChanged: Boolean = false
 
     private val documentInitializer = DocumentInitializer()
+    private val stateSubscriber = StateSubscriber(this)
+    private val htmlSetter = HtmlSetter(this)
     private val jsExecutor = JsExecutor(this)
     private val scriptCssInjector = ScriptCssInjector(this)
     private val keyboardOpener = KeyboardOpener(this)
@@ -84,6 +93,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * You can use this flow to listen to subscribed [EditorStatuses] and update your toolbar's UI accordingly to show which
      * formatting is enabled on the current selection.
+     *
+     * @see subscribeToStates
      */
     val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
 
@@ -97,47 +108,37 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         webViewClient = RichHtmlEditorWebViewClient(::notifyPageHasLoaded)
 
         addJavascriptInterface(jsBridge, "editor")
-    }
-
-    /**
-     * Initializes the [RichHtmlEditorWebView] with the HTML content to be displayed.
-     *
-     * This method initializes the WebView to work properly and can also load the provided HTML content and subscribed states. No
-     * HTML content is needed to have an empty editor; calling the method without parameters will still initialize everything
-     * necessary for the editor to function properly.
-     *
-     * @param html The HTML content to be displayed. Defaults to an empty string. If the string is empty it means the editor will
-     * start empty and simply won't load any initial data
-     * @param subscribedStates A set of [StatusCommand] to subscribe to. Defaults to null, meaning all available [StatusCommand]
-     * will be subscribed to.
-     *
-     * Example usage:
-     * ```
-     * val htmlContent = "<p>Hello, World!</p>"
-     * val subscribedStates = setOf(StatusCommand.BOLD, StatusCommand.ITALIC)
-     *
-     * setHtml(htmlContent, subscribedStates)
-     * ```
-     */
-    fun setHtml(html: String = "", subscribedStates: Set<StatusCommand>? = null) {
-        documentInitializer.init(html, subscribedStates)
 
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
+
     }
 
-    fun addCss(css: String) {
-        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
-    }
+    /**
+     * Sets the HTML content that will be displayed inside of the editor.
+     *
+     * @param html A string containing the HTML content to be set.
+     */
+    fun setHtml(html: String) = htmlSetter.executeWhenDomIsLoaded(html)
+
+    /**
+     * Subscribes to a subset of states, ensuring that [editorStatusesFlow] triggers only when at least one of the specified
+     * states changes.
+     *
+     * @param subscribedStates A set of [StatusCommand] to subscribe to. If `null`, all available [StatusCommand] will be
+     * subscribed to.
+     */
+    fun subscribeToStates(subscribedStates: Set<StatusCommand>?) = stateSubscriber.executeWhenDomIsLoaded(subscribedStates)
+
+    fun addCss(css: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
 
     /**
      * Injects a custom script inside the editor template's `<head>`.
      *
-     * The html loaded with [setHtml] is not guaranteed to be loaded inside the editor by the time this injected script is loaded
+     * The html loaded with [initEditor] is not guaranteed to be loaded inside the editor by the time this injected script is
+     * loaded
      * */
-    fun addScript(script: String) {
-        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.SCRIPT, script))
-    }
+    fun addScript(script: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.SCRIPT, script))
 
     fun toggleBold() = jsBridge.toggleBold()
     fun toggleItalic() = jsBridge.toggleItalic()
@@ -175,6 +176,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun notifyPageHasLoaded() {
         documentInitializer.setupDocument(this)
 
+        stateSubscriber.notifyDomLoaded()
+        htmlSetter.notifyDomLoaded()
         jsExecutor.notifyDomLoaded()
         scriptCssInjector.notifyDomLoaded()
         keyboardOpener.notifyDomLoaded()

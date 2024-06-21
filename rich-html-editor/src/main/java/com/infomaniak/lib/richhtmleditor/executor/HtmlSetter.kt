@@ -17,20 +17,18 @@
  */
 package com.infomaniak.lib.richhtmleditor.executor
 
-internal abstract class JsLifecycleAwareExecutor<T> {
+import android.webkit.WebView
 
-    private var hasDomLoaded = false
-    private val objectsWaitingForDom = mutableListOf<T>()
+internal class HtmlSetter(private val webView: WebView) : JsLifecycleAwareExecutor<String>() {
 
-    fun executeWhenDomIsLoaded(value: T): Unit = synchronized(lock = this) {
-        if (hasDomLoaded) executeImmediately(value) else objectsWaitingForDom.add(value)
+    override fun executeImmediately(value: String) = webView.insertUserHtml(value)
+
+    private fun WebView.insertUserHtml(html: String) {
+        evaluateJavascript("""document.getElementById("$EDITOR_ID").innerHTML = `${html}`""", null)
     }
 
-    fun notifyDomLoaded() = synchronized(lock = this) {
-        hasDomLoaded = true
-        objectsWaitingForDom.forEach(::executeImmediately)
-        objectsWaitingForDom.clear()
+    companion object {
+        // The id of this HTML tag is shared across multiple files and needs to remain the same
+        private const val EDITOR_ID = "editor"
     }
-
-    abstract fun executeImmediately(value: T)
 }
