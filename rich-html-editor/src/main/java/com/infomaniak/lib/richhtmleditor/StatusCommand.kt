@@ -34,7 +34,7 @@ enum class StatusCommand(override val argumentName: String, val statusType: Stat
     FONT_SIZE("fontSize", StatusType.VALUE),
     TEXT_COLOR("foreColor", StatusType.VALUE),
     BACKGROUND_COLOR("backColor", StatusType.VALUE),
-    CREATE_LINK("createLink", StatusType.COMPLEX),
+    CREATE_LINK("", StatusType.COMPLEX), // This value is not meant to be called by JsBride's execCommand()
 }
 
 enum class OtherCommand(override val argumentName: String) : ExecCommand {
