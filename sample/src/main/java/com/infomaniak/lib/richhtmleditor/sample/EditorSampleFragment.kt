@@ -32,7 +32,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.Justification
-import com.infomaniak.lib.richhtmleditor.StatusCommand
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentEditorSampleBinding
 import kotlinx.coroutines.launch
@@ -58,7 +57,7 @@ class EditorSampleFragment : Fragment() {
 
         setEditorContent()
         editor.apply {
-            // You can configure the editor as follows:
+            // You can configure the editor like this:
             // addCss(readAsset("editor_custom_css.css"))
             // addScript("document.body.style['background'] = '#00FFFF'")
             // subscribeToStates(setOf(StatusCommand.BOLD, StatusCommand.ITALIC))
