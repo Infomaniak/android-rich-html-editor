@@ -57,9 +57,10 @@ class EditorSampleFragment : Fragment() {
 
         setEditorContent()
         editor.apply {
-            // You can add custom scripts and css such as:
+            // You can configure the editor like this:
             // addCss(readAsset("editor_custom_css.css"))
             // addScript("document.body.style['background'] = '#00FFFF'")
+            // subscribeToStates(setOf(StatusCommand.BOLD, StatusCommand.ITALIC))
 
             isVisible = true
             setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }

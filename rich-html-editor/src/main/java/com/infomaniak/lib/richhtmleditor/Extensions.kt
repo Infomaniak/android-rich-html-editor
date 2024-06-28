@@ -31,16 +31,27 @@ internal fun Context.readAsset(fileName: String): String {
         .use(BufferedReader::readText)
 }
 
-internal fun WebView.injectScript(scriptCode: String) {
+internal fun WebView.injectScript(scriptCode: String, id: String? = null) {
+    val removePreviousId = id?.let {
+        """
+        var previousScript = document.getElementById(`$it`)
+        if (previousScript) previousScript.remove()
+        """.trimIndent()
+    } ?: ""
+
+    val setId = id?.let { "script.id = `${it}`;" } ?: ""
     val addScriptJs = """
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.text = `${scriptCode}`;
+        $setId
 
         document.head.appendChild(script);
         """.trimIndent()
 
-    evaluateJavascript(addScriptJs, null)
+    val code = removePreviousId + "\n" + addScriptJs
+
+    evaluateJavascript(code, null)
 }
 
 internal fun WebView.injectCss(css: String) {
