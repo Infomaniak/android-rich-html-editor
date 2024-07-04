@@ -43,9 +43,12 @@ import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjectio
 import com.infomaniak.lib.richhtmleditor.executor.StateSubscriber
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.math.roundToInt
@@ -91,7 +94,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         updateWebViewHeight = ::updateWebViewHeight,
     )
 
-    private val htmlExportCoroutineScope = CoroutineScope(CoroutineName("HtmlExportCoroutine"))
+    @OptIn(DelicateCoroutinesApi::class)
+    private val htmlExportCoroutineScope = CoroutineScope(newSingleThreadContext("HtmlExportCoroutine"))
 
     /**
      * Flow that is notified everytime a subscribed [EditorStatuses] is updated.
@@ -197,7 +201,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     fun exportHtml(resultCallback: (html: String) -> Unit) {
-        htmlExportCoroutineScope.launch {
+        htmlExportCoroutineScope.launch(Dispatchers.Main) {
             htmlExportMutex.withLock {
                 val notYetRunning = htmlExportCallback.isEmpty()
                 htmlExportCallback.add(resultCallback)
@@ -236,7 +240,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     private fun notifyExportedHtml(html: String) {
-        htmlExportCoroutineScope.launch {
+        htmlExportCoroutineScope.launch(Dispatchers.Main) {
             htmlExportMutex.withLock {
                 htmlExportCallback.forEach { it.invoke(html) }
                 htmlExportCallback.clear()
