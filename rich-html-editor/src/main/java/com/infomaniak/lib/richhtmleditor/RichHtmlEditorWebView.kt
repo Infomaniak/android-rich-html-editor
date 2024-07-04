@@ -45,6 +45,9 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.math.roundToInt
 
 /**
@@ -88,6 +91,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         updateWebViewHeight = ::updateWebViewHeight,
     )
 
+    private val htmlExportCoroutineScope = CoroutineScope(CoroutineName("HtmlExportCoroutine"))
+
     /**
      * Flow that is notified everytime a subscribed [EditorStatuses] is updated.
      *
@@ -98,7 +103,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      */
     val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
 
-    private var htmlExportCallback: ((html: String) -> Unit)? = null
+    private var htmlExportCallback: MutableList<((html: String) -> Unit)> = mutableListOf()
+
+    private val htmlExportMutex = Mutex()
 
     init {
         @SuppressLint("SetJavaScriptEnabled")
@@ -190,8 +197,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     fun exportHtml(resultCallback: (html: String) -> Unit) {
-        htmlExportCallback = resultCallback
-        jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
+        htmlExportCoroutineScope.launch {
+            htmlExportMutex.withLock {
+                val notYetRunning = htmlExportCallback.isEmpty()
+                htmlExportCallback.add(resultCallback)
+                if (notYetRunning) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
+            }
+        }
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -224,8 +236,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     private fun notifyExportedHtml(html: String) {
-        htmlExportCallback?.invoke(html)
-        htmlExportCallback = null
+        htmlExportCoroutineScope.launch {
+            htmlExportMutex.withLock {
+                htmlExportCallback.forEach { it.invoke(html) }
+                htmlExportCallback.clear()
+            }
+        }
     }
 
     private fun requestRectangleOnScreen(left: Int, top: Int, right: Int, bottom: Int) {
