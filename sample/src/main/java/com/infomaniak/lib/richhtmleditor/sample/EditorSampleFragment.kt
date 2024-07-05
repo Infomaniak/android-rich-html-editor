@@ -146,12 +146,8 @@ class EditorSampleFragment : Fragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        editorSampleViewModel.editorReloader.save(binding.editor)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onDestroyView() {
+        editorSampleViewModel.editorReloader.save(binding.editor)
         super.onDestroyView()
         _binding = null
     }
