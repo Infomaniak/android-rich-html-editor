@@ -47,6 +47,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.sync.Mutex
@@ -201,11 +202,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     fun exportHtml(resultCallback: (html: String) -> Unit) {
-        htmlExportCoroutineScope.launch(Dispatchers.Main) {
+        htmlExportCoroutineScope.launch {
             htmlExportMutex.withLock {
                 val notYetRunning = htmlExportCallback.isEmpty()
                 htmlExportCallback.add(resultCallback)
-                if (notYetRunning) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
+                Dispatchers.Main {
+                    if (notYetRunning) jsExecutor.executeWhenDomIsLoaded(JsExecutableMethod("exportHtml"))
+                }
             }
         }
     }
@@ -240,9 +243,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     private fun notifyExportedHtml(html: String) {
-        htmlExportCoroutineScope.launch(Dispatchers.Main) {
+        htmlExportCoroutineScope.launch {
             htmlExportMutex.withLock {
-                htmlExportCallback.forEach { it.invoke(html) }
+                Dispatchers.Main {
+                    htmlExportCallback.forEach { it.invoke(html) }
+                }
                 htmlExportCallback.clear()
             }
         }
