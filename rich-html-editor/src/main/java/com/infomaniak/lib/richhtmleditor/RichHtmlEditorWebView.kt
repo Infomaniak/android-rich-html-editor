@@ -77,13 +77,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
-    /**
-     * Describes if the content of the editor is empty or not. With some user inputs, the editor could visually look empty but
-     * still have a <br> or other tags inside it. In this case isEmpty will still return false, so this value might not be suited
-     * for all usages.
-     */
-    var isEmpty: Boolean = true
-
     private var keepKeyboardOpenedOnConfigurationChanged: Boolean = false
 
     private val documentInitializer = DocumentInitializer()
@@ -100,14 +93,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         notifyExportedHtml = ::notifyExportedHtml,
         requestRectangleOnScreen = ::requestRectangleOnScreen,
         updateWebViewHeight = ::updateWebViewHeight,
-        notifyEmptyEditorChange = ::notifyEmptyEditorChange,
     )
 
     @OptIn(DelicateCoroutinesApi::class)
     private val htmlExportCoroutineScope = CoroutineScope(newSingleThreadContext("HtmlExportCoroutine"))
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private val emptyBodyListenerCoroutine = CoroutineScope(newSingleThreadContext("EmptyBodyListenerCoroutine"))
 
     /**
      * Flow that is notified everytime a subscribed [EditorStatuses] is updated.
@@ -119,8 +108,15 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      */
     val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
 
+    /**
+     * Describes if the content of the editor is empty or not.
+     *
+     * With some user inputs, the editor could visually look empty but still have a <br> or other tags inside it. In this case
+     * [isEmptyFlow] will still return false, so this value might not be suited for all usages.
+     */
+    val isEmptyFlow: Flow<Boolean> by jsBridge::isEmptyFlow
+
     private var htmlExportCallback: MutableList<((html: String) -> Unit)> = mutableListOf()
-    private var emptyEditorListener: ((Boolean) -> Unit)? = null
 
     private val htmlExportMutex = Mutex()
 
@@ -225,10 +221,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         }
     }
 
-    fun setOnEmptyEditorChangeListener(listener: ((Boolean) -> Unit)? = null) {
-        emptyEditorListener = listener
-    }
-
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
         return bundleOf(
@@ -285,13 +277,6 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private fun updateWebViewHeight(newHeight: Int) {
         updateLayoutParams<ViewGroup.LayoutParams> {
             height = newHeight
-        }
-    }
-
-    private fun notifyEmptyEditorChange(isEditorEmpty: Boolean) {
-        emptyBodyListenerCoroutine.launch(Dispatchers.Main) {
-            emptyEditorListener?.invoke(isEditorEmpty)
-            isEmpty = isEditorEmpty
         }
     }
 

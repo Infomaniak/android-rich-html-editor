@@ -65,8 +65,10 @@ class EditorSampleFragment : Fragment() {
             isVisible = true
             setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }
 
-            setOnEmptyEditorChangeListener { isEditorEmpty ->
-                placeholder.isVisible = isEditorEmpty
+            lifecycleScope.launch {
+                isEmptyFlow.collect { isEditorEmpty ->
+                    placeholder.isVisible = isEditorEmpty
+                }
             }
         }
 

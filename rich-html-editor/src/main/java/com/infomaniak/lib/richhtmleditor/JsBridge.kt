@@ -39,7 +39,6 @@ internal class JsBridge(
     private val notifyExportedHtml: (String) -> Unit,
     private val requestRectangleOnScreen: (left: Int, top: Int, right: Int, bottom: Int) -> Unit,
     private val updateWebViewHeight: (Int) -> Unit,
-    private val notifyEmptyEditorChange: (Boolean) -> Unit,
 ) {
 
     private val editorStatuses = EditorStatuses()
@@ -49,6 +48,9 @@ internal class JsBridge(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
     val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
+
+    private var _isEmptyFlow: MutableSharedFlow<Boolean> = MutableSharedFlow()
+    var isEmptyFlow: Flow<Boolean> = _isEmptyFlow
 
     fun toggleBold() = execCommand(StatusCommand.BOLD)
 
@@ -178,7 +180,11 @@ internal class JsBridge(
     fun exportHtml(html: String) = notifyExportedHtml(html)
 
     @JavascriptInterface
-    fun onEmptyBodyChanges(isBodyEmpty: Boolean) = notifyEmptyEditorChange(isBodyEmpty)
+    fun onEmptyBodyChanges(isBodyEmpty: Boolean) {
+        coroutineScope.launch(defaultDispatcher) {
+            _isEmptyFlow.emit(isBodyEmpty)
+        }
+    }
 
     companion object {
         private val CHARACTERS_TO_REMOVE = setOf('r', 'g', 'b', 'a', '(', ')', ' ')
