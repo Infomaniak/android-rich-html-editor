@@ -77,6 +77,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
+    /**
+     * Describes if the content of the editor is empty or not. With some user inputs, the editor could visually look empty but
+     * still have a <br> or other tags inside it. In this case isEmpty will still return false, so this value might not be suited
+     * for all usages.
+     */
     var isEmpty: Boolean = true
 
     private var keepKeyboardOpenedOnConfigurationChanged: Boolean = false
