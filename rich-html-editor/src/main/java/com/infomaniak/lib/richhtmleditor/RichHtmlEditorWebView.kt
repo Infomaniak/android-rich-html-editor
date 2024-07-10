@@ -272,6 +272,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         }
     }
 
+    // Prevent scrolling bug that makes the editor twitch
+    override fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) = Unit
+
     @Deprecated(
         "Use setHtml() instead to initialize the editor with the desired HTML content.",
         ReplaceWith("setHtml()", "com.infomaniak.lib.richhtmleditor")
