@@ -1,4 +1,5 @@
 let currentSelectionState = {}
+let previousEmptyStat = undefined
 
 // Helper functions
 
@@ -19,6 +20,20 @@ function onBodyResize(callback) {
 function getSelectionRangeOrNull() {
     const selection = document.getSelection()
     return (selection.rangeCount > 0) ? selection.getRangeAt(0) : null
+}
+
+function onEmptyBodyChanges(callback) {
+    let config = { childList: true }
+    let editor = getEditor()
+
+    var observer = new MutationObserver(_ => {
+        var isEditorEmpty = editor.childNodes.length === 0
+        if (previousEmptyStat === isEditorEmpty) return
+        previousEmptyStat = isEditorEmpty
+        callback(isEditorEmpty)
+    })
+
+    observer.observe(editor, config)
 }
 
 // Core logic

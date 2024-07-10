@@ -21,6 +21,7 @@
 
     <color name="textColor">#333333</color>
     <color name="subtitleColor">#666666</color>
+    <color name="placeholderColor">#9F9F9F</color>
 
     <color name="gray">#888888</color>
 </resources>

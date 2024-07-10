@@ -93,10 +93,14 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         notifyExportedHtml = ::notifyExportedHtml,
         requestRectangleOnScreen = ::requestRectangleOnScreen,
         updateWebViewHeight = ::updateWebViewHeight,
+        notifyEmptyEditorChange = ::notifyEmptyEditorChange,
     )
 
     @OptIn(DelicateCoroutinesApi::class)
     private val htmlExportCoroutineScope = CoroutineScope(newSingleThreadContext("HtmlExportCoroutine"))
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private val emptyBodyListenerCoroutine = CoroutineScope(newSingleThreadContext("EmptyBodyListenerCoroutine"))
 
     /**
      * Flow that is notified everytime a subscribed [EditorStatuses] is updated.
@@ -109,6 +113,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
 
     private var htmlExportCallback: MutableList<((html: String) -> Unit)> = mutableListOf()
+    private var emptyEditorListener: ((Boolean) -> Unit)? = null
 
     private val htmlExportMutex = Mutex()
 
@@ -213,6 +218,10 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         }
     }
 
+    fun setOnEmptyEditorChangeListener(listener: ((Boolean) -> Unit)? = null) {
+        emptyEditorListener = listener
+    }
+
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
         return bundleOf(
@@ -269,6 +278,12 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private fun updateWebViewHeight(newHeight: Int) {
         updateLayoutParams<ViewGroup.LayoutParams> {
             height = newHeight
+        }
+    }
+
+    private fun notifyEmptyEditorChange(isEditorEmpty: Boolean) {
+        emptyBodyListenerCoroutine.launch(Dispatchers.Main) {
+            emptyEditorListener?.invoke(isEditorEmpty)
         }
     }
 

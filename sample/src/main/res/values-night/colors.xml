@@ -18,4 +18,5 @@
 <resources>
     <color name="textColor">#F1F1F1</color>
     <color name="subtitleColor">#9F9F9F</color>
+    <color name="placeholderColor">#666666</color>
 </resources>
