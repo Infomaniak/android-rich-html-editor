@@ -77,6 +77,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
+    var isEmpty: Boolean = true
+
     private var keepKeyboardOpenedOnConfigurationChanged: Boolean = false
 
     private val documentInitializer = DocumentInitializer()
@@ -284,6 +286,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private fun notifyEmptyEditorChange(isEditorEmpty: Boolean) {
         emptyBodyListenerCoroutine.launch(Dispatchers.Main) {
             emptyEditorListener?.invoke(isEditorEmpty)
+            isEmpty = isEditorEmpty
         }
     }
 
