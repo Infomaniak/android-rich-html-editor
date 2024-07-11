@@ -46,7 +46,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
@@ -106,7 +107,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * @see subscribeToStates
      */
-    val editorStatusesFlow: Flow<EditorStatuses> by jsBridge::editorStatusesFlow
+    val editorStatusesFlow: SharedFlow<EditorStatuses> by jsBridge::editorStatusesFlow
 
     /**
      * Describes if the content of the editor is empty or not.
@@ -114,7 +115,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * With some user inputs, the editor could visually look empty but still have a <br> or other tags inside it. In this case
      * [isEmptyFlow] will still return false, so this value might not be suited for all usages.
      */
-    val isEmptyFlow: Flow<Boolean> by jsBridge::isEmptyFlow
+    val isEmptyFlow: StateFlow<Boolean> by jsBridge::isEmptyFlow
 
     private var htmlExportCallback: MutableList<((html: String) -> Unit)> = mutableListOf()
 

@@ -27,8 +27,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 internal class JsBridge(
@@ -47,10 +51,10 @@ internal class JsBridge(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
+    val editorStatusesFlow: SharedFlow<EditorStatuses> = _editorStatusesFlow.asSharedFlow()
 
-    private var _isEmptyFlow: MutableSharedFlow<Boolean> = MutableSharedFlow()
-    var isEmptyFlow: Flow<Boolean> = _isEmptyFlow
+    private var _isEmptyFlow: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    var isEmptyFlow: StateFlow<Boolean> = _isEmptyFlow.asStateFlow()
 
     fun toggleBold() = execCommand(StatusCommand.BOLD)
 
