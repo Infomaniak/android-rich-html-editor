@@ -114,8 +114,14 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * With some user inputs, the editor could visually look empty but still have a <br> or other tags inside it. In this case
      * [isEmptyFlow] will still return false, so this value might not be suited for all usages.
+     *
+     * The flow is initialized to the value `null` until it receives its very first value from the javascript observer and won't
+     * ever become `null` again.
+     *
+     * If the flow emits a new value it will always be different than the previous value, i.e. it's already distinctUntilChanged
+     * by nature.
      */
-    val isEmptyFlow: StateFlow<Boolean> by jsBridge::isEmptyFlow
+    val isEmptyFlow: StateFlow<Boolean?> by jsBridge::isEmptyFlow
 
     private var htmlExportCallback: MutableList<((html: String) -> Unit)> = mutableListOf()
 

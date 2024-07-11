@@ -22,18 +22,10 @@ function getSelectionRangeOrNull() {
     return (selection.rangeCount > 0) ? selection.getRangeAt(0) : null
 }
 
-function onEmptyBodyChanges(callback) {
+function onEditorChildListChange(callback) {
     let config = { childList: true }
-    let editor = getEditor()
-
-    var observer = new MutationObserver(_ => {
-        var isEditorEmpty = editor.childNodes.length === 0
-        if (previousEmptyStat === isEditorEmpty) return
-        previousEmptyStat = isEditorEmpty
-        callback(isEditorEmpty)
-    })
-
-    observer.observe(editor, config)
+    var observer = new MutationObserver(callback)
+    observer.observe(getEditor(), config)
 }
 
 // Core logic
@@ -143,4 +135,11 @@ function updateWebViewHeightWithBodyHeight() {
     let paddingBottom = parseInt(window.getComputedStyle(documentElement)["margin-bottom"])
 
     window.editor.reportNewDocumentHeight((documentElement.offsetHeight + paddingTop + paddingBottom) * window.devicePixelRatio)
+}
+
+function reportEmptyBodyStatus() {
+    var isEditorEmpty = getEditor().childNodes.length === 0
+    if (previousEmptyStat === isEditorEmpty) return
+    previousEmptyStat = isEditorEmpty
+    window.editor.onEmptyBodyChanges(isEditorEmpty)
 }

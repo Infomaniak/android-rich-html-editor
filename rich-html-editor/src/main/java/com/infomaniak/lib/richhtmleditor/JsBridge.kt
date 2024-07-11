@@ -53,8 +53,8 @@ internal class JsBridge(
     )
     val editorStatusesFlow: SharedFlow<EditorStatuses> = _editorStatusesFlow.asSharedFlow()
 
-    private var _isEmptyFlow: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    var isEmptyFlow: StateFlow<Boolean> = _isEmptyFlow.asStateFlow()
+    private var _isEmptyFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    var isEmptyFlow: StateFlow<Boolean?> = _isEmptyFlow.asStateFlow()
 
     fun toggleBold() = execCommand(StatusCommand.BOLD)
 

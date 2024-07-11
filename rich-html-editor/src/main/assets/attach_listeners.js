@@ -8,6 +8,7 @@ document.addEventListener("selectionchange", () => {
     focusCursorOnScreen()
 })
 
-onEmptyBodyChanges(isEditorEmpty => {
-    window.editor.onEmptyBodyChanges(isEditorEmpty)
+reportEmptyBodyStatus()
+onEditorChildListChange(() => {
+    reportEmptyBodyStatus()
 })
