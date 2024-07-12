@@ -1,5 +1,5 @@
 let currentSelectionState = {}
-let previousEmptyStat = undefined
+let previousEmptyStat
 
 // Helper functions
 
@@ -23,8 +23,8 @@ function getSelectionRangeOrNull() {
 }
 
 function onEditorChildListChange(callback) {
-    let config = { childList: true }
-    var observer = new MutationObserver(callback)
+    const config = { childList: true }
+    const observer = new MutationObserver(callback)
     observer.observe(getEditor(), config)
 }
 
@@ -138,7 +138,7 @@ function updateWebViewHeightWithBodyHeight() {
 }
 
 function reportEmptyBodyStatus() {
-    var isEditorEmpty = getEditor().childNodes.length === 0
+    const isEditorEmpty = getEditor().childNodes.length === 0
     if (previousEmptyStat === isEditorEmpty) return
     previousEmptyStat = isEditorEmpty
     window.editor.onEmptyBodyChanges(isEditorEmpty)
