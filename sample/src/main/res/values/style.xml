@@ -21,4 +21,11 @@
         <item name="android:minWidth">48dp</item>
         <item name="backgroundTint">@color/background_editor_button</item>
     </style>
+
+    <style name="EditorDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
 </resources>
