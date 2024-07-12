@@ -19,8 +19,10 @@ function createLink(displayText, url) {
             anchor.href = url;
             range.insertNode(anchor)
         }
+
+        setCaretAtEndOfAnchor(anchor)
     } else {
-        // There's already a selction so use execCommand to create a new link
+        // There's already a selection so use execCommand to create a new link
         document.execCommand("createLink", false, url)
 
         // Update the newly created link's display text if we have a custom text
@@ -40,6 +42,17 @@ function updateAnchorDisplayText(anchor, displayText) {
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
+}
+
+function setCaretAtEndOfAnchor(anchor) {
+    const range = new Range();
+    range.setStart(anchor, 1);
+    range.setEnd(anchor, 1);
+    range.collapsed = true;
+
+    const selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
 }
 
 // Unlink
