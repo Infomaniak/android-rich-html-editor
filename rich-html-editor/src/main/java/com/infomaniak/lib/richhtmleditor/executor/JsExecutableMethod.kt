@@ -20,6 +20,7 @@ package com.infomaniak.lib.richhtmleditor.executor
 import android.webkit.WebView
 import androidx.annotation.ColorInt
 import com.infomaniak.lib.richhtmleditor.JsColor
+import com.infomaniak.lib.richhtmleditor.looselyEscapeAsStringLiteralForJs
 
 class JsExecutableMethod(
     private val methodName: String,
@@ -56,25 +57,6 @@ class JsExecutableMethod(
                 is JsColor -> "'${colorToRgbHex(value.color)}'"
                 else -> throw NotImplementedError("Encoding ${value::class} for JS is not yet implemented")
             }
-        }
-
-        // TODO: This method might not be enough to escape user inputs and prevent access to JS code execution
-        private fun looselyEscapeAsStringLiteralForJs(string: String): String {
-            val stringBuilder = StringBuilder("`")
-
-            string.forEach {
-                val char = when (it) {
-                    '`' -> "\\`"
-                    '\\' -> "\\\\"
-                    '$' -> "\\$"
-                    else -> it
-                }
-                stringBuilder.append(char)
-            }
-
-            stringBuilder.append("`")
-
-            return stringBuilder.toString()
         }
 
         @OptIn(ExperimentalStdlibApi::class)
