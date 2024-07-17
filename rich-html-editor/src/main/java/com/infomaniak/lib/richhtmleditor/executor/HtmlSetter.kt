@@ -18,13 +18,15 @@
 package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
+import com.infomaniak.lib.richhtmleditor.looselyEscapeAsStringLiteralForJs
 
 internal class HtmlSetter(private val webView: WebView) : JsLifecycleAwareExecutor<String>() {
 
     override fun executeImmediately(value: String) = webView.insertUserHtml(value)
 
     private fun WebView.insertUserHtml(html: String) {
-        evaluateJavascript("""document.getElementById("$EDITOR_ID").innerHTML = `${html}`""", null)
+        val escapedHtmlStringLiteral = looselyEscapeAsStringLiteralForJs(html)
+        evaluateJavascript("""document.getElementById("$EDITOR_ID").innerHTML = $escapedHtmlStringLiteral""", null)
     }
 
     companion object {
