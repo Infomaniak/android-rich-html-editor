@@ -1,4 +1,5 @@
 let currentSelectionState = {}
+let previousEmptyStat
 
 // Helper functions
 
@@ -19,6 +20,12 @@ function onBodyResize(callback) {
 function getSelectionRangeOrNull() {
     const selection = document.getSelection()
     return (selection.rangeCount > 0) ? selection.getRangeAt(0) : null
+}
+
+function onEditorChildListChange(callback) {
+    const config = { childList: true }
+    const observer = new MutationObserver(callback)
+    observer.observe(getEditor(), config)
 }
 
 // Core logic
@@ -128,4 +135,11 @@ function updateWebViewHeightWithBodyHeight() {
     let paddingBottom = parseInt(window.getComputedStyle(documentElement)["margin-bottom"])
 
     window.editor.reportNewDocumentHeight((documentElement.offsetHeight + paddingTop + paddingBottom) * window.devicePixelRatio)
+}
+
+function reportEmptyBodyStatus() {
+    const isEditorEmpty = getEditor().childNodes.length === 0
+    if (previousEmptyStat === isEditorEmpty) return
+    previousEmptyStat = isEditorEmpty
+    window.editor.onEmptyBodyChanges(isEditorEmpty)
 }

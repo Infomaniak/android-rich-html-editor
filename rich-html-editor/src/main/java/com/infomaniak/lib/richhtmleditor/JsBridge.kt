@@ -27,8 +27,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 internal class JsBridge(
@@ -47,7 +51,10 @@ internal class JsBridge(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    val editorStatusesFlow: Flow<EditorStatuses> = _editorStatusesFlow
+    val editorStatusesFlow: SharedFlow<EditorStatuses> = _editorStatusesFlow.asSharedFlow()
+
+    private var _isEmptyFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    var isEmptyFlow: StateFlow<Boolean?> = _isEmptyFlow.asStateFlow()
 
     fun toggleBold() = execCommand(StatusCommand.BOLD)
 
@@ -175,6 +182,13 @@ internal class JsBridge(
 
     @JavascriptInterface
     fun exportHtml(html: String) = notifyExportedHtml(html)
+
+    @JavascriptInterface
+    fun onEmptyBodyChanges(isBodyEmpty: Boolean) {
+        coroutineScope.launch(defaultDispatcher) {
+            _isEmptyFlow.emit(isBodyEmpty)
+        }
+    }
 
     companion object {
         private val CHARACTERS_TO_REMOVE = setOf('r', 'g', 'b', 'a', '(', ')', ' ')

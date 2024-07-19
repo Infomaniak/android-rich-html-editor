@@ -333,17 +333,43 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:layout_height="wrap_content">
 
-            <com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView
-                android:id="@+id/editor"
+            <FrameLayout
+                android:id="@+id/webViewLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </FrameLayout>
+                <com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView
+                    android:id="@+id/editor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/placeholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Write here"
+                android:textColor="@color/placeholderColor"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/webViewLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/webViewLayout"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

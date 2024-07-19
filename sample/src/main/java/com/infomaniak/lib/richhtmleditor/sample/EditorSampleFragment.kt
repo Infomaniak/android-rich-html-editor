@@ -34,6 +34,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.lib.richhtmleditor.Justification
 import com.infomaniak.lib.richhtmleditor.sample.databinding.CreateLinkTextInputBinding
 import com.infomaniak.lib.richhtmleditor.sample.databinding.FragmentEditorSampleBinding
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 
@@ -64,6 +67,11 @@ class EditorSampleFragment : Fragment() {
 
             isVisible = true
             setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }
+
+            isEmptyFlow
+                .filterNotNull()
+                .onEach { isEditorEmpty -> placeholder.isVisible = isEditorEmpty }
+                .launchIn(lifecycleScope)
         }
 
         setEditorButtonClickListeners()

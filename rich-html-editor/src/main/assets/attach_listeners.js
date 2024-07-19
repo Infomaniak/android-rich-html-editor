@@ -7,3 +7,8 @@ document.addEventListener("selectionchange", () => {
     reportSelectionStateChangedIfNecessary()
     focusCursorOnScreen()
 })
+
+reportEmptyBodyStatus()
+onEditorChildListChange(() => {
+    reportEmptyBodyStatus()
+})
