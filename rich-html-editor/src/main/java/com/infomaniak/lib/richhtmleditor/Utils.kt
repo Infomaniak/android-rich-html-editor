@@ -31,7 +31,5 @@ fun looselyEscapeAsStringLiteralForJs(string: String): String {
         stringBuilder.append(char)
     }
 
-    stringBuilder.append("`")
-
-    return stringBuilder.toString()
+    return stringBuilder.append("`").toString()
 }
