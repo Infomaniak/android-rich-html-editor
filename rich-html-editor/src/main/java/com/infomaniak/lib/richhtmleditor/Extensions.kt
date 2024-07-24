@@ -32,18 +32,21 @@ internal fun Context.readAsset(fileName: String): String {
 }
 
 internal fun WebView.injectScript(scriptCode: String, id: String? = null) {
-    val removePreviousId = id?.let {
+    val escapedStringLiteralId = id?.let { looselyEscapeAsStringLiteralForJs(it) }
+
+    val removePreviousId = escapedStringLiteralId?.let {
         """
-        var previousScript = document.getElementById(`$it`)
+        var previousScript = document.getElementById($it)
         if (previousScript) previousScript.remove()
         """.trimIndent()
     } ?: ""
+    val setId = escapedStringLiteralId?.let { "script.id = ${it};" } ?: ""
 
-    val setId = id?.let { "script.id = `${it}`;" } ?: ""
+    val escapedStringLiteralScriptCode = looselyEscapeAsStringLiteralForJs(scriptCode)
     val addScriptJs = """
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.text = `${scriptCode}`;
+        script.text = $escapedStringLiteralScriptCode;
         $setId
 
         document.head.appendChild(script);
@@ -55,9 +58,10 @@ internal fun WebView.injectScript(scriptCode: String, id: String? = null) {
 }
 
 internal fun WebView.injectCss(css: String) {
+    val escapedStringLiteralCss = looselyEscapeAsStringLiteralForJs(css)
     val addCssJs = """
         var style = document.createElement('style');
-        style.textContent = `${css}`;
+        style.textContent = $escapedStringLiteralCss;
 
         document.head.appendChild(style);
         """.trimIndent()
