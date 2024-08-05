@@ -137,9 +137,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
         addJavascriptInterface(jsBridge, "editor")
 
         stateSubscriber.executeWhenDomIsLoaded(null)
+
         val template = context.readAsset("editor_template.html")
         super.loadDataWithBaseURL("", template, "text/html", "UTF-8", null)
-
     }
 
     /**
@@ -151,20 +151,38 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
     /**
      * Subscribes to a subset of states, ensuring that [editorStatusesFlow] triggers only when at least one of the specified
-     * states changes.
+     * states changes. By default, when this method is never called, all available [StatusCommand] will be subscribed to.
      *
      * @param subscribedStates A set of [StatusCommand] to subscribe to. If `null`, all available [StatusCommand] will be
      * subscribed to.
      */
     fun subscribeToStates(subscribedStates: Set<StatusCommand>?) = stateSubscriber.executeWhenDomIsLoaded(subscribedStates)
 
+
+    /**
+     * Injects a custom CSS tag into the `<head>` of the editor template.
+     *
+     * This method can be called repeatedly to add multiple tags. You don't need to wait for the [WebView]'s content to load. If
+     * the [WebView]'s content hasn't finished loading, the method will wait and inject the tag once the page is ready. If the
+     * page has already loaded, it injects the tag immediately.
+     *
+     * The content string to inject can span multiple lines and include any character, such as backquotes, backslashes,
+     * dollar signs, and more.
+     */
     fun addCss(css: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
 
     /**
-     * Injects a custom script inside the editor template's `<head>`.
+     * Injects a custom script tag into the `<head>` of the editor template.
+     *
+     * This method can be called repeatedly to add multiple tags. You don't need to wait for the [WebView]'s content to load. If
+     * the [WebView]'s content hasn't finished loading, the method will wait and inject the tag once the page is ready. If the
+     * page has already loaded, it injects the tag immediately.
+     *
+     * The content string to inject can span multiple lines and include any character, such as backquotes, backslashes,
+     * dollar signs, and more.
      *
      * The html loaded with [initEditor] is not guaranteed to be loaded inside the editor by the time this injected script is
-     * loaded
+     * loaded.
      * */
     fun addScript(script: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.SCRIPT, script))
 
