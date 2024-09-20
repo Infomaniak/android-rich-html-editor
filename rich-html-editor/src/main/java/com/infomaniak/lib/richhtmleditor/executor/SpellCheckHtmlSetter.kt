@@ -19,16 +19,15 @@ package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
 import com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView.Companion.EDITOR_ID
-import com.infomaniak.lib.richhtmleditor.looselyEscapeAsStringLiteralForJs
 
-internal class HtmlSetter(private val webView: WebView) : JsLifecycleAwareExecutor<String>() {
+internal class SpellCheckHtmlSetter(private val webView: WebView) : JsLifecycleAwareExecutor<Boolean>() {
 
-    override fun executeImmediately(value: String) = webView.insertUserHtml(value)
+    override fun executeImmediately(value: Boolean) = webView.insertSpellCheckValue(value)
 
-    private fun WebView.insertUserHtml(html: String) {
-        val escapedHtmlStringLiteral = looselyEscapeAsStringLiteralForJs(html)
+    private fun WebView.insertSpellCheckValue(enable: Boolean) {
+        val spellCheckValue = if (enable) "true" else "false"
         evaluateJavascript(
-            """document.getElementById("$EDITOR_ID").innerHTML = $escapedHtmlStringLiteral""",
+            """document.getElementById("$EDITOR_ID").setAttribute("spellcheck", $spellCheckValue)""",
             null
         )
     }

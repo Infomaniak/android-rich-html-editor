@@ -131,6 +131,15 @@ editor.apply {
 To safely use your own WebViewClient instance with the editor, you have to call the
 RichHtmlEditorWebView's `notifyPageHasLoaded()` inside your custom WebViewClient's `onPageFinished()` callback.
 
+### Activate/Deactivate spellcheck
+
+Spellcheck is activated by default but if you don't want to have any spellcheck done on the editor content,
+you can do that by doing so.
+
+```kt
+editor.withSpellCheck(false)
+```
+
 ### More advanced features
 
 For more advanced features, take a look at the [sample project](sample) or
