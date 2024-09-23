@@ -18,9 +18,7 @@
 package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
-import androidx.annotation.ColorInt
-import com.infomaniak.lib.richhtmleditor.JsColor
-import com.infomaniak.lib.richhtmleditor.looselyEscapeAsStringLiteralForJs
+import com.infomaniak.lib.richhtmleditor.encodeArgsForJs
 
 class JsExecutableMethod(
     private val methodName: String,
@@ -46,20 +44,5 @@ class JsExecutableMethod(
 
     fun addCallback(callback: (String) -> Unit) {
         callbacks.add(callback)
-    }
-
-    companion object {
-        private fun encodeArgsForJs(value: Any?): String {
-            return when (value) {
-                null -> "null"
-                is String -> looselyEscapeAsStringLiteralForJs(value)
-                is Boolean, is Number -> value.toString()
-                is JsColor -> "'${colorToRgbHex(value.color)}'"
-                else -> throw NotImplementedError("Encoding ${value::class} for JS is not yet implemented")
-            }
-        }
-
-        @OptIn(ExperimentalStdlibApi::class)
-        private fun colorToRgbHex(@ColorInt color: Int) = color.toHexString(HexFormat.UpperCase).takeLast(6)
     }
 }
