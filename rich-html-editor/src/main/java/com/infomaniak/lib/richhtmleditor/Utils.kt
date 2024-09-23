@@ -17,6 +17,8 @@
  */
 package com.infomaniak.lib.richhtmleditor
 
+import androidx.annotation.ColorInt
+
 // TODO: This method might not be enough to escape user inputs and prevent access to JS code execution
 fun looselyEscapeAsStringLiteralForJs(string: String): String {
     val stringBuilder = StringBuilder("`")
@@ -33,3 +35,16 @@ fun looselyEscapeAsStringLiteralForJs(string: String): String {
 
     return stringBuilder.append("`").toString()
 }
+
+fun encodeArgsForJs(value: Any?): String {
+    return when (value) {
+        null -> "null"
+        is String -> looselyEscapeAsStringLiteralForJs(value)
+        is Boolean, is Number -> value.toString()
+        is JsColor -> "'${colorToRgbHex(value.color)}'"
+        else -> throw NotImplementedError("Encoding ${value::class} for JS is not yet implemented")
+    }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+private fun colorToRgbHex(@ColorInt color: Int) = color.toHexString(HexFormat.UpperCase).takeLast(6)

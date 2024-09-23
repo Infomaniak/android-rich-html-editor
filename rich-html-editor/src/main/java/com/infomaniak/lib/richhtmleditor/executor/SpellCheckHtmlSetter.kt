@@ -18,31 +18,17 @@
 package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
+import com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView.Companion.EDITOR_ID
 import com.infomaniak.lib.richhtmleditor.encodeArgsForJs
 
-class JsExecutableMethod(
-    private val methodName: String,
-    private vararg val args: Any?,
-    resultCallback: ((String) -> Unit)? = null,
-) {
-    private val callbacks: MutableList<(String) -> Unit> = resultCallback?.let { mutableListOf(it) } ?: mutableListOf()
+internal class SpellCheckHtmlSetter(private val webView: WebView) : JsLifecycleAwareExecutor<Boolean>() {
 
-    fun executeOn(webView: WebView) {
-        val formattedArgs = args.joinToString(transform = ::encodeArgsForJs)
-        val jsCode = "$methodName($formattedArgs)"
+    override fun executeImmediately(value: Boolean) = webView.insertSpellCheckValue(value)
 
-        val evaluationCallback: ((String) -> Unit)? = if (callbacks.isEmpty()) {
+    private fun WebView.insertSpellCheckValue(enable: Boolean) {
+        evaluateJavascript(
+            """document.getElementById("$EDITOR_ID").setAttribute("spellcheck", ${encodeArgsForJs(enable)})""",
             null
-        } else {
-            { jsExecutionOutput ->
-                callbacks.forEach { callback -> callback(jsExecutionOutput) }
-            }
-        }
-
-        webView.evaluateJavascript(jsCode, evaluationCallback)
-    }
-
-    fun addCallback(callback: (String) -> Unit) {
-        callbacks.add(callback)
+        )
     }
 }

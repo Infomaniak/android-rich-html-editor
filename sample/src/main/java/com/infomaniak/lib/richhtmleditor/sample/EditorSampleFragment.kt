@@ -64,6 +64,7 @@ class EditorSampleFragment : Fragment() {
             // addCss(readAsset("editor_custom_css.css"))
             // addScript("document.body.style['background'] = '#00FFFF'")
             // subscribeToStates(setOf(StatusCommand.BOLD, StatusCommand.ITALIC))
+            // withSpellCheck(false)
 
             isVisible = true
             setOnFocusChangeListener { _, hasFocus -> setToolbarEnabledStatus(hasFocus) }

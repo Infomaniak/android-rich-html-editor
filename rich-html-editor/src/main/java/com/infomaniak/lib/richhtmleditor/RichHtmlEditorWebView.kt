@@ -40,6 +40,7 @@ import com.infomaniak.lib.richhtmleditor.executor.KeyboardOpener
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
+import com.infomaniak.lib.richhtmleditor.executor.SpellCheckHtmlSetter
 import com.infomaniak.lib.richhtmleditor.executor.StateSubscriber
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -83,6 +84,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private val documentInitializer = DocumentInitializer()
     private val stateSubscriber = StateSubscriber(this)
     private val htmlSetter = HtmlSetter(this)
+    private val spellCheckHtmlSetter = SpellCheckHtmlSetter(this)
     private val jsExecutor = JsExecutor(this)
     private val scriptCssInjector = ScriptCssInjector(this)
     private val keyboardOpener = KeyboardOpener(this)
@@ -134,6 +136,8 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
         webViewClient = RichHtmlEditorWebViewClient(::notifyPageHasLoaded)
 
+        withSpellCheck(true)
+
         addJavascriptInterface(jsBridge, "editor")
 
         stateSubscriber.executeWhenDomIsLoaded(null)
@@ -170,6 +174,11 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      * dollar signs, and more.
      */
     fun addCss(css: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
+
+    /**
+     * Injects a custom attribute to the editor div to activate/deactivate spellchecking. By default, spellcheck is activated.
+     */
+    fun withSpellCheck(enable: Boolean) = spellCheckHtmlSetter.executeWhenDomIsLoaded(enable)
 
     /**
      * Injects a custom script tag into the `<head>` of the editor template.
@@ -224,6 +233,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
 
         stateSubscriber.notifyDomLoaded()
         htmlSetter.notifyDomLoaded()
+        spellCheckHtmlSetter.notifyDomLoaded()
         jsExecutor.notifyDomLoaded()
         scriptCssInjector.notifyDomLoaded()
         keyboardOpener.notifyDomLoaded()
@@ -339,6 +349,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     }
 
     companion object {
+        // The id of this HTML tag is shared across multiple files and needs to remain the same
+        const val EDITOR_ID = "editor"
+
         private const val KEYBOARD_SHOULD_REOPEN_KEY = "keyboardShouldReopen"
         private const val SUPER_STATE_KEY = "superState"
     }

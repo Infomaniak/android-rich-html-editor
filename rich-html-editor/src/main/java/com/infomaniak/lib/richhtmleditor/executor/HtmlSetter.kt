@@ -18,6 +18,7 @@
 package com.infomaniak.lib.richhtmleditor.executor
 
 import android.webkit.WebView
+import com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView.Companion.EDITOR_ID
 import com.infomaniak.lib.richhtmleditor.looselyEscapeAsStringLiteralForJs
 
 internal class HtmlSetter(private val webView: WebView) : JsLifecycleAwareExecutor<String>() {
@@ -26,11 +27,9 @@ internal class HtmlSetter(private val webView: WebView) : JsLifecycleAwareExecut
 
     private fun WebView.insertUserHtml(html: String) {
         val escapedHtmlStringLiteral = looselyEscapeAsStringLiteralForJs(html)
-        evaluateJavascript("""document.getElementById("$EDITOR_ID").innerHTML = $escapedHtmlStringLiteral""", null)
-    }
-
-    companion object {
-        // The id of this HTML tag is shared across multiple files and needs to remain the same
-        private const val EDITOR_ID = "editor"
+        evaluateJavascript(
+            """document.getElementById("$EDITOR_ID").innerHTML = $escapedHtmlStringLiteral""",
+            null
+        )
     }
 }
