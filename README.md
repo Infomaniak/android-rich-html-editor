@@ -8,7 +8,7 @@ the power of the `contenteditable` HTML attribute inside a WebView.
 
 <img src="assets/android-sample.png" alt="Android sample app" style="height: 400px; width: auto;">
 
-Looking for an iOS or macOS equivalent? Check out the Swift version of this editor here: https://github.com/Infomaniak/swift-rich-html-editor
+Looking for an iOS or macOS equivalent? Check out the Swift version of this editor here: [Infomaniak/swift-rich-html-editor](https://github.com/Infomaniak/swift-rich-html-editor)
 
 ## ✍️ About
 
