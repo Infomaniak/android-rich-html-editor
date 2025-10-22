@@ -36,7 +36,7 @@ Directly inside gradle dependencies:
 
 ```gradle
 dependencies {
-    implementation "com.github.Infomaniak:android-rich-html-editor:$richHtmlEditorVersion"
+    implementation "com.github.infomaniak:android-rich-html-editor:$richHtmlEditorVersion"
 }
 ```
 
