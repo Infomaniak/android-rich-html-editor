@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metalava)
     id("maven-publish")
 }
 
@@ -25,6 +26,10 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core.ktx)
+}
+
+metalava {
+    filename = "api/api.txt"
 }
 
 afterEvaluate {
