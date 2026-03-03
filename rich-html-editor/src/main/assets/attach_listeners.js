@@ -4,8 +4,11 @@ onBodyResize(() => {
 })
 
 document.addEventListener("selectionchange", () => {
+    if (document.hasFocus()) {
+        focusCursorOnScreen()
+    }
+
     reportSelectionStateChangedIfNecessary()
-    focusCursorOnScreen()
 })
 
 reportEmptyBodyStatus()
