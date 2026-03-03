@@ -1,0 +1,19 @@
+name: 'PR and Commit Message Check'
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-commit-message:
+    name: Check Commit Message
+    uses: infomaniak/.github/.github/workflows/semantic-commit.yml@v2
+    secrets: inherit
