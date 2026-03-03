@@ -4,6 +4,8 @@ onBodyResize(() => {
 })
 
 document.addEventListener("selectionchange", () => {
+    if (!document.hasFocus()) return
+
     reportSelectionStateChangedIfNecessary()
     focusCursorOnScreen()
 })

@@ -32,9 +32,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components.findByName("release"))
-                groupId = "com.github"
+                groupId = "com.github.infomaniak"
                 artifactId = "android-rich-html-editor"
-                version = "0.1.0"
+                version = "0.2.0"
             }
         }
     }
