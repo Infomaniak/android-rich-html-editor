@@ -29,7 +29,7 @@ dependencies {
 }
 
 metalava {
-    filename = "api/api.txt"
+    filename = "metalavaApi/api.txt"
 }
 
 afterEvaluate {
