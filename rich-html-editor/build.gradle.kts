@@ -13,8 +13,6 @@ android {
 
     defaultConfig {
         minSdk = sharedMinSdk
-
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {
