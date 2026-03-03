@@ -2,6 +2,7 @@
 agp = "9.0.1"
 coreKtx = "1.17.0"
 appcompat = "1.7.1"
+kotlin = "2.3.10"
 material = "1.13.0"
 constraintlayout = "2.2.1"
 navigationKtx = "2.9.7"
@@ -9,6 +10,7 @@ navigationKtx = "2.9.7"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationKtx" }
