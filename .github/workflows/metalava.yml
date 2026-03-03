@@ -1,0 +1,12 @@
+name: Metalava api check
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  metalava:
+    uses: infomaniak/.github/.github/workflows/metalava.yml@cf5ea9f31aaaf5bdcb4f05172f1c4fb111bef6e9
