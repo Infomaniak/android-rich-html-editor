@@ -12,6 +12,10 @@ Looking for an iOS or macOS equivalent? Check out the Swift version of this edit
 
 ## ✍️ About
 
+### Dev
+
+To modify the library, don't forget to update the [api.txt](rich-html-editor/metalavaApi/api.txt) file with metalava's gradle task `./gradlew metalavaGenerateSignatureRelease`
+
 ### Features
 
 - **HTML Content Editing**: Full support for viewing and editing HTML content directly.
