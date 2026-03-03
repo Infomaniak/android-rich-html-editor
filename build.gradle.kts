@@ -1,7 +1,7 @@
 buildscript {
     extra.apply {
         set("sharedMinSdk", 24)
-        set("sharedCompileSdk", 34)
+        set("sharedCompileSdk", 36)
         set("javaVersion", JavaVersion.VERSION_17)
     }
 }
@@ -9,5 +9,4 @@ buildscript {
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
 }

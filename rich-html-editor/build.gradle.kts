@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     id("maven-publish")
 }
 
@@ -14,20 +13,17 @@ android {
 
     defaultConfig {
         minSdk = sharedMinSdk
-
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
     }
-    kotlinOptions {
-        jvmTarget = javaVersion.toString()
-    }
 }
 
 dependencies {
+    implementation(libs.kotlin.stdlib)
+
     implementation(libs.androidx.core.ktx)
 }
 
