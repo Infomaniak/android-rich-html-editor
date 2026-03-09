@@ -32,6 +32,8 @@ jobs:
       # Setup Gradle and run Build
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      # the task 'build' will run the metalava check automatically
       - name: Build with Gradle
         run: ./gradlew build
 

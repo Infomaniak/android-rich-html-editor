@@ -1,0 +1,206 @@
+// Signature format: 4.0
+package com.infomaniak.lib.richhtmleditor {
+
+  public final class EditorReloader {
+    ctor public EditorReloader(kotlinx.coroutines.CoroutineScope coroutineScope);
+    method public suspend Object? load(com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView editor, String defaultHtml, kotlin.coroutines.Continuation<? super kotlin.Unit>);
+    method public void save(com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView editor);
+  }
+
+  public final class EditorStatuses {
+    ctor public EditorStatuses();
+    ctor public EditorStatuses(optional boolean isBold, optional boolean isItalic, optional boolean isStrikeThrough, optional boolean isUnderlined, optional String? fontName, optional Float? fontSize, optional Integer? textColor, optional Integer? backgroundColor, optional boolean isLinkSelected, optional boolean isOrderedListSelected, optional boolean isUnorderedListSelected, optional boolean isSubscript, optional boolean isSuperscript, optional com.infomaniak.lib.richhtmleditor.Justification? justification);
+    method public boolean component1();
+    method public boolean component10();
+    method public boolean component11();
+    method public boolean component12();
+    method public boolean component13();
+    method public com.infomaniak.lib.richhtmleditor.Justification? component14();
+    method public boolean component2();
+    method public boolean component3();
+    method public boolean component4();
+    method public String? component5();
+    method public Float? component6();
+    method public Integer? component7();
+    method public Integer? component8();
+    method public boolean component9();
+    method public com.infomaniak.lib.richhtmleditor.EditorStatuses copy(optional boolean isBold, optional boolean isItalic, optional boolean isStrikeThrough, optional boolean isUnderlined, optional String? fontName, optional Float? fontSize, optional Integer? textColor, optional Integer? backgroundColor, optional boolean isLinkSelected, optional boolean isOrderedListSelected, optional boolean isUnorderedListSelected, optional boolean isSubscript, optional boolean isSuperscript, optional com.infomaniak.lib.richhtmleditor.Justification? justification);
+    method @InaccessibleFromKotlin public Integer? getBackgroundColor();
+    method @InaccessibleFromKotlin public String? getFontName();
+    method @InaccessibleFromKotlin public Float? getFontSize();
+    method @InaccessibleFromKotlin public com.infomaniak.lib.richhtmleditor.Justification? getJustification();
+    method @InaccessibleFromKotlin public Integer? getTextColor();
+    method @InaccessibleFromKotlin public boolean isBold();
+    method @InaccessibleFromKotlin public boolean isItalic();
+    method @InaccessibleFromKotlin public boolean isLinkSelected();
+    method @InaccessibleFromKotlin public boolean isOrderedListSelected();
+    method @InaccessibleFromKotlin public boolean isStrikeThrough();
+    method @InaccessibleFromKotlin public boolean isSubscript();
+    method @InaccessibleFromKotlin public boolean isSuperscript();
+    method @InaccessibleFromKotlin public boolean isUnderlined();
+    method @InaccessibleFromKotlin public boolean isUnorderedListSelected();
+    method @InaccessibleFromKotlin public void setBackgroundColor(Integer?);
+    method @InaccessibleFromKotlin public void setBold(boolean);
+    method @InaccessibleFromKotlin public void setFontName(String?);
+    method @InaccessibleFromKotlin public void setFontSize(Float?);
+    method @InaccessibleFromKotlin public void setItalic(boolean);
+    method @InaccessibleFromKotlin public void setJustification(com.infomaniak.lib.richhtmleditor.Justification?);
+    method @InaccessibleFromKotlin public void setLinkSelected(boolean);
+    method @InaccessibleFromKotlin public void setOrderedListSelected(boolean);
+    method @InaccessibleFromKotlin public void setStrikeThrough(boolean);
+    method @InaccessibleFromKotlin public void setSubscript(boolean);
+    method @InaccessibleFromKotlin public void setSuperscript(boolean);
+    method @InaccessibleFromKotlin public void setTextColor(Integer?);
+    method @InaccessibleFromKotlin public void setUnderlined(boolean);
+    method @InaccessibleFromKotlin public void setUnorderedListSelected(boolean);
+    method public suspend Object? updateStatusesAtomically(boolean isBold, boolean isItalic, boolean isStrikeThrough, boolean isUnderlined, String fontName, Float? fontSize, @ColorInt Integer? textColor, @ColorInt Integer? backgroundColor, boolean isLinkSelected, boolean isOrderedListSelected, boolean isUnorderedListSelected, boolean isSubscript, boolean isSuperscript, com.infomaniak.lib.richhtmleditor.Justification? justification, kotlin.coroutines.Continuation<? super kotlin.Unit>);
+    property public Integer? backgroundColor;
+    property public String? fontName;
+    property public Float? fontSize;
+    property public boolean isBold;
+    property public boolean isItalic;
+    property public boolean isLinkSelected;
+    property public boolean isOrderedListSelected;
+    property public boolean isStrikeThrough;
+    property public boolean isSubscript;
+    property public boolean isSuperscript;
+    property public boolean isUnderlined;
+    property public boolean isUnorderedListSelected;
+    property public com.infomaniak.lib.richhtmleditor.Justification? justification;
+    property public Integer? textColor;
+  }
+
+  public interface ExecCommand {
+    method @InaccessibleFromKotlin public String getArgumentName();
+    property public abstract String argumentName;
+  }
+
+  public final class ExtensionsKt {
+    method public static android.view.AbsSavedState? getParcelableCompat(android.os.Bundle, String key, Class<android.view.AbsSavedState> clazz);
+  }
+
+  public final class JsColor {
+    ctor public JsColor(@ColorInt int color);
+    method public int component1();
+    method public com.infomaniak.lib.richhtmleditor.JsColor copy(optional @ColorInt int color);
+    method @InaccessibleFromKotlin public int getColor();
+    property public int color;
+  }
+
+  public enum Justification {
+    method @InaccessibleFromKotlin public com.infomaniak.lib.richhtmleditor.StatusCommand getExecCommand();
+    property public com.infomaniak.lib.richhtmleditor.StatusCommand execCommand;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.Justification CENTER;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.Justification FULL;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.Justification LEFT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.Justification RIGHT;
+  }
+
+  public enum OtherCommand implements com.infomaniak.lib.richhtmleditor.ExecCommand {
+    method @InaccessibleFromKotlin public String getArgumentName();
+    property public String argumentName;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.OtherCommand INDENT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.OtherCommand OUTDENT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.OtherCommand REDO;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.OtherCommand REMOVE_FORMAT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.OtherCommand UNDO;
+  }
+
+  public final class RichHtmlEditorWebView extends android.webkit.WebView {
+    ctor public RichHtmlEditorWebView(android.content.Context context);
+    ctor public RichHtmlEditorWebView(android.content.Context context, optional android.util.AttributeSet? attrs);
+    ctor public RichHtmlEditorWebView(android.content.Context context, optional android.util.AttributeSet? attrs, optional int defStyleAttr);
+    method public void addCss(String css);
+    method public void addScript(String script);
+    method public void createLink(String? displayText, String url);
+    method public void exportHtml(kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit> resultCallback);
+    method @InaccessibleFromKotlin public kotlinx.coroutines.flow.SharedFlow<com.infomaniak.lib.richhtmleditor.EditorStatuses> getEditorStatusesFlow();
+    method public void indent();
+    method @InaccessibleFromKotlin public kotlinx.coroutines.flow.StateFlow<java.lang.Boolean?> isEmptyFlow();
+    method public void justify(com.infomaniak.lib.richhtmleditor.Justification justification);
+    method @Deprecated public void loadData(String data, String? mimeType, String? encoding);
+    method @Deprecated public void loadDataWithBaseURL(String? baseUrl, String data, String? mimeType, String? encoding, String? historyUrl);
+    method @Deprecated public void loadUrl(String url);
+    method @Deprecated public void loadUrl(String url, java.util.Map<java.lang.String,java.lang.String> additionalHttpHeaders);
+    method public void notifyPageHasLoaded();
+    method public void outdent();
+    method public void redo();
+    method public void removeFormat();
+    method public void requestFocusAndOpenKeyboard();
+    method public void setFontSize(@IntRange(from=com.infomaniak.lib.richhtmleditor.JsBridge.FONT_MIN_SIZE, to=com.infomaniak.lib.richhtmleditor.JsBridge.FONT_MAX_SIZE) int fontSize);
+    method public void setHtml(String html);
+    method public void setTextBackgroundColor(@ColorInt int color);
+    method public void setTextColor(@ColorInt int color);
+    method public void subscribeToStates(java.util.Set<? extends com.infomaniak.lib.richhtmleditor.StatusCommand>? subscribedStates);
+    method public void toggleBold();
+    method public void toggleItalic();
+    method public void toggleOrderedList();
+    method public void toggleStrikeThrough();
+    method public void toggleSubscript();
+    method public void toggleSuperscript();
+    method public void toggleUnderline();
+    method public void toggleUnorderedList();
+    method public void undo();
+    method public void unlink();
+    method public void withSpellCheck(boolean enable);
+    property public kotlinx.coroutines.flow.SharedFlow<com.infomaniak.lib.richhtmleditor.EditorStatuses> editorStatusesFlow;
+    property public kotlinx.coroutines.flow.StateFlow<java.lang.Boolean?> isEmptyFlow;
+    field public static final com.infomaniak.lib.richhtmleditor.RichHtmlEditorWebView.Companion Companion;
+    field public static final String EDITOR_ID = "editor";
+  }
+
+  public static final class RichHtmlEditorWebView.Companion {
+    property public static String EDITOR_ID;
+  }
+
+  public final class RichHtmlEditorWebViewClient extends android.webkit.WebViewClient {
+    ctor public RichHtmlEditorWebViewClient(kotlin.jvm.functions.Function0<kotlin.Unit> onPageLoaded);
+  }
+
+  public enum StatusCommand implements com.infomaniak.lib.richhtmleditor.ExecCommand {
+    method @InaccessibleFromKotlin public String getArgumentName();
+    method @InaccessibleFromKotlin public com.infomaniak.lib.richhtmleditor.StatusType getStatusType();
+    property public String argumentName;
+    property public com.infomaniak.lib.richhtmleditor.StatusType statusType;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand BACKGROUND_COLOR;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand BOLD;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand CREATE_LINK;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand FONT_NAME;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand FONT_SIZE;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand ITALIC;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand JUSTIFY_CENTER;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand JUSTIFY_FULL;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand JUSTIFY_LEFT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand JUSTIFY_RIGHT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand ORDERED_LIST;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand STRIKE_THROUGH;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand SUBSCRIPT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand SUPERSCRIPT;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand TEXT_COLOR;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand UNDERLINE;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusCommand UNORDERED_LIST;
+  }
+
+  public enum StatusType {
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusType COMPLEX;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusType STATE;
+    enum_constant public static final com.infomaniak.lib.richhtmleditor.StatusType VALUE;
+  }
+
+  public final class UtilsKt {
+    method public static String encodeArgsForJs(Object? value);
+    method public static String looselyEscapeAsStringLiteralForJs(String string);
+  }
+
+}
+
+package com.infomaniak.lib.richhtmleditor.executor {
+
+  public final class JsExecutableMethod {
+    ctor public JsExecutableMethod(String methodName, Object?[] args, optional kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit>? resultCallback);
+    method public void addCallback(kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit> callback);
+    method public void executeOn(android.webkit.WebView webView);
+  }
+
+}
+
