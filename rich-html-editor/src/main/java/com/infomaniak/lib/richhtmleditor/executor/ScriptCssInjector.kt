@@ -26,12 +26,12 @@ internal class ScriptCssInjector(private val webView: WebView) : JsLifecycleAwar
 
     override fun executeImmediately(value: CodeInjection): Unit = with(webView) {
         when (value.type) {
-            InjectionType.SCRIPT -> injectScript(value.code)
-            InjectionType.CSS -> injectCss(value.code)
+            InjectionType.SCRIPT -> injectScript(value.code, value.id)
+            InjectionType.CSS -> injectCss(value.code, value.id)
         }
     }
 
-    data class CodeInjection(val type: InjectionType, val code: String) {
+    data class CodeInjection(val type: InjectionType, val code: String, val id: String?) {
         enum class InjectionType { SCRIPT, CSS }
     }
 }

@@ -33,17 +33,12 @@ internal fun Context.readAsset(fileName: String): String {
 internal fun WebView.injectScript(scriptCode: String, id: String? = null) {
     val escapedStringLiteralId = id?.let { looselyEscapeAsStringLiteralForJs(it) }
 
-    val removePreviousId = escapedStringLiteralId?.let {
-        """
-        var previousScript = document.getElementById($it)
-        if (previousScript) previousScript.remove()
-        """.trimIndent()
-    } ?: ""
+    val removePreviousIdScript = getRemovePreviousElementByIdScript(escapedStringLiteralId)
     val setId = escapedStringLiteralId?.let { "script.id = ${it};" } ?: ""
 
     val escapedStringLiteralScriptCode = looselyEscapeAsStringLiteralForJs(scriptCode)
     val addScriptJs = """
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.type = 'text/javascript';
         script.text = $escapedStringLiteralScriptCode;
         $setId
@@ -51,22 +46,40 @@ internal fun WebView.injectScript(scriptCode: String, id: String? = null) {
         document.head.appendChild(script);
         """.trimIndent()
 
-    val code = removePreviousId + "\n" + addScriptJs
+    val code = removePreviousIdScript + "\n" + addScriptJs
 
     evaluateJavascript(code, null)
 }
 
-internal fun WebView.injectCss(css: String) {
+internal fun WebView.injectCss(css: String, id: String? = null) {
+    val escapedStringLiteralId = id?.let { looselyEscapeAsStringLiteralForJs(it) }
+
+    val removePreviousIdScript = getRemovePreviousElementByIdScript(escapedStringLiteralId)
+    val setId = escapedStringLiteralId?.let { "style.id = ${it};" } ?: ""
+
     val escapedStringLiteralCss = looselyEscapeAsStringLiteralForJs(css)
     val addCssJs = """
-        var style = document.createElement('style');
+        const style = document.createElement('style');
         style.textContent = $escapedStringLiteralCss;
+        $setId
 
         document.head.appendChild(style);
         """.trimIndent()
 
-    evaluateJavascript(addCssJs, null)
+    val code = removePreviousIdScript + "\n" + addCssJs
+
+    evaluateJavascript(code, null)
 }
+
+/**
+ * @param escapedId The id for which we will remove previous instances of the element. This needs to be correctly escaped beforehand
+ */
+private fun getRemovePreviousElementByIdScript(escapedId: String?): String = escapedId?.let {
+    """
+    const previousElement = document.getElementById($it)
+    if (previousElement) previousElement.remove()
+    """.trimIndent()
+} ?: ""
 
 fun Bundle.getParcelableCompat(key: String, clazz: Class<AbsSavedState>): AbsSavedState? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

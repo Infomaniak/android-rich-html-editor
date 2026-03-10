@@ -171,13 +171,13 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * The content string to inject can span multiple lines and include any character, such as backquotes, backslashes,
      * dollar signs, and more.
+     *
+     * @param id The id to use for this new element. The id doesn't need to be escaped, this method will handle this automatically.
+     * If an element with the same id already exists, it will replace the previous element with this new one.
      */
-    fun addCss(css: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.CSS, css))
-
-    /**
-     * Injects a custom attribute to the editor div to activate/deactivate spellchecking. By default, spellcheck is activated.
-     */
-    fun withSpellCheck(enable: Boolean) = spellCheckHtmlSetter.executeWhenDomIsLoaded(enable)
+    fun addCss(css: String, id: String? = null) {
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(type = InjectionType.CSS, code = css, id = id))
+    }
 
     /**
      * Injects a custom script tag into the `<head>` of the editor template.
@@ -191,8 +191,18 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * The html loaded with [initEditor] is not guaranteed to be loaded inside the editor by the time this injected script is
      * loaded.
-     * */
-    fun addScript(script: String) = scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(InjectionType.SCRIPT, script))
+     *
+     * @param id The id to use for this new element. The id doesn't need to be escaped, this method will handle this automatically.
+     * If an element with the same id already exists, it will replace the previous element with this new one.
+     */
+    fun addScript(script: String, id: String? = null) {
+        scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(type = InjectionType.SCRIPT, code = script, id = id))
+    }
+
+    /**
+     * Injects a custom attribute to the editor div to activate/deactivate spellchecking. By default, spellcheck is activated.
+     */
+    fun withSpellCheck(enable: Boolean) = spellCheckHtmlSetter.executeWhenDomIsLoaded(enable)
 
     fun toggleBold() = jsBridge.toggleBold()
     fun toggleItalic() = jsBridge.toggleItalic()

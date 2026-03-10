@@ -110,8 +110,8 @@ package com.infomaniak.lib.richhtmleditor {
     ctor public RichHtmlEditorWebView(android.content.Context context);
     ctor public RichHtmlEditorWebView(android.content.Context context, optional android.util.AttributeSet? attrs);
     ctor public RichHtmlEditorWebView(android.content.Context context, optional android.util.AttributeSet? attrs, optional int defStyleAttr);
-    method public void addCss(String css);
-    method public void addScript(String script);
+    method public void addCss(String css, optional String? id);
+    method public void addScript(String script, optional String? id);
     method public void createLink(String? displayText, String url);
     method public void exportHtml(kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit> resultCallback);
     method @InaccessibleFromKotlin public kotlinx.coroutines.flow.SharedFlow<com.infomaniak.lib.richhtmleditor.EditorStatuses> getEditorStatusesFlow();
