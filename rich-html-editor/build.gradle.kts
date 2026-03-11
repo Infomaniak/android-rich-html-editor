@@ -9,6 +9,11 @@ val sharedCompileSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
     namespace = "com.infomaniak.lib.richhtmleditor"
     compileSdk = sharedCompileSdk
 
@@ -32,15 +37,15 @@ metalava {
     filename = "metalavaApi/api.txt"
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components.findByName("release"))
-                groupId = "com.github.infomaniak"
-                artifactId = "android-rich-html-editor"
-                version = "0.2.0"
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            afterEvaluate {
+                from(components["release"])
             }
+            groupId = "com.github.infomaniak"
+            artifactId = "android-rich-html-editor"
+            version = "0.2.0"
         }
     }
 }
