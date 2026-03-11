@@ -38,7 +38,7 @@ internal fun WebView.injectScript(scriptCode: String, id: String? = null) {
 
     val escapedStringLiteralScriptCode = looselyEscapeAsStringLiteralForJs(scriptCode)
     val addScriptJs = """
-        const script = document.createElement('script');
+        var script = document.createElement('script');
         script.type = 'text/javascript';
         script.text = $escapedStringLiteralScriptCode;
         $setId
@@ -59,7 +59,7 @@ internal fun WebView.injectCss(css: String, id: String? = null) {
 
     val escapedStringLiteralCss = looselyEscapeAsStringLiteralForJs(css)
     val addCssJs = """
-        const style = document.createElement('style');
+        var style = document.createElement('style');
         style.textContent = $escapedStringLiteralCss;
         $setId
 
@@ -76,7 +76,7 @@ internal fun WebView.injectCss(css: String, id: String? = null) {
  */
 private fun getRemovePreviousElementByIdScript(escapedId: String?): String = escapedId?.let {
     """
-    const previousElement = document.getElementById($it)
+    var previousElement = document.getElementById($it)
     if (previousElement) previousElement.remove()
     """.trimIndent()
 } ?: ""
