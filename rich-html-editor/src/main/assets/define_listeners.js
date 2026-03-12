@@ -53,6 +53,8 @@ function getCaretRect() {
 
     const range = selection.getRangeAt(0).cloneRange()
 
+    // The following node manipulation operation should not occur when the selection is collapsed to
+    // avoid sending wrong coordinates when a collapsed selection is on an empty line.
     if (!range.collapsed) {
         // If the range isn't collapsed, it means the user is selecting text. We need to create a
         // range around the last selected node so the webview can scroll and follow the cursor even
