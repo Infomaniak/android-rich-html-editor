@@ -53,9 +53,16 @@ function getCaretRect() {
 
     const range = selection.getRangeAt(0).cloneRange()
 
-    // Create a range around the last selected node so the webview can scroll and follow the cursor even if the whole range is
-    // bigger than the screen
-    range.selectNodeContents(lastSelectedNode)
+    // The following node manipulation operation should not occur when the selection is collapsed to
+    // avoid sending wrong coordinates when a collapsed selection is on an empty line.
+    if (!range.collapsed) {
+        // If the range isn't collapsed, it means the user is selecting text. We need to create a
+        // range around the last selected node so the webview can scroll and follow the cursor even
+        // if the whole range is bigger than the screen.
+        // This affects mostly the situation where you start selecting multiple lines of text
+        // and try to scroll by expanding the selection.
+        range.selectNodeContents(lastSelectedNode)
+    }
 
     const rangeRects = range.getClientRects()
 
