@@ -45,7 +45,7 @@ publishing {
             }
             groupId = "com.github.infomaniak"
             artifactId = "android-rich-html-editor"
-            version = "0.2.0"
+            version = "1.0.0"
         }
     }
 }
