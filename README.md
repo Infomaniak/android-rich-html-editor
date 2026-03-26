@@ -144,7 +144,7 @@ you can do that by doing so.
 
 ### Acces the editor element inside the DOM
 
-If you need to access the editor inside some custom javascript code, you can call the globally avaialble `getEditor()` method.
+If you need to access the editor inside your custom javascript code, you can call the globally available `getEditor()` method.
 This is the prefered way over trying to access the div of the editor by its ID directly.
 
 ### More advanced features
