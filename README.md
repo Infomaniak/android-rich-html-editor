@@ -142,9 +142,10 @@ RichHtmlEditorWebView's `notifyPageHasLoaded()` inside your custom WebViewClient
 Spellcheck is activated by default but if you don't want to have any spellcheck done on the editor content,
 you can do that by doing so.
 
-```kt
-editor.withSpellCheck(false)
-```
+### Acces the editor element inside the DOM
+
+If you need to access the editor inside your custom javascript code, you can call the globally available `getEditor()` method.
+This is the prefered way over trying to access the div of the editor by its ID directly.
 
 ### More advanced features
 
