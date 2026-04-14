@@ -48,6 +48,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
@@ -81,12 +83,27 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     private var keepKeyboardOpenedOnConfigurationChanged: Boolean = false
 
     private val documentInitializer = DocumentInitializer()
+
+    //region JsLifecycleAwareExecutor
     private val stateSubscriber = StateSubscriber(this)
     private val htmlSetter = HtmlSetter(this)
     private val spellCheckHtmlSetter = SpellCheckHtmlSetter(this)
     private val jsExecutor = JsExecutor(this)
     private val scriptCssInjector = ScriptCssInjector(this)
     private val keyboardOpener = KeyboardOpener(this)
+    //endregion
+
+    // Always list all JsLifecycleAwareExecutor so we can determine when everything is done loading
+    private val hasLoadedAllJsExecutors = combine(
+        stateSubscriber.isWaitingForDom,
+        htmlSetter.isWaitingForDom,
+        spellCheckHtmlSetter.isWaitingForDom,
+        jsExecutor.isWaitingForDom,
+        scriptCssInjector.isWaitingForDom,
+        keyboardOpener.isWaitingForDom,
+    ) { isWaitingForDomList ->
+        isWaitingForDomList.all { it.not() }
+    }
 
     private val jsBridgeJob = Job()
     private val jsBridge = JsBridge(
@@ -197,6 +214,22 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      */
     fun addScript(script: String, id: String? = null) {
         scriptCssInjector.executeWhenDomIsLoaded(CodeInjection(type = InjectionType.SCRIPT, code = script, id = id))
+    }
+
+    /**
+     * Executes a JavaScript method inside the editor webview.
+     *
+     * This method suspends until all editor setup scripts are executed. This is useful for when you want to call a method from a
+     * custom script, and you want to make sure the script is loaded before calling it.
+     *
+     * If [executeJsMethodWhenEditorIsSetup] is called when the editor is already setup, [jsExecutableMethod] will be executed immediately.
+     *
+     * Setting up the editor requires to load or execute multiple scripts. Some scripts are loaded by default by the editor for it
+     * to function correctly, while other scripts are loaded by the user in order to customize the behavior of the editor webview.
+     */
+    suspend fun executeJsMethodWhenEditorIsSetup(jsExecutableMethod: JsExecutableMethod) {
+        hasLoadedAllJsExecutors.first { it }
+        jsExecutor.executeImmediately(jsExecutableMethod)
     }
 
     /**
