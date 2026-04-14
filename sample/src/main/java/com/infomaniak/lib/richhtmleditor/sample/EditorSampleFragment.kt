@@ -87,7 +87,7 @@ class EditorSampleFragment : Fragment() {
     private fun getUrl(url: String): String {
         val webUrl = android.util.Patterns.WEB_URL
         val matcher = webUrl.matcher(url)
-        if (matcher.find() && url.isNotBlank()) {
+        if (url.isNotBlank() && matcher.find()) {
             return matcher.group()
         }
         return ""
