@@ -16,10 +16,16 @@
  */
 package com.infomaniak.lib.richhtmleditor.executor
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 internal abstract class JsLifecycleAwareExecutor<T> {
 
     private var hasDomLoaded = false
     private val objectsWaitingForDom = mutableListOf<T>()
+
+    private val _isWaitingForDom = MutableStateFlow(true)
+    val isWaitingForDom = _isWaitingForDom.asStateFlow()
 
     fun executeWhenDomIsLoaded(value: T): Unit = synchronized(lock = this) {
         if (hasDomLoaded) executeImmediately(value) else objectsWaitingForDom.add(value)
@@ -29,6 +35,7 @@ internal abstract class JsLifecycleAwareExecutor<T> {
         hasDomLoaded = true
         objectsWaitingForDom.forEach(::executeImmediately)
         objectsWaitingForDom.clear()
+        _isWaitingForDom.value = false
     }
 
     abstract fun executeImmediately(value: T)

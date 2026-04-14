@@ -132,6 +132,27 @@ editor.apply {
 }
 ```
 
+### Execute JavaScript after all the editor and its scripts are set up
+
+You might want to define some custom scripts that exposes functions for you to call later on in your logic. If you need to make
+sure the script is loaded before calling its methods, use `executeJsMethodWhenEditorIsSetup()`
+
+```kt
+// When setting up the editor add a script that will be loaded inside the <head> 
+editor.addScript(
+  """
+  function setBackground(color) {
+      document.body.style['background'] = color
+  }
+  """.trimIndent()
+)
+```
+
+```kt
+// When you need to execute the method from the above script inside some logic or button click
+editor.executeJsMethodWhenEditorIsSetup(JsExecutableMethod("setBackground", "#00FFFF"))
+```
+
 ### Use a custom WebViewClient with the editor
 
 To safely use your own WebViewClient instance with the editor, you have to call the
