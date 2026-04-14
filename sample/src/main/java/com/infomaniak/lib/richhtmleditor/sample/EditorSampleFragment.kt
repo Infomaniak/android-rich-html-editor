@@ -84,6 +84,15 @@ class EditorSampleFragment : Fragment() {
         }
     }
 
+    private fun getUrl(url: String): String {
+        val webUrl = android.util.Patterns.WEB_URL
+        val matcher = webUrl.matcher(url)
+        if (matcher.find() && url.isNotBlank()) {
+            return matcher.group()
+        }
+        return ""
+    }
+
     private fun setEditorButtonClickListeners() = with(binding) {
         buttonBold.setOnClickListener { editor.toggleBold() }
         buttonItalic.setOnClickListener { editor.toggleItalic() }
@@ -94,8 +103,13 @@ class EditorSampleFragment : Fragment() {
             if (buttonLink.isActivated) {
                 editor.unlink()
             } else {
-                createLinkDialog.show("", "") { url, displayText ->
-                    editor.createLink(displayText, url)
+                lifecycleScope.launch {
+                    val selectedText = getUrl(editor.getSelectedText())
+                    createLinkDialog.show(
+                        selectedText, ""
+                    ) { url, displayText ->
+                        editor.createLink(displayText, url)
+                    }
                 }
             }
         }

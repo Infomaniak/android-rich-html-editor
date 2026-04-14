@@ -41,6 +41,7 @@ import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjectio
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
 import com.infomaniak.lib.richhtmleditor.executor.SpellCheckHtmlSetter
 import com.infomaniak.lib.richhtmleditor.executor.StateSubscriber
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -56,6 +57,7 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.math.roundToInt
+
 
 /**
  * A custom WebView designed to provide simple formatting and editing capabilities to an existing HTML content.
@@ -261,7 +263,19 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
     fun undo() = jsBridge.undo()
     fun redo() = jsBridge.redo()
-    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
+
+    suspend fun getSelectedText(): String {
+        val selectedText = CompletableDeferred<String>()
+        evaluateJavascript("globalThis.getSelection().toString().trim()", { value ->
+            selectedText.complete(
+                value.replace(Regex("^\"|\"$|"), "").replace("\\n", " ").replace("\\t", " ")
+            )
+        })
+        return selectedText.await()
+    }
+
+    fun createLink(displayText: String?, url: String) =
+        jsBridge.createLink(displayText?.takeIf { !it.isNullOrBlank() }, url)
     fun unlink() = jsBridge.unlink()
 
     /**
