@@ -87,10 +87,11 @@ class EditorSampleFragment : Fragment() {
     private fun extractUrl(url: String): String {
         val webUrl = android.util.Patterns.WEB_URL
         val matcher = webUrl.matcher(url)
-        if (url.isNotBlank() && matcher.find()) {
-            return matcher.group()
+        return if (url.isNotBlank() && matcher.find()) {
+            matcher.group()
+        } else {
+            ""
         }
-        return ""
     }
 
     private fun setEditorButtonClickListeners() = with(binding) {
