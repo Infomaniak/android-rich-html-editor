@@ -106,9 +106,7 @@ class EditorSampleFragment : Fragment() {
             } else {
                 lifecycleScope.launch {
                     val selectedText = extractUrl(editor.getSelectedText())
-                    createLinkDialog.show(
-                        selectedText, ""
-                    ) { url, displayText ->
+                    createLinkDialog.show(selectedText, "") { url, displayText ->
                         editor.createLink(displayText, url)
                     }
                 }
