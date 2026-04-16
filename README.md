@@ -171,7 +171,7 @@ This is the prefered way over trying to access the div of the editor by its ID d
 ### Retreive user selection
 
 If you need to retrieve the user selection inside the editor, you can call the `getSelectedText` method.
-This return the selected text in a String.
+This returns the selected text in a String. If the user didn't select anything, an empty string will be returned.
 
 ### More advanced features
 

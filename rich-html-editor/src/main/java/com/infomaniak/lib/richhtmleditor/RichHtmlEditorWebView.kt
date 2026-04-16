@@ -268,14 +268,14 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     /**
      * Retrieves the text selected by the user in the editor.
      *
-     * This function executes a JavaScript command to retrieve the native selection.
-     * It is a suspend function because it waits for the asynchronous execution of the JavaScript command.
+     * It executes a JavaScript function to retrieve the user selection in the editor.
+     * It is a suspend function because it waits for the asynchronous execution of evaluateJavascript.
      *
      * @return A string containing the selected text, or an empty string if nothing is selected.
      */
     suspend fun getSelectedText(): String {
         val selectedText = CompletableDeferred<String>()
-        evaluateJavascript("globalThis.getSelection().toString().trim()", { value ->
+        evaluateJavascript("globalThis.getSelection().toString()", { value ->
             selectedText.complete(
                 Json.decodeFromString(value)
             )
