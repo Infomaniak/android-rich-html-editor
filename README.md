@@ -168,6 +168,11 @@ you can do that by doing so.
 If you need to access the editor inside your custom javascript code, you can call the globally available `getEditor()` method.
 This is the prefered way over trying to access the div of the editor by its ID directly.
 
+### Retreive user selection
+
+If you need to retrieve the user selection inside the editor, you can call the `getSelectedText` method.
+This return the selected text in a String.
+
 ### More advanced features
 
 For more advanced features, take a look at the [sample project](sample) or

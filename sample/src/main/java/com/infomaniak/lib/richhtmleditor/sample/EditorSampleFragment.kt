@@ -84,7 +84,7 @@ class EditorSampleFragment : Fragment() {
         }
     }
 
-    private fun getUrl(url: String): String {
+    private fun extractUrl(url: String): String {
         val webUrl = android.util.Patterns.WEB_URL
         val matcher = webUrl.matcher(url)
         if (url.isNotBlank() && matcher.find()) {
@@ -104,7 +104,7 @@ class EditorSampleFragment : Fragment() {
                 editor.unlink()
             } else {
                 lifecycleScope.launch {
-                    val selectedText = getUrl(editor.getSelectedText())
+                    val selectedText = extractUrl(editor.getSelectedText())
                     createLinkDialog.show(
                         selectedText, ""
                     ) { url, displayText ->

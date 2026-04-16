@@ -56,8 +56,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.json.Json
 import kotlin.math.roundToInt
-
 
 /**
  * A custom WebView designed to provide simple formatting and editing capabilities to an existing HTML content.
@@ -263,20 +263,25 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
     fun undo() = jsBridge.undo()
     fun redo() = jsBridge.redo()
-
+    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { !it.isNullOrBlank() }, url)
+    fun unlink() = jsBridge.unlink()
+    /**
+     * Retrieves the text selected by the user in the editor.
+     *
+     * This function executes a JavaScript command to retrieve the native selection.
+     * It is a suspend function because it waits for the asynchronous execution of the JavaScript command.
+     *
+     * @return A string containing the selected text, or an empty string if nothing is selected.
+     */
     suspend fun getSelectedText(): String {
         val selectedText = CompletableDeferred<String>()
         evaluateJavascript("globalThis.getSelection().toString().trim()", { value ->
             selectedText.complete(
-                value.replace(Regex("^\"|\"$|"), "").replace("\\n", " ").replace("\\t", " ")
+                Json.decodeFromString(value)
             )
         })
         return selectedText.await()
     }
-
-    fun createLink(displayText: String?, url: String) =
-        jsBridge.createLink(displayText?.takeIf { !it.isNullOrBlank() }, url)
-    fun unlink() = jsBridge.unlink()
 
     /**
      * Notifies the [RichHtmlEditorWebView] to setup the editor.
