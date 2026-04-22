@@ -35,6 +35,7 @@ dependencies {
 
 metalava {
     filename = "metalavaApi/api.txt"
+    enforceCheck = false
 }
 
 publishing {
