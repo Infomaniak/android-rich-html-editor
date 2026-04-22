@@ -263,8 +263,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun setFontSize(@IntRange(from = FONT_MIN_SIZE, to = FONT_MAX_SIZE) fontSize: Int) = jsBridge.setFontSize(fontSize)
     fun undo() = jsBridge.undo()
     fun redo() = jsBridge.redo()
-    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { !it.isNullOrBlank() }, url)
+    fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
+
     /**
      * Retrieves the text selected by the user in the editor.
      *
@@ -275,11 +276,9 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      */
     suspend fun getSelectedText(): String {
         val selectedText = CompletableDeferred<String>()
-        evaluateJavascript("globalThis.getSelection().toString()", { value ->
-            selectedText.complete(
-                Json.decodeFromString(value)
-            )
-        })
+        evaluateJavascript("globalThis.getSelection().toString()") { value ->
+            selectedText.complete(Json.decodeFromString(value))
+        }
         return selectedText.await()
     }
 
