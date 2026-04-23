@@ -116,6 +116,7 @@ package com.infomaniak.lib.richhtmleditor {
     method public suspend Object? executeJsMethodWhenEditorIsSetup(com.infomaniak.lib.richhtmleditor.executor.JsExecutableMethod jsExecutableMethod, kotlin.coroutines.Continuation<? super kotlin.Unit>);
     method public void exportHtml(kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit> resultCallback);
     method @InaccessibleFromKotlin public kotlinx.coroutines.flow.SharedFlow<com.infomaniak.lib.richhtmleditor.EditorStatuses> getEditorStatusesFlow();
+    method public suspend Object? getSelectedText(kotlin.coroutines.Continuation<? super java.lang.String>);
     method public void indent();
     method @InaccessibleFromKotlin public kotlinx.coroutines.flow.StateFlow<java.lang.Boolean?> isEmptyFlow();
     method public void justify(com.infomaniak.lib.richhtmleditor.Justification justification);

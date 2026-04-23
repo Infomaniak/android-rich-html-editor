@@ -20,6 +20,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,6 +85,11 @@ class EditorSampleFragment : Fragment() {
         }
     }
 
+    private fun extractUrl(url: String): String {
+        val matcher = Patterns.WEB_URL.matcher(url)
+        return if (url.isNotBlank() && matcher.find()) matcher.group() else ""
+    }
+
     private fun setEditorButtonClickListeners() = with(binding) {
         buttonBold.setOnClickListener { editor.toggleBold() }
         buttonItalic.setOnClickListener { editor.toggleItalic() }
@@ -94,8 +100,11 @@ class EditorSampleFragment : Fragment() {
             if (buttonLink.isActivated) {
                 editor.unlink()
             } else {
-                createLinkDialog.show("", "") { url, displayText ->
-                    editor.createLink(displayText, url)
+                lifecycleScope.launch {
+                    val selectedText = extractUrl(editor.getSelectedText())
+                    createLinkDialog.show(selectedText, "") { url, displayText ->
+                        editor.createLink(displayText, url)
+                    }
                 }
             }
         }

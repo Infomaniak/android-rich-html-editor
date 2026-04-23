@@ -41,6 +41,7 @@ import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjectio
 import com.infomaniak.lib.richhtmleditor.executor.ScriptCssInjector.CodeInjection.InjectionType
 import com.infomaniak.lib.richhtmleditor.executor.SpellCheckHtmlSetter
 import com.infomaniak.lib.richhtmleditor.executor.StateSubscriber
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -55,6 +56,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.json.Json
 import kotlin.math.roundToInt
 
 /**
@@ -263,6 +265,23 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
     fun redo() = jsBridge.redo()
     fun createLink(displayText: String?, url: String) = jsBridge.createLink(displayText?.takeIf { it.isNotBlank() }, url)
     fun unlink() = jsBridge.unlink()
+
+    /**
+     * Retrieves the text selected by the user in the editor.
+     *
+     * It executes a JavaScript function to retrieve the user selection in the editor.
+     * It is a suspend function because it waits for the asynchronous execution of evaluateJavascript.
+     * This method execute immediately, it doesn't wait for all scripts (js, css...) to be loaded.
+     *
+     * @return A string containing the selected text, or an empty string if nothing is selected.
+     */
+    suspend fun getSelectedText(): String {
+        val selectedText = CompletableDeferred<String>()
+        evaluateJavascript("globalThis.getSelection().toString()") { value ->
+            selectedText.complete(Json.decodeFromString(value))
+        }
+        return selectedText.await()
+    }
 
     /**
      * Notifies the [RichHtmlEditorWebView] to setup the editor.
