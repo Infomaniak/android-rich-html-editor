@@ -271,6 +271,7 @@ class RichHtmlEditorWebView @JvmOverloads constructor(
      *
      * It executes a JavaScript function to retrieve the user selection in the editor.
      * It is a suspend function because it waits for the asynchronous execution of evaluateJavascript.
+     * This method execute immediately, it doesn't wait for all scripts (js, css...) to be loaded.
      *
      * @return A string containing the selected text, or an empty string if nothing is selected.
      */
