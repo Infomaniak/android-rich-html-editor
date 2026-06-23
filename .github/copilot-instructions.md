@@ -20,7 +20,7 @@ This updates `rich-html-editor/metalavaApi/api.txt`. CI fails if the API changed
 ## Project Layout
 ```
 rich-html-editor/
-├── src/main/kotlin/com/infomaniak/lib/richhtmleditor/
+├── src/main/java/com/infomaniak/lib/richhtmleditor/
 │   └── RichHtmlEditorWebView.kt    # Main public class (extends WebView)
 ├── metalavaApi/api.txt             # Public API signature — keep in sync
 └── src/main/assets/               # HTML/CSS/JS editor assets
