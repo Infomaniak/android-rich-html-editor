@@ -30,8 +30,6 @@ assertApiIsUnchanged.sh
 
 ## PR Review Instructions
 
-- The editor's public API is tracked by Metalava — run `./gradlew metalavaGenerateSignatureRelease` and commit `api.txt` on every public API change.
-- No Compose, no Hilt — keep the dependency footprint minimal. The library is consumed via JitPack.
 - Maintain backward compatibility — breaking API changes affect all consuming apps.
 - When adding/removing a runtime dependency, update `LICENSES.md` at the repo root.
 
