@@ -4,9 +4,9 @@ plugins {
     id("maven-publish")
 }
 
-val sharedMinSdk: Int by rootProject.extra
-val sharedCompileSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
+val sharedMinSdk = rootProject.extra["sharedMinSdk"] as Int
+val sharedCompileSdk = rootProject.extra["sharedCompileSdk"] as Int
+val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
 
 android {
     publishing {
