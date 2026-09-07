@@ -1,8 +1,12 @@
 buildscript {
     extra.apply {
         set("sharedMinSdk", 24)
-        set("sharedCompileSdk", 36)
+        set("sharedCompileSdk", 37)
         set("javaVersion", JavaVersion.VERSION_17)
+    }
+
+    dependencies {
+        classpath(libs.kotlin.gradle.plugin)
     }
 }
 

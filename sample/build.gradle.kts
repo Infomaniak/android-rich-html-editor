@@ -1,10 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
-val sharedMinSdk: Int by rootProject.extra
-val sharedCompileSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
+val sharedMinSdk = rootProject.extra["sharedMinSdk"] as Int
+val sharedCompileSdk = rootProject.extra["sharedCompileSdk"] as Int
+val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
 
 android {
     namespace = "com.infomaniak.lib.richhtmleditor.sample"
@@ -34,10 +36,14 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(javaVersion.toString())
+    }
+}
+
 dependencies {
     implementation(project(":rich-html-editor"))
-
-    implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

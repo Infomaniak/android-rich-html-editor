@@ -1,12 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.metalava)
     id("maven-publish")
 }
 
-val sharedMinSdk: Int by rootProject.extra
-val sharedCompileSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
+val sharedMinSdk = rootProject.extra["sharedMinSdk"] as Int
+val sharedCompileSdk = rootProject.extra["sharedCompileSdk"] as Int
+val javaVersion = rootProject.extra["javaVersion"] as JavaVersion
 
 android {
     publishing {
@@ -27,8 +29,13 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(javaVersion.toString())
+    }
+}
+
 dependencies {
-    implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
 }
