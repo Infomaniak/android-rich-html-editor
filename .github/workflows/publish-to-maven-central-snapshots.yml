@@ -1,0 +1,64 @@
+name: Publish to Maven Central Snapshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish as a snapshot (x.x.x). Leave empty to auto-bump from the latest release using "bump"'
+        required: false
+        type: string
+      bump:
+        description: 'Version part to bump automatically when "version" is left empty'
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+      perform-a-gradle-clean:
+        description: "Perform a Gradle clean"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  resolve-version:
+    name: Resolve version
+    uses: Infomaniak/.github/.github/workflows/resolve-next-library-version.yml@v2
+    with:
+      version: ${{ inputs.version }}
+      bump: ${{ inputs.bump }}
+
+  build:
+    name: Publish snapshots
+    needs: resolve-version
+    runs-on: [ self-hosted, Android ]
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Perform a Gradle clean, as requested
+        if: ${{ github.event.inputs.perform-a-gradle-clean == 'true' }}
+        run: ./gradlew clean
+
+      - name: Publish snapshots
+        run: ./gradlew publishAggregationToCentralSnapshots -PlibVersion=${{ needs.resolve-version.outputs.version }}-SNAPSHOT
+env:
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8"
+  ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
+  ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
+  GPG_key_id: ${{ secrets.GPG_KEY_ID }}
+  GPG_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+  GPG_private_password: ${{ secrets.GPG_PRIVATE_PASSWORD }}

@@ -1,0 +1,81 @@
+name: Publish to Maven Central
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (x.x.x). Leave empty to auto-bump from the latest release using "bump"'
+        required: false
+        type: string
+      bump:
+        description: 'Version part to bump automatically when "version" is left empty'
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+      acknowledgement:
+        description: |
+          WARNING: Publishing a version to Maven Central is irrevocable.
+          Do you confirm (Yes/no):
+          1. You validated publication to snapshots beforehand
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  resolve-version:
+    name: Resolve version
+    uses: Infomaniak/.github/.github/workflows/resolve-next-library-version.yml@v2
+    with:
+      version: ${{ inputs.version }}
+      bump: ${{ inputs.bump }}
+
+  build:
+    name: Publish artifacts
+    needs: resolve-version
+    runs-on: [ self-hosted, Android ]
+    steps:
+      - name: Check acknowledgement
+        env:
+          ACKNOWLEDGEMENT: ${{ github.event.inputs.acknowledgement }}
+        run: test "$ACKNOWLEDGEMENT" = "Yes" || (echo "Acknowledgement missing" && exit 1)
+
+      - name: Checkout sources
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Publish artifacts
+        run: ./gradlew publishAggregationToCentralPortal -PlibVersion=${{ needs.resolve-version.outputs.version }}
+
+      - name: Create Git tag and GitHub Release
+        run: |
+          VERSION="${{ needs.resolve-version.outputs.version }}"
+          if ! git ls-remote --tags origin "refs/tags/$VERSION" | grep -q .; then
+            git tag "$VERSION"
+            git push origin "$VERSION"
+          fi
+          if ! gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release create "$VERSION" --title "$VERSION" --generate-notes
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+env:
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8"
+  ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
+  ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
+  GPG_key_id: ${{ secrets.GPG_KEY_ID }}
+  GPG_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+  GPG_private_password: ${{ secrets.GPG_PRIVATE_PASSWORD }}
