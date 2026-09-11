@@ -68,6 +68,29 @@ dependencies {
 }
 ```
 
+#### JitPack
+
+The library is still available on [JitPack](https://jitpack.io/#Infomaniak/android-rich-html-editor) for existing consumers.
+Add the JitPack repository:
+
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+        ...
+    }
+}
+```
+
+Then depend on it using its GitHub coordinates and a released tag as version:
+
+```gradle
+dependencies {
+    implementation "com.github.Infomaniak:android-rich-html-editor:$richHtmlEditorVersion"
+}
+```
+
 ## ⚙️ Usage
 
 ### Simplest usage
