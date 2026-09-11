@@ -1,13 +1,20 @@
 buildscript {
-    // The version is always provided explicitly via the "libVersion" Gradle property (used by
-    // both the snapshot and release publishing workflows, which resolve it via auto-bump). Falls
-    // back to "unspecified" for local builds/tests that don't need a real version.
+    // The version is provided explicitly via the "libVersion" Gradle property (used by both the
+    // snapshot and release publishing workflows, which resolve it via auto-bump). JitPack instead
+    // sets the standard "version" project property to the built Git tag, which Gradle applies
+    // directly to project.version, so it's used as a second fallback to keep JitPack builds
+    // working. Falls back to "unspecified" for local builds/tests that don't need a real version.
     extra.apply {
         set("sharedMinSdk", 24)
         set("sharedCompileSdk", 37)
         set("javaVersion", JavaVersion.VERSION_17)
         set("libGroupId", "com.infomaniak.richhtmleditor")
-        set("libVersionName", project.findProperty("libVersion") as String? ?: "unspecified")
+        set(
+            "libVersionName",
+            project.findProperty("libVersion") as String?
+                ?: project.version.toString().takeUnless { it == "unspecified" }
+                ?: "unspecified",
+        )
         set("libArtifactId", "android-rich-html-editor")
     }
 
