@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.metalava)
     alias(libs.plugins.publish)
-    alias(libs.plugins.nmcp)
 }
 
 val sharedMinSdk = rootProject.extra["sharedMinSdk"] as Int

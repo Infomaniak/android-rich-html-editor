@@ -35,7 +35,6 @@ allprojects {
     repositories {
         ...
         maven { url 'https://maven.infomaniak.app/releases' }
-        mavenCentral()
         ...
     }
 }
@@ -48,7 +47,6 @@ dependencyResolutionManagement {
     repositories {
         ...
         maven(url = "https://maven.infomaniak.app/releases")
-        mavenCentral()
         ...
     }
 }
