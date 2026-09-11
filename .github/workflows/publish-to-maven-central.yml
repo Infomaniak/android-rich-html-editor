@@ -4,40 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (x.x.x). Leave empty to auto-bump from the latest release using "bump"'
-        required: false
-        type: string
-      bump:
-        description: 'Version part to bump automatically when "version" is left empty'
+        description: 'Already released version to also publish to Maven Central (x.x.x). Must match an existing Git tag/GitHub Release.'
         required: true
-        default: patch
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
+        type: string
       acknowledgement:
         description: |
           WARNING: Publishing a version to Maven Central is irrevocable.
           Do you confirm (Yes/no):
-          1. You validated publication to snapshots beforehand
+          1. This version was already published to Reposilite
         required: true
         type: string
 
-permissions:
-  contents: write
-
 jobs:
-  resolve-version:
-    name: Resolve version
-    uses: Infomaniak/.github/.github/workflows/resolve-next-library-version.yml@v2
-    with:
-      version: ${{ inputs.version }}
-      bump: ${{ inputs.bump }}
-
   build:
     name: Publish artifacts
-    needs: resolve-version
     runs-on: [ self-hosted, Android ]
     steps:
       - name: Check acknowledgement
@@ -48,6 +28,14 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4.2.2
 
+      - name: Check that the version was already released
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1 \
+            || (echo "No GitHub Release found for version $VERSION. Publish it via 'Publish to Reposilite' first." && exit 1)
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -55,23 +43,10 @@ jobs:
           java-version: 17
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
 
       - name: Publish artifacts
-        run: ./gradlew publishAggregationToCentralPortal -PlibVersion=${{ needs.resolve-version.outputs.version }}
-
-      - name: Create Git tag and GitHub Release
-        run: |
-          VERSION="${{ needs.resolve-version.outputs.version }}"
-          if ! git ls-remote --tags origin "refs/tags/$VERSION" | grep -q .; then
-            git tag "$VERSION"
-            git push origin "$VERSION"
-          fi
-          if ! gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            gh release create "$VERSION" --title "$VERSION" --generate-notes
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publishAggregationToCentralPortal -PlibVersion=${{ inputs.version }}
 env:
   GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8"
   ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
