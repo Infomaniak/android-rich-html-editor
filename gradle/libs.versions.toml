@@ -23,3 +23,4 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 metalava = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava" }
+publish = { id = "infomaniak.publishPlugin" }

@@ -1,0 +1,64 @@
+name: Publish to Reposilite Snapshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish as a snapshot (x.x.x). Leave empty to auto-bump from the latest release using "bump"'
+        required: false
+        type: string
+      bump:
+        description: 'Version part to bump automatically when "version" is left empty'
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+      perform-a-gradle-clean:
+        description: "Perform a Gradle clean"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  resolve-version:
+    name: Resolve version
+    uses: Infomaniak/.github/.github/workflows/resolve-next-library-version.yml@v2
+    with:
+      version: ${{ inputs.version }}
+      bump: ${{ inputs.bump }}
+
+  build:
+    name: Publish snapshots
+    needs: resolve-version
+    runs-on: [ self-hosted, Android ]
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+
+      - name: Perform a Gradle clean, as requested
+        if: ${{ github.event.inputs.perform-a-gradle-clean == 'true' }}
+        run: ./gradlew clean
+
+      - name: Publish snapshots
+        run: ./gradlew publishAllPublicationsToReposiliteRepository -PlibVersion=${{ needs.resolve-version.outputs.version }}-SNAPSHOT
+env:
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8"
+  reposiliteUsername: ${{ secrets.REPOSILITE_USERNAME }}
+  reposilitePassword: ${{ secrets.REPOSILITE_PASSWORD }}
+  GPG_key_id: ${{ secrets.GPG_KEY_ID }}
+  GPG_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+  GPG_private_password: ${{ secrets.GPG_PRIVATE_PASSWORD }}

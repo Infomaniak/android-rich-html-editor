@@ -1,7 +1,7 @@
 # Copilot Coding Agent Onboarding — android-rich-html-editor
 
 ## Overview
-Infomaniak Rich HTML Editor — an Android library for displaying and editing HTML inside a `WebView` using the `contenteditable` attribute. Published on **JitPack** (`com.github.infomaniak:android-rich-html-editor`). No Hilt, no Compose. Kotlin + XML.
+Infomaniak Rich HTML Editor — an Android library for displaying and editing HTML inside a `WebView` using the `contenteditable` attribute. Published on **Reposilite** (`maven.infomaniak.app`) as `com.infomaniak.richhtmleditor:android-rich-html-editor`. No Hilt, no Compose. Kotlin + XML.
 
 ## Build & Test (CI: `.github/workflows/android.yml`)
 ```bash
