@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.metalava)
-    id("maven-publish")
+    alias(libs.plugins.publish)
 }
 
 val sharedMinSdk = rootProject.extra["sharedMinSdk"] as Int
@@ -14,6 +14,7 @@ android {
     publishing {
         singleVariant("release") {
             withSourcesJar()
+            withJavadocJar()
         }
     }
     namespace = "com.infomaniak.lib.richhtmleditor"
@@ -43,17 +44,4 @@ dependencies {
 metalava {
     filename = "metalavaApi/api.txt"
     enforceCheck = false
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            afterEvaluate {
-                from(components["release"])
-            }
-            groupId = "com.github.infomaniak"
-            artifactId = "android-rich-html-editor"
-            version = "1.1.0"
-        }
-    }
 }

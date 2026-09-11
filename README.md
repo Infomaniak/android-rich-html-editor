@@ -1,6 +1,6 @@
 # Infomaniak Rich HTML Editor
 
-![JitPack](https://jitpack.io/v/Infomaniak/android-rich-html-editor.svg)
+![maven.infomaniak.app](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.infomaniak.app%2Freleases%2Fcom%2Finfomaniak%2Frichhtmleditor%2Fandroid-rich-html-editor%2Fmaven-metadata.xml&label=maven.infomaniak.app)
 
 The **Infomaniak Rich HTML Editor** is an Android library designed to display HTML and easily modify it on the fly. It relies on
 the power of the `contenteditable` HTML attribute inside a WebView.
@@ -28,23 +28,45 @@ To modify the library, don't forget to update the [api.txt](rich-html-editor/met
 
 ### Installation
 
-Add this dependency to your project:
+Add to _build.gradle_:
+
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://maven.infomaniak.app/releases' }
+        mavenCentral()
+        ...
+    }
+}
+```
+
+or _build.gradle.kts_:
+
+```kts
+dependencyResolutionManagement {
+    repositories {
+        ...
+        maven(url = "https://maven.infomaniak.app/releases")
+        mavenCentral()
+        ...
+    }
+}
+```
 
 Using version catalog:
 
 ```toml
-rich-html-editor = { module = "com.github.infomaniak:android-rich-html-editor", version.ref = "richHtmlEditorVersion" }
+rich-html-editor = { module = "com.infomaniak.richhtmleditor:android-rich-html-editor", version.ref = "richHtmlEditorVersion" }
 ```
 
 Directly inside gradle dependencies:
 
 ```gradle
 dependencies {
-    implementation "com.github.infomaniak:android-rich-html-editor:$richHtmlEditorVersion"
+    implementation "com.infomaniak.richhtmleditor:android-rich-html-editor:$richHtmlEditorVersion"
 }
 ```
-
-The latest version is: ![JitPack](https://jitpack.io/v/Infomaniak/android-rich-html-editor.svg)
 
 ## ⚙️ Usage
 

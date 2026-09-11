@@ -8,6 +8,7 @@ constraintlayout = "2.2.1"
 navigationKtx = "2.9.7"
 metalava = "0.5.0"
 kotlinxSerialization = "1.11.0"
+nmcp = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -23,3 +24,6 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 metalava = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava" }
+nmcp = { id = "com.gradleup.nmcp", version.ref = "nmcp" }
+nmcp-aggregation = { id = "com.gradleup.nmcp.aggregation", version.ref = "nmcp" }
+publish = { id = "infomaniak.publishPlugin" }
