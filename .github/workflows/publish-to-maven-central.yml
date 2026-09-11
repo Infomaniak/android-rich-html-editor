@@ -30,6 +30,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ inputs.version }}
 
       - name: Check that the version was already released
         env:

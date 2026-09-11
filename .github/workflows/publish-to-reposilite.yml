@@ -59,23 +59,35 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
 
-      - name: Publish artifacts
+      - name: Create Git tag
         env:
-          LIB_VERSION: ${{ needs.resolve-version.outputs.version }}
-        run: ./gradlew publishAllPublicationsToReposiliteRepository -PlibVersion="$LIB_VERSION"
-
-      - name: Create Git tag and GitHub Release
+          VERSION: ${{ needs.resolve-version.outputs.version }}
         run: |
-          VERSION="${{ needs.resolve-version.outputs.version }}"
           if ! git ls-remote --tags origin "refs/tags/$VERSION" | grep -q .; then
             git tag "$VERSION"
             git push origin "$VERSION"
           fi
+
+      - name: Publish artifacts
+        id: publish
+        env:
+          LIB_VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: ./gradlew publishAllPublicationsToReposiliteRepository -PlibVersion="$LIB_VERSION"
+
+      - name: Remove Git tag if publication failed
+        if: failure() && steps.publish.outcome == 'failure'
+        env:
+          VERSION: ${{ needs.resolve-version.outputs.version }}
+        run: git push origin --delete "$VERSION" || true
+
+      - name: Create GitHub Release
+        env:
+          VERSION: ${{ needs.resolve-version.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           if ! gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             gh release create "$VERSION" --title "$VERSION" --generate-notes
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 env:
   GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8"
   reposiliteUsername: ${{ secrets.REPOSILITE_USERNAME }}
